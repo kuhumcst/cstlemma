@@ -1,0 +1,33 @@
+------------------------------
+Version 2.4 (3 March 2005)
+------------------------------
+Removed (undocumented) requirement that word classes must be capitalised.
+
+------------------------------
+Version 2.3 (24 February 2005)
+------------------------------
+Problem solved with -I option. (input format) 
+
+------------------------------
+Version 2.2 (23 February 2005)
+------------------------------
+Problems with generation of flex rules and dictionary solved.
+Addition of $s field (word separator that expands to blank or new line) in -c
+format.
+
+------------------------------
+Version 2.1 (27 January 2004)
+------------------------------
+General beautification of code.
+Introduction of C++ streams instead of file pointers (optional).
+Lemmata can contain uppercase characters.
+
+----------------------------
+Version 2.0 (5 January 2004)
+----------------------------
+Initial version under GPL
+
+-------------------------
+Version 1.0 (Autumn 2002)
+-------------------------
+Initial non-GPL version.
