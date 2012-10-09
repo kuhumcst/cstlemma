@@ -1,42 +1,40 @@
-CSTLEMMA - the CST Lemmatiser
+# CSTLEMMA - the CST Lemmatiser
 
 
-This distribution contains the following directories and files:
----------------------------------------------------------------
+**This distribution contains the following directories and files:**
 
-doc           This directory contains documentation of the program.
+* doc
+    * This directory contains documentation of the program.
+* src
+    * This directory contains the source code and a Makefile.
+* Changelog
+    * A document describing changes between versions.
+* COPYING
+    * The full text of the GNU public licence.
+* README.md
+    * This file.
 
-src           This directory contains the source code and a Makefile.
-
-Changelog     A document describing changes between versions.
-
-COPYING       The full text of the GNU public licence.
-
-Readme        This file.
 
 
-
-CSTLEMMA has been compiled and run on the following platforms:
-----------------------------------------------------------------
-
-Platform      Compiler(s)
-
-Windows       Borland C++ 5 and Microsoft Visual C++ 6.0 and later
-Linux         GNU C++ 3.3.1 and later
+**CSTLEMMA has been compiled and run on the following platforms:**
+<table>
+<thead><td>
+Platform</td><td>Compiler(s)</td></thead>
+<tr><td>
+Windows</td><td>Borland C++ 5 and Microsoft Visual C++ 6.0 and later</td></tr><tr><td>
+Linux</td><td>GNU C++ 3.3.1 and later</td></tr></table>
 
 Both 32 and 64 bit versions can be made.
 
-Installation:
--------------
+**Installation**
 
-Linux:
+* Linux:
 
-      Change directory to the 'src' directory.
-      Run 'make' or 'make cstlemma'. To get rid of object files, run 
-      'make clean'.
+    1. Change directory to the 'src' directory.
+    2. Run 'make' or 'make cstlemma'. To get rid of object files, run 
+    3. 'make clean'.
 
-Running:
---------
+**Running**
 
 For running the CST lemmatiser you need as a minimum a file containing flex
 rules. The absolute minimal set of flex rules is the empty set, in which case
@@ -45,8 +43,8 @@ lemmatised already.
 
 Thus, for checking that the lemmatiser runs OK, you could do the following:
 
-touch my_empty_rule_file
-cstlemma -L -t- -f my_empty_rule_file -i my_text_file.txt
+        touch my_empty_rule_file
+        cstlemma -L -t- -f my_empty_rule_file -i my_text_file.txt
 
 This would create a file my_text_file.txt.lemma that has two tab-separated
 columns: the left column contains a word from your text and the right column
@@ -65,18 +63,17 @@ dictionary with 70000 head words that we have used to train the lemmatiser for
 the Danish language.
 
 
-Contact info:
--------------
+**Contact info**
 
 For questions and remarks about the program, please feel free to contact us.
 
 Our postal address is:
 
-Center for Sprogteknologi
-University of Copenhagen
-Njalsgade 140
-2300 Copenhagen S.
-Denmark
+    Center for Sprogteknologi
+    University of Copenhagen
+    Njalsgade 140
+    2300 Copenhagen S.
+    Denmark
 
-On the internet, you can visit us at http://www.cst.dk
+On the internet, you can visit us at [www.cst.ku.dk](http://www.cst.ku.dk)
 Here you can also try the CST lemmatiser for Danish and many other languages.
