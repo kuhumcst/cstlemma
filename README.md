@@ -6,7 +6,11 @@
 * doc
     * This directory contains documentation of the program.
 * src
-    * This directory contains the source code and a Makefile.
+    * This directory contains source code and a Makefile.
+    * You also need the source code in the following repositories, installed alongside and at the same level as cstlemma:
+        * https://github.com/kuhumcst/parsesgml
+        * https://github.com/kuhumcst/letterfunc
+        * https://github.com/kuhumcst/hashmap      
 * Changelog
     * A document describing changes between versions.
 * COPYING
@@ -29,10 +33,10 @@ Both 32 and 64 bit versions can be made.
 **Installation**
 
 * Linux:
-
-    1. Change directory to the 'src' directory.
-    2. Run 'make' or 'make cstlemma'. To get rid of object files, run 
-    3. 'make clean'.
+    1. Download (e.g. git pull) cstlemma, parsesgml, letterfunc and hashmap. If you are going to use the Makefile that comes with cstlemma, locate each of these packages in separate subdirectories under the same directory, and call these subdirectories cstlemma, parsesgml, letterfunc and hashmap, respectively.
+    2. Change directory to the 'cstlemma/src' directory.
+    3. Run 'make' or 'make cstlemma'. To get rid of object files, run 
+    4. 'make clean'.
 
 **Running**
 
