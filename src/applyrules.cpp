@@ -34,7 +34,7 @@ cstlemma -L -eU -p -qwft -t -U- -H2 -fD:\projects\cstlemma\res.da\tags\2\flexrul
 V:\csttools\bin\cstlemma -L -eU -p -qfwt -t -U- -H2 -f"V:\csttools\res\web\da\lemmatiser\tags\0\flexrules" -B"$f $w/$t ($W)\n" -l -b"$f $w/$t ($W)\n" -d"V:\csttools\res\web\da\lemmatiser\tags\dict.UTF8" -u- -W"$f $w/$t" -z"V:\csttools\res\web\da\lemmatiser\tags\lemmatags" -v"V:\csttools\res\web\da\lemmatiser\tags\friends" -x"V:\csttools\res\web\da\lemmatiser\tags\translation" -i V:\www\uploads\tagged\41536 -o V:\www\uploads\lemmatised\41536 -m0
 */
 
-#include "hash.h"
+#include "hashmap.h"
 #include "applyrules.h"
 #include "flex.h"
 #include "utf8func.h"
