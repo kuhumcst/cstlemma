@@ -550,7 +550,7 @@ int Lemmatiser::openFiles()
         {
         if(Option.v)
             {
-            fpv = fopen(Option.v,"r");
+            fpv = fopen(Option.v,"rb");  /* "r" -> "rb" 20130122 */
             if(!fpv)
                 {
                 printf("-v\t%-20s\t(Tag friends file): Cannot open file.\n",Option.v);
@@ -564,7 +564,7 @@ int Lemmatiser::openFiles()
 
         if(Option.x)
             {
-            fpx = fopen(Option.x,"r");
+            fpx = fopen(Option.x,"rb"); /* "r" -> "rb" 20130122 */
             if(!fpx)
                 {
                 printf("-x\t%-20s\t(Lexical type translation table): Cannot open file.\n",Option.x);
@@ -594,7 +594,7 @@ int Lemmatiser::openFiles()
         { // Bart 20021105
         if(Option.z)
             {
-            fpz = fopen(Option.z,"r");
+            fpz = fopen(Option.z,"rb");  /* "r" -> "rb" 20130122 */
             if(!fpz)
                 {
                 printf("-z\t%-20s\t(Full form - Lemma type conversion table): Cannot open file.\n",Option.z);

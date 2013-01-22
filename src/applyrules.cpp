@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 /*
-D:\projects\cstlemmabin\vc6\Release\cstlemma.exe -L -e1 -p+ -q- -t- -U- -H2 -fD:\projects\tvarsok\ru\rules_0utf8.lem -B$w -l -c$w/$B$s -i D:\dokumenter\russisk\russisk.txt -o D:\dokumenter\russisk\russisk.lemmatised.txt -m0
+D:\projects\lemmatiser\bin\vc6\Release\cstlemma.exe -L -e1 -p+ -q- -t- -U- -H2 -fD:\projects\tvarsok\ru\rules_0utf8.lem -B$w -l -c$w/$B$s -i D:\dokumenter\russisk\russisk.txt -o D:\dokumenter\russisk\russisk.lemmatised.txt -m0
 cstlemma -L -q- -U- -H2 -m0 -t- -c"$B\n" -B"$w" -f  D:\projects\cstlemma\res.de\nflex_de5 -i  D:\projects\train\test\ae.txt -o D:\projects\train\test\ae.lemma.txt
 */
 
@@ -31,10 +31,10 @@ This doesn't work yet:
 
 /var/csttools/bin/cstlemma -L -eU -p -qwft -t -U- -H2 -f'/var/csttools/res/web/da/lemmatiser/tags/2/flexrules' -B'$f $w/$t ($W)\n' -l -d'/var/csttools/res/web/da/lemmatiser/dict' -u- -W'$f $w/$t' -z'/var/csttools/res/web/da/lemmatiser/tags/lemmatags' -v'/var/csttools/res/web/da/lemmatiser/tags/friends' -x'/var/csttools/res/web/da/lemmatiser/tags/translation' -i /var/www/uploads/tagged/32828.UTF8 -o /var/www/uploads/lemmatised/32828.UTF8 -m0
 cstlemma -L -eU -p -qwft -t -U- -H2 -fD:\projects\cstlemma\res.da\tags\2\flexrules -B"$f $w/$t ($W)\n" -l -dD:\projects\cstlemma\res.da\dict.UTF8 -u- -W"$f $w/$t" -zD:\projects\cstlemma\res.da\tags\lemmatags -vD:\projects\cstlemma\res.da\tags\friends -xD:\projects\cstlemma\res.da\tags\translation -i D:\projects\cstlemma\res.da\tags\32828.UTF8 -o D:\projects\cstlemma\res.da\tags\32828.UTF8
-V:\csttools\bin\cstlemma -L -eU -p -qfwt -t -U- -H2 -f"V:\csttools\res\web\da\cstlemmatags\0\flexrules" -B"$f $w/$t ($W)\n" -l -b"$f $w/$t ($W)\n" -d"V:\csttools\res\web\da\cstlemmatags\dict.UTF8" -u- -W"$f $w/$t" -z"V:\csttools\res\web\da\cstlemmatags\lemmatags" -v"V:\csttools\res\web\da\cstlemmatags\friends" -x"V:\csttools\res\web\da\cstlemmatags\translation" -i V:\www\uploads\tagged\41536 -o V:\www\uploads\lemmatised\41536 -m0
+V:\csttools\bin\cstlemma -L -eU -p -qfwt -t -U- -H2 -f"V:\csttools\res\web\da\lemmatiser\tags\0\flexrules" -B"$f $w/$t ($W)\n" -l -b"$f $w/$t ($W)\n" -d"V:\csttools\res\web\da\lemmatiser\tags\dict.UTF8" -u- -W"$f $w/$t" -z"V:\csttools\res\web\da\lemmatiser\tags\lemmatags" -v"V:\csttools\res\web\da\lemmatiser\tags\friends" -x"V:\csttools\res\web\da\lemmatiser\tags\translation" -i V:\www\uploads\tagged\41536 -o V:\www\uploads\lemmatised\41536 -m0
 */
 
-#include "hashmap.h"
+#include "hash.h"
 #include "applyrules.h"
 #include "flex.h"
 #include "utf8func.h"

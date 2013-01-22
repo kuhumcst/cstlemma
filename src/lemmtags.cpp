@@ -48,12 +48,35 @@ const char * LemmaTag(const char * tag)
 
 static bool taglinecheck(const char * xx)
     {
+#if 1 /* 20120122 */
+    // Lines starting with # or ; or // or /* are considered comment lines.
+    // Comments can be preceded by whitespace.
+    size_t whitePrefix = strspn(xx," \t\v");
+    switch(xx[whitePrefix])
+        {
+        case '#':
+        case ';':
+            return false;
+        case '/':
+            switch(xx[whitePrefix+1])
+                {
+                case '/':
+                case '*':
+                    return false;
+                default:
+                    return true;
+                }
+        default:
+            return true;
+        }
+#else
     size_t d; /*20120709 int -> size_t*/
     size_t len = strlen(xx);
     return strspn(xx,"ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ_\t ") == strlen(xx) // line consists only of capital letters and white space
         && (d = strcspn(xx,"\t ")) > 0 // line contains identifier
         && d < len // line contains space
         && strcspn(xx+d,"ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ_") < (size_t)(len - d); // line contains identifier after space
+#endif
     }
 
 bool readLemmaTags(FILE * fpx,bool nice)
