@@ -35,6 +35,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //#define NDEBUG
 #include <assert.h>
 
+#if STREAM
+#include <iostream>
+using namespace std;
+#endif
+
 class DictNode;
 class Lemma;
 typedef int tchildrencount; // type for variables that are optimal for counting
@@ -513,11 +518,16 @@ public:
     int printLeaf()
         {
         assert(leaf);
+#if STREAM
+        cout << m_flexform << "[" << m_n << "](";
+        int ret = u.type->print(stdout);
+#else
         printf("%s",m_flexform);
         printf("[%d]",m_n);
         printf("(");
         int ret = u.type->print(stdout);
-        printf(")\n");
+#endif
+        LOG1LINE(")");
         return ret;
         }
     };
@@ -975,10 +985,16 @@ static tlength compressStrings(tcount nstrings,tcount * nUniqueStrings)
     {
     pstrings = new char ** [nstrings];
     root->getStrings();
+
+#if STREAM
+    cout << "sorting " << nstrings << " strings..." << flush;
+    qsort( (void *)pstrings, nstrings, sizeof( char * ), compare );
+#else
     printf("sorting " PERCLD " strings...",nstrings);
     fflush(stdout);
     qsort( (void *)pstrings, nstrings, sizeof( char * ), compare );
-    printf("done\n");
+#endif
+    LOG1LINE("done");
     tcount i,j,k;
     tlength len = (tlength)strlen(*pstrings[0]) + 1;
     for(i = 0, j = 1;j < nstrings;++j)
@@ -996,8 +1012,12 @@ static tlength compressStrings(tcount nstrings,tcount * nUniqueStrings)
     delete [] *pstrings[0];
     *pstrings[0] = STRINGS;
     pos = (tlength)strlen(*pstrings[0])+1;
+#if STREAM
+    cout << "compacting strings..." << endl;
+#else
     printf("compacting strings...");
     fflush(stdout);
+#endif
     for(i = 0, j = 1,k = 1;j < nstrings;++j)
         {
         if(strcmp(*pstrings[i],*pstrings[j]))
@@ -1023,7 +1043,11 @@ static tlength compressStrings(tcount nstrings,tcount * nUniqueStrings)
     delete [] pstrings;
     pstrings = NULL;
     *nUniqueStrings = k;
+#if STREAM
+    cout << "resulting in " << k << " strings" << endl;
+#else
     printf("resulting in " PERCLD " strings\n",k);
+#endif
     return len;
     }
 
@@ -1039,10 +1063,15 @@ static tcount compressLeafs(tcount nLeaf,tcount * nUniqueLemmas)
     pLeafs = new DictNode * [nLeaf];
     root->getLemmas();
     tcount i,j,k;
+#if STREAM
+    cout << "sorting " << nLeaf << " leafs..." << flush;
+    qsort( (void *)pLeafs, nLeaf, sizeof( DictNode * ), compareLeaf );
+#else
     printf("sorting " PERCLD " leafs...",nLeaf);
     fflush(stdout);
     qsort( (void *)pLeafs, nLeaf, sizeof( DictNode * ), compareLeaf );
-    printf("done\n");
+#endif
+    LOG1LINE("done");
     tcount len = pLeafs[0]->numberOfLextypes();
     for(i = 0, j = 1;j < nLeaf;++j)
         {
@@ -1055,8 +1084,7 @@ static tcount compressLeafs(tcount nLeaf,tcount * nUniqueLemmas)
     LEMMAS = new Lemma[len];
     tcount pos = 0;
     pos = pLeafs[0]->moveLemma(pos);
-    printf("compacting leafs...");
-    fflush(stdout);
+    LOGANDFLUSH("compacting leafs...");
     for(i = 0, j = 1,k = 1;j < nLeaf;++j)
         {
         if(pLeafs[i]->cmp(pLeafs[j]))
@@ -1073,61 +1101,88 @@ static tcount compressLeafs(tcount nLeaf,tcount * nUniqueLemmas)
     if(k < nLeaf)
         pLeafs[k/*++*/] = NULL;
     *nUniqueLemmas = k;
+#if STREAM
+    cout << "resulting in " << k << " leafs" << endl;
+#else
     printf("resulting in " PERCLD " leafs\n",k);
+#endif
     return len;
     }
     
 int makedict(FILE * fpin,FILE * fpout,bool nice,const char * format,const FreqFile * freq,bool CollapseHomographs)
     {
     root = new DictNode("","","",0);
+#if STREAM
+    cout << "reading lemmas" << endl;
+#else
     printf("reading lemmas\n");
+#endif
     int failed;
     bool T;
     int cnt = readLemmas(fpin,format,add,CollapseHomographs,failed,T);
+#if STREAM
+    cout << cnt << " lemmas read, " << failed << " discarded" << endl;
+#else
     printf("%d lemmas read, %d discarded\n",cnt,failed);
+#endif
     if(failed)
-        printf("(see file \"discarded\")\n");
-
+        LOG1LINE("(see file \"discarded\")");
     while(freq)
         {
         if(!freq->itsName())
             {
+#if STREAM
+            cout << "No file name matching format " << freq->itsFormat() << endl;
+#else
             printf("No file name matching format %s\n",freq->itsFormat());
+#endif
             break;
             }
         if(!freq->itsFormat())
             {
+#if STREAM
+            cout << "No format matching file name " << freq->itsName() << endl;
+#else
             printf("No format matching file name %s\n",freq->itsName());
+#endif
             break;
             }
 
         FILE * ffreq = fopen(freq->itsName(),"r");
         if(ffreq)
             {
+#if STREAM
+            cout << "reading frequencies from " << freq->itsName() << " with format " << freq->itsFormat() << endl;
+#else
             printf("reading frequencies from %s with format %s\n",freq->itsName(),freq->itsFormat());
+#endif
             readFrequencies(ffreq,freq->itsFormat(),addFreq,T);
             }
         else
+#if STREAM
+            cout << "*** CANNOT OPEN " << freq->itsName() << endl;
+#else
             printf("*** CANNOT OPEN %s\n",freq->itsName());
+#endif
         freq = freq->Next();
         }
-    printf("counting children\n");
+    LOG1LINE("counting children");
     tchildrencount nroot = root->count();
 
-    printf("counting strings\n");
+    LOG1LINE("counting strings");
     tcount nstrings = root->strcnt();
     tcount nUniqueStrings = 0;
-    printf("compressing strings\n");
+    LOG1LINE("compressing strings");
     tlength stringBufferLen = compressStrings(nstrings,&nUniqueStrings);
     tcount nLemmas = -1; // compensate for root
-    printf("counting leafs\n");
+    LOG1LINE("counting leafs");
     tcount nLeaf = root->LeafCount(&nLemmas);
 
 
     tcount nUniqueLemmas = 0;
-    printf("compressing leafs\n");
+    LOG1LINE("compressing leafs");
     tcount LemmaBufferLen = compressLeafs(nLeaf,&nUniqueLemmas);
-    printf("writing strings\n");
+    LOG1LINE("writing strings");
     tcount i;
     if(nice)
         {
@@ -1142,7 +1197,7 @@ int makedict(FILE * fpin,FILE * fpout,bool nice,const char * format,const FreqFi
         fwrite(&stringBufferLen,sizeof(stringBufferLen),1,fpout);
         fwrite(STRINGS,stringBufferLen,1,fpout);
         }
-    printf("writing lemmas\n");
+    LOG1LINE("writing lemmas");
     if(nice)
         {
         fprintf(fpout,"*** LEMMAS ***\n" PERCLD "\n",LemmaBufferLen);
@@ -1159,10 +1214,15 @@ int makedict(FILE * fpin,FILE * fpout,bool nice,const char * format,const FreqFi
         for(i = 0;i < LemmaBufferLen;++i)
             LEMMAS[i].binprint(fpout);
         }
+#if STREAM
+    cout << "strings: " << nstrings << " unique: " << nUniqueStrings << endl;
+    cout << "flexforms: "  << nLeaf << " lemmas: " << nLemmas << " unique: " << nUniqueLemmas << endl;
+#else
     printf("strings: " PERCLD " unique: " PERCLD "\n",nstrings,nUniqueStrings);
     printf("flexforms: " PERCLD " lemmas: " PERCLD " unique: " PERCLD "\n",nLeaf,nLemmas,nUniqueLemmas);
+#endif
     tcount nnodes = root->BreadthFirst_position(0,nroot);
-    printf("writing nodes\n");
+    LOG1LINE("writing nodes");
     if(nice)
         {
         fprintf(fpout,"*** nodes ***\n" PERCLD "\n",nnodes);
@@ -1183,9 +1243,15 @@ int makedict(FILE * fpin,FILE * fpout,bool nice,const char * format,const FreqFi
 
     if(totcnt > 0)
         {
+#if STREAM
+        cout << "frequencies added from " << g_added << " words (" << (double)addedcnt*100.0/(double)totcnt << "% of reference text)" << endl;
+        cout << "frequencies from " << notadded - notypematch << " words are not added because they weren't found in the dictionary (" << (double)notaddedcnt*100.0/(double)totcnt << "% of reference text)" << endl;
+        cout << "frequencies from " << notypematch << " words are not added because the types didn't agree. (" << (double)notypematchcnt*100.0/(double)totcnt << "% of reference text)" << endl;
+#else
         printf("frequencies added from %d words (%f%% of reference text)\n",g_added,(double)addedcnt*100.0/(double)totcnt);
         printf("frequencies from %ld words are not added because they weren't found in the dictionary (%f%% of reference text)\n",notadded - notypematch,(double)notaddedcnt*100.0/(double)totcnt);
         printf("frequencies from %ld words are not added because the types didn't agree. (%f%% of reference text)\n",notypematch,(double)notypematchcnt*100.0/(double)totcnt);
+#endif
         }
     return 0;
     }

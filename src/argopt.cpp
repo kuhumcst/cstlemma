@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "argopt.h"
 #include <string.h>
 
-char *optarg;
-int optind = 0;
+char *myoptarg;
+int myoptind = 0;
 
 int getopt(int argc,char *argv[],char *opts)
     {
@@ -33,33 +33,33 @@ int getopt(int argc,char *argv[],char *opts)
     char *index/* = NULL*/;
     int optc/* = -1*/;
     
-    if (!optind)    /* argv[0] points to the command verb */
-        ++optind;
-    if (optind >= argc)
+    if (!myoptind)    /* argv[0] points to the command verb */
+        ++myoptind;
+    if (myoptind >= argc)
         {
-        optarg = NULL;
+        myoptarg = NULL;
         return -1;
         }
     
-    if ((index = argv[optind]) != NULL)
+    if ((index = argv[myoptind]) != NULL)
         {
         char * optpos;
         if (*index != '-' && *index != '/')
             {
             /* no option, perhaps something else ? */
-            optarg = NULL;
+            myoptarg = NULL;
             return -1;
             }
         if (*(++index) == '-')
             {
-            ++optind;            /* double --,  end of options */
-            optarg = NULL;
+            ++myoptind;            /* double --,  end of options */
+            myoptarg = NULL;
             return -1;
             }
         if (!*index)
             {
                                 /* single -, probably not an option */
-            optarg = NULL;
+            myoptarg = NULL;
             return -1;
             }
         optc = *index;       /* option letter */
@@ -72,52 +72,52 @@ int getopt(int argc,char *argv[],char *opts)
                 if(!*++index)
                     {
                     /* try next argument */
-                    for (;++optind < argc && !*argv[optind];);
-                    if(  optind == argc
-                      || argv[optind] == NULL
-                      || (  *argv[optind] == '-'
-                         && *(argv[optind]+1) != '\0'
+                    for (;++myoptind < argc && !*argv[myoptind];);
+                    if(  myoptind == argc
+                      || argv[myoptind] == NULL
+                      || (  *argv[myoptind] == '-'
+                         && *(argv[myoptind]+1) != '\0'
                          )
                       )
                         {
-                        optarg = emptystr;
+                        myoptarg = emptystr;
                         return optc;  /* no data after all */
                         }
                     else
                         {
-                        optarg = argv[optind++]; 
-                        if(optarg[strlen(optarg) - 1] == '\r') // Bart 20030806 Last argument has trailing '\r' under Linux !
-                            optarg[strlen(optarg) - 1] = '\0';
+                        myoptarg = argv[myoptind++]; 
+                        if(myoptarg[strlen(myoptarg) - 1] == '\r') // Bart 20030806 Last argument has trailing '\r' under Linux !
+                            myoptarg[strlen(myoptarg) - 1] = '\0';
                         return optc;
                         }
                     }
                 else
                     {
-                    optind++;
-                    optarg = index; 
-                    if(optarg[strlen(optarg) - 1] == '\r') // Bart 20030806 Last argument has trailing '\r' under Linux !
-                        optarg[strlen(optarg) - 1] = '\0';
+                    myoptind++;
+                    myoptarg = index; 
+                    if(myoptarg[strlen(myoptarg) - 1] == '\r') // Bart 20030806 Last argument has trailing '\r' under Linux !
+                        myoptarg[strlen(myoptarg) - 1] = '\0';
                     return optc;
                     }
                 }
             else
                 {
-                optind++;
-                optarg = NULL; 
+                myoptind++;
+                myoptarg = NULL; 
                 return optc;
                 }
             }
         else
             {
-            optind++;
-            optarg = NULL; 
+            myoptind++;
+            myoptarg = NULL; 
             return -1;
             }
         }
     else
         {
-        optind++;
-        optarg = NULL;
+        myoptind++;
+        myoptarg = NULL;
         return -1;
         }
     }

@@ -29,14 +29,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <ctype.h>
 #include <assert.h>
 
+#if STREAM
+#include <iostream>
+using namespace std;
+#endif
+
 bool WRITE = 0;
 
 bool changes()
     {
     if(base::mutated || node::mutated || type::mutated)
         {
+#if STREAM
+        cout << "Mutations: baseforms " << base::mutated << " nodes " << node::mutated << " types " << type::mutated << endl;
+#else
         printf("Mutations: baseforms %d nodes %d types %d\n",
             base::mutated,node::mutated,type::mutated);
+#endif
         return true;
         }
     return false;
@@ -84,13 +93,21 @@ void base::test(char * Text,char * save,char * buf,const char * Type)
         {
         if(strcmp(save,bf))
             {
+#if STREAM
+            cout << Text << " Buf " << buf << " Difference: baseform should be: " << save << ", found: " << bf << endl;
+#else
             printf("%s Buf %s Difference: baseform should be: %s, found: %s\n",Text,buf,save,bf);
+#endif
             Exit();
             }
         }
     else
         {
+#if STREAM
+        cout << Text << " Baseform " << buf << " not found (should have baseform " << save << ")" << endl;
+#else
         printf("%s Baseform %s not found (should have baseform %s)\n",Text,buf,save);
+#endif
         Exit();
         }
     free(save);
@@ -613,7 +630,11 @@ base * flex::update(char * baseForm,char * word,const char * tag,bool partial)
     base * ret = 0;
     size_t i = 0;
     if(WRITE)
+#if STREAM
+        cout << "[" << baseForm << "]" << word << endl;
+#else
         printf("[%s]%s\n",baseForm,word);
+#endif
     // Find the shortest [basef]end combination that is distinct from
     // already existing combinations by removing a common "stem" from the start
     // such that stem+basef = baseForm and stem+end = word.
@@ -707,7 +728,11 @@ base * flex::update(char * baseForm,char * word,const char * tag,bool partial)
                         // Agreement!
                         {
                         if(WRITE)
+#if STREAM
+                            cout << "nothing to do [" << baseForm + i << "] == [" << Base->bf() << "]" << endl;
+#else
                             printf("nothing to do [%s] == [%s]\n",baseForm + i,Base->bf());
+#endif
                         if(i == 0 && !partial)
                             {
                             Base->setFullWord();
@@ -725,11 +750,6 @@ base * flex::update(char * baseForm,char * word,const char * tag,bool partial)
                 if(i > 0)
                     // No agreement. We need a more specific rule.
                     --i; // shorten the stem, or, make the tail pattern longer.
-                else
-                    {
-               //     printf("CALAMITY %s %s\n",baseForm,word);
-                 //   sBase->print(0);
-                    }
                 }
             }
         else // Could not predict a base form. Possible causes: tag isn't 
@@ -795,13 +815,6 @@ base * flex::add(const char * tag,char * end,char * baseform,bool fullWord)
 
     int flex::updateFlexRulesIfNeeded(char * dictBaseform,char * dictFlexform, char * dictType)
         {
-        /*20120906
-        if(removeBogus(dictFlexform))
-            {
-            static int boguscnt = 0;
-            boguscnt++;
-            printf("%d Comma detected in flex form. Type: %s Baseform: %s Flexform: %s\n",boguscnt,dictType,dictBaseform,dictFlexform);
-            }*/
         update(dictBaseform,dictFlexform,dictType,false);
         return 2;
         }
@@ -1042,8 +1055,12 @@ void flex::makeFlexRules
                 if(nice)
                     {
                     count = Count();
+#if STREAM
+                    cout << "rep " << SRep << "." << Rep << "." << rep << endl << count << " COUNT\n" << endl;
+#else
                     printf("rep %d.%d.%d\n",SRep,Rep,rep);
                     printf("%d COUNT\n\n",count);
+#endif
                     }
                 if(!changes())
                     {
@@ -1057,8 +1074,12 @@ void flex::makeFlexRules
             if(nice)
                 {
                 count = Count();
-                printf("removeNonFullWordsAsAlternatives\n");
+                LOG1LINE("removeNonFullWordsAsAlternatives");
+#if STREAM
+                cout << count << " COUNT\n" << endl;
+#else
                 printf("%d COUNT\n\n",count);
+#endif
                 }
             if(!changes())
                 {
@@ -1085,8 +1106,12 @@ void flex::makeFlexRules
         if(nice)
             {
             count = Count();
-            printf("removeUnneededPatterns\n");
+            LOG1LINE("removeUnneededPatterns");
+#if STREAM
+            cout << count << " COUNT\n" << endl;
+#else
             printf("%d COUNT\n\n",count);
+#endif
             
             sprintf(name,"after%d.txt",SRep);
             FILE *fpflexTMP = fopen(name,"w");
@@ -1105,7 +1130,7 @@ void flex::makeFlexRules
         }
     if(nice)
         {
-        printf("Remove unused\n");
+        LOG1LINE("Remove unused");
         }
     
     removeUnusedPatterns();

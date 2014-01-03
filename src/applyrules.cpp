@@ -44,6 +44,12 @@ V:\csttools\bin\cstlemma -L -eU -p -qfwt -t -U- -H2 -f"V:\csttools\res\web\da\le
 #include <string.h>
 #include <assert.h>
 
+#if STREAM
+#include <iostream>
+using namespace std;
+#endif
+
+
 bool oneAnswer = false;
 
 struct var
@@ -713,7 +719,11 @@ const char * applyRules(const char * word,const char * tag)
             {
             size_t length = 0;
             if(strchr(word,'/') > 0)
-                printf("Raar word [%s] tag [%s]\n",word,tag);
+#if STREAM
+                cout << "Strange word [" << word << "] tag [" << tag << "]" << endl;
+#else
+                printf("Strange word [%s] tag [%s]\n",word,tag);
+#endif
             word = changeCase(word,true,length);
             /*
             loword = new char[len+1];

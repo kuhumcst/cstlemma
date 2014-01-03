@@ -111,9 +111,6 @@ functionTree * basefrm::Format(const char * format)
     bool DummySortInput;
     int testType = 0;
     OutputClass::Format(format,getBasefrmFunctionNoW,*ret,format,DummySortInput,testType);
-/*    printf("\nFormat %s:",format);
-    ret->print();
-    printf("\n");*/
     return ret;
     }
 
@@ -207,7 +204,7 @@ bool basefrm::setFormat(const char * Wformat,const char * bformat,const char * B
         {
         if(!Wformat)
             {
-            printf("You need to specify -W<full form format> if you use the $W variable in -B<base form format> or -b<base form format>\n");
+            LOG1LINE("You need to specify -W<full form format> if you use the $W variable in -B<base form format> or -b<base form format>");
             exit(0);
             }
         if(wfuncs)
@@ -348,7 +345,11 @@ int basefrm::Closeness(const char * tag)
 
 void basefrm::testPrint()const
     {
+#if STREAM
+    cout << m_s << "/" << m_t << endl;
+#else
     printf("%s/%s\n",m_s,m_t);
+#endif
     }
 
 

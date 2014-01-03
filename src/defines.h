@@ -22,7 +22,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define STREAM 0
+#define STREAM 1 // 0: use stdio 1: use iostream
+
+#if STREAM
+//#define fprintf xxx
+//void xxx(){}
+#define LOG1LINE(x) cout << x << endl
+#define LOGANDFLUSH(x) cout << x << flush
+#else
+#define LOG1LINE(x) printf("%s\n",x)
+#define LOGANDFLUSH(x) printf("%s", x);fflush(stdout)
+#endif
+
 #define FREQ24 0 /* $n field in baseform. This is a meaningless field
                      (not used for disambiguation) */
 #define PFRQ 0 /* frequency field in baseformpointer. This keeps the

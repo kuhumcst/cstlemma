@@ -37,7 +37,11 @@ void baseformpointer::testPrint()
         bf->testPrint();
     if(next)
         {
+#if STREAM
+        cout << "||";
+#else
         printf("||");
+#endif
         next->testPrint();
         }
     }

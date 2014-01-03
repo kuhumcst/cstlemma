@@ -20,18 +20,13 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-// -Xaw -Xllemma -Xpana -I"$w\s" -L -e1 -f flexrules.utf8 -t -p -l- -c"$B" -B"$w" -i text-context.xml -o text-context.lemma.xml
-// -L -eU -p+ -qwft -t- -U- -H2 -f"V:\csttools\res\web\da\cstlemmanotags\0\flexrules" -B"$f $w ($W)\n" -l -b"$f $w ($W)\n" -d"V:\csttools\res\web\da\cstlemmanotags\dict.UTF8" -u- -W"$f $w" -i "V:\www\uploads\input\41548" -o "D:\41548.txt" -m0
 #include "field.h"
 #include "text.h"
 #include "word.h"
-//#include "dictionary.h"
 #include "basefrm.h"
-//#include "caseconv.h"
 #include "flex.h"
 #include <stdlib.h>
 #include <assert.h>
-//#include <ctype.h>
 #include "hashmap.h"
 
 static hash<Word> * Hash = 0;
@@ -235,7 +230,18 @@ void text::AddField(field * fld)
         fields->addField(fld);
     }
 
-/*static*/ char * globIformat = 0;
+static void invalidFormatString(char * Iformat,char * pformat)
+    {
+#if STREAM
+    cout << "Invalid format string \"" << Iformat << "\"" << endl;
+    cout << "                        " << setw((int)(strlen(Iformat) - strlen(pformat))) << "^" << endl;
+#else
+    printf("Invalid format string \"%s\"\n",Iformat);
+    printf("                        %*c\n",(int)(strlen(Iformat) - strlen(pformat)),'^');
+#endif
+    }
+
+char * globIformat = 0;
 field * text::translateFormat(char * Iformat,field *& wordfield,field *& tagfield)
     {
     globIformat = Iformat;
@@ -253,8 +259,7 @@ field * text::translateFormat(char * Iformat,field *& wordfield,field *& tagfiel
                 case 'w':
                     if(wordfield)
                         {
-                        printf("Invalid format string \"%s\"\n",Iformat);
-                        printf("                        %*c\n",(int)(strlen(Iformat) - strlen(pformat)),'^');
+                        invalidFormatString(Iformat,pformat);
                         exit(0);
                         }
                     wordfield = new readValue();
@@ -264,8 +269,7 @@ field * text::translateFormat(char * Iformat,field *& wordfield,field *& tagfiel
                 case 't':
                     if(tagfield)
                         {
-                        printf("Invalid format string \"%s\"\n",Iformat);
-                        printf("                        %*c\n",(int)(strlen(Iformat) - strlen(pformat)),'^');
+                        invalidFormatString(Iformat,pformat);
                         exit(0);
                         }
                     tagfield = new readValue();
@@ -278,8 +282,7 @@ field * text::translateFormat(char * Iformat,field *& wordfield,field *& tagfiel
                     break;
                 default:
                     {
-                    printf("Invalid format string \"%s\"\n",Iformat);
-                    printf("                        %*c\n",(int)(strlen(Iformat) - strlen(pformat)),'^');
+                    invalidFormatString(Iformat,pformat);
                     exit(0);
                     }
                 }
@@ -307,8 +310,7 @@ field * text::translateFormat(char * Iformat,field *& wordfield,field *& tagfiel
                     break;
                 default:
                     {
-                    printf("Invalid format string \"%s\"\n",Iformat);
-                    printf("                        %*c\n",(int)(strlen(Iformat) - strlen(pformat)),'^');
+                    invalidFormatString(Iformat,pformat);
                     exit(0);
                     }
                 }
@@ -483,7 +485,7 @@ void text::Lemmatise(FILE * fpo
     cntD = 0;
     cntL = 0;
     if(nice)
-        printf("looking up words\n");
+        LOG1LINE("looking up words");
     if(Root)
         {
         for(size_t i = 0;i < N;++i)
@@ -535,7 +537,7 @@ void text::Lemmatise(FILE * fpo
     if(UseLemmaFreqForDisambiguation != 2 /*Why?-> && lext::DictUnique*/)
         {
         if(nice)
-            printf("disambiguation by lemma frequency\n");
+            LOG1LINE("disambiguation by lemma frequency");
         if(Root)
             {
             for(size_t i = 0;i < N;++i)
@@ -544,20 +546,19 @@ void text::Lemmatise(FILE * fpo
                 Root[i]->decFreq();
             }
         if(nice)
-            printf("...disambiguated by lemma frequency\n");
+            LOG1LINE("...disambiguated by lemma frequency");
         }
     if(TagFriends && InputHasTags)
         {
         if(nice)
-            printf("disambiguation by tag friends\n");
-//        printf("DissambiguateByTagFriends\n");
+            LOG1LINE("disambiguation by tag friends");
         if(Root)
             {
             for(size_t i = 0;i < N;++i)
                 ((taggedWord**)Root)[i]->DissambiguateByTagFriends();
             }
         if(nice)
-            printf("...disambiguated by tag friends\n");
+            LOG1LINE("...disambiguated by tag friends");
         }
 
     Word::setFile(fpo);
@@ -575,7 +576,7 @@ void text::Lemmatise(FILE * fpo
             sortBaseforms_f(basefrmarrL,cntL);
             }
         if(nice)
-            printf("listing lemmas\n");
+            LOG1LINE("listing lemmas");
         basefrmarrD[0]->setFile(fpo);
         if(  (listLemmas & 1)
           && (listLemmas & 2)
@@ -626,17 +627,17 @@ void text::Lemmatise(FILE * fpo
                 basefrmarrL[K]->printB();
             }
         if(nice)
-            printf("...listed lemmas\n");
+            LOG1LINE("...listed lemmas");
         }
     else/* Make a list of word forms, for each word form listing all possible lemmas. */
         {
     //    unsorted[0]->setFile(fpo);
         if(nice)
-            printf("listing words\n");
+            LOG1LINE("listing words");
         if(SortOutput)
             {
             if(nice)
-                printf("sorting words\n");
+                LOG1LINE("sorting words");
             if(Root)
                 {
                 if(InputHasTags)
@@ -650,11 +651,11 @@ void text::Lemmatise(FILE * fpo
         else 
             {
             if(nice)
-                printf("print Unsorted words\n");
+                LOG1LINE("print Unsorted words");
             printUnsorted(fpo);
             }
         if(nice)
-            printf("...listed words\n");
+            LOG1LINE("...listed words");
         }
 #if 0
     unsorted[0]->setFile(fpnew);
@@ -671,7 +672,7 @@ void text::Lemmatise(FILE * fpo
 //    totcnt = k;
 //    return cnt;
     if(nice)
-        printf("...text processed\n");
+        LOG1LINE("...text processed");
     delete [] basefrmarrD;
     delete [] basefrmarrL;
     
@@ -798,15 +799,7 @@ void text::createTagged(const char * w, const char * tag)
 
 
 
-#if STREAM
-text::text(/*istream * fpi,*/bool a_InputHasTags/*,char * Iformat*/,/*int keepPunctuation,*/bool nice
-           /*,unsigned long int size,bool treatSlashAsAlternativesSeparator*/
-           )
-#else
-text::text(/*FILE * fpi,*/bool a_InputHasTags/*,char * Iformat*/,/*int keepPunctuation,*/bool nice
-           /*,unsigned long int size,bool treatSlashAsAlternativesSeparator*/
-           )
-#endif
+text::text(bool a_InputHasTags,bool nice)
            :Root(0)
            ,lineno(0)
            ,total(0)
@@ -820,33 +813,8 @@ text::text(/*FILE * fpi,*/bool a_InputHasTags/*,char * Iformat*/,/*int keepPunct
 #ifdef COUNTOBJECTS
     ++COUNT;
 #endif
-/*
-    fields = 0;
-    reducedtotal = 0;
-    Root = 0;
-    basefrmarrD = 0;
-    basefrmarrL = 0;
-*/
-/*
-#ifndef CONSTSTRCHR
-    const 
-#endif
-        char * w;
-*/
-    //total = 0;
-/*
-    const char * Tag;
-    field * wordfield;
-    field * tagfield;
-*/
-    /*
-    field * format = 0;
-    int slashFound = 0;
-    */
     if(nice)
-        printf("counting words\n");
-//    lineno = 0;
-//    unsigned long newlines;
+        LOG1LINE("counting words");
     }
 
 
@@ -882,6 +850,9 @@ void token::setFile(FILE * a_fp)
 void text::makeList()
     {
     if(Hash)
+        {
         Root = Hash->convertToList(N);
-    delete Hash;
+        delete Hash;
+        Hash = NULL;
+        }
     }

@@ -19,12 +19,9 @@ You should have received a copy of the GNU General Public License
 along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-//-L -eU -p+ -q- -t- -U- -H2 -fD:\projects\tvarsok\ru\rules_0utf8.lem -dD:\projects\cstlemmares.ru\dictrus -B$w -l- -c$w/$B$s -i D:\dokumenter\russisk\oetsjastiee.txt -o D:\dokumenter\russisk\oetsjastiee.lemmatised.txt -m0
-//-L -eU -p+ -q- -t- -U- -H2 -fD:\projects\tvarsok\ru\rules_0utf8.lem -B$w -l- -c$w/$B$s -i D:\dokumenter\russisk\oetsjastiee.txt -o D:\dokumenter\russisk\oetsjastiee.lemmatised.txt -m0
-//-L -e0 -p+ -q- -t- -U- -H2 -fD:\projects\tvarsok\ru\rules_0utf8.lem -B$w -l- -b$w -dD:\projects\cstlemmares.ru\dictrus -u- -c$i$w/$b1[[$b~1]?$B]$s -i D:\dokumenter\russisk\oetsjastiee.txt -o D:\dokumenter\russisk\oetsjastiee.lemmatised.txt -m0
-#define CSTLEMMAVERSION "4.7"
-#define CSTLEMMADATE "2012.09.07"
-#define CSTLEMMACOPYRIGHT "2002-2012 Center for Sprogteknologi"
+#define CSTLEMMAVERSION "5.0"
+#define CSTLEMMADATE "2014.01.03"
+#define CSTLEMMACOPYRIGHT "2002-2014 Center for Sprogteknologi"
 
 #include "lemmatiser.h"
 #include "option.h"
@@ -58,28 +55,26 @@ int main(int argc, char * argv[])
     {
     if(argc == 1)
         {
-        printf("\n");
-        printf("CSTLEMMA version " CSTLEMMAVERSION " (" CSTLEMMADATE ")\n");
-        printf("Copyright (C) " CSTLEMMACOPYRIGHT "\n");
+        LOG1LINE("");
+        LOG1LINE("CSTLEMMA version " CSTLEMMAVERSION " (" CSTLEMMADATE ")");
+        LOG1LINE("Copyright (C) " CSTLEMMACOPYRIGHT);
         if(sizeof(ptrdiff_t) == 8)
-            printf("64-bit\n");
+            LOG1LINE("64-bit");
         else
-            printf("32-bit\n");
+            LOG1LINE("32-bit");
 // GNU >> 
-        printf("CSTLEMMA comes with ABSOLUTELY NO WARRANTY; for details use option -w.\n");
-        printf("This is free software, and you are welcome to redistribute it under\n");
-        printf("certain conditions; use option -r for details.\n");
-        printf("\n\n");
+        LOG1LINE("CSTLEMMA comes with ABSOLUTELY NO WARRANTY; for details use option -w.");
+        LOG1LINE("This is free software, and you are welcome to redistribute it under");
+        LOG1LINE("certain conditions; use option -r for details.");
+        LOG1LINE("");
+        LOG1LINE("");
 // << GNU
-        printf("Use option -h for usage.\n");
+        LOG1LINE("Use option -h for usage.");
         return 0;
         }
 
     optionStruct Option;
     int ret;
-
-    //setEncoding(1);
-
 
     OptReturnTp optResult = Option.readArgs(argc,argv);
     if(optResult == Error)
@@ -106,51 +101,13 @@ int main(int argc, char * argv[])
             default:
                 {
 #if defined PROGLEMMATISE
-#define BATCH 1
-#if BATCH || !STREAM
                 ret = theLemmatiser.LemmatiseFile();
-#else
-                while(true)
-                    {
-                    char line[256];
-                    cin.getline(line,sizeof(line),'\n');
-                    if(!line[0])
-                        break;
-#if defined __BORLANDC__ || defined __GNUG__ && __GNUG__ < 3
-                    strstream * str = new strstream;
-                    *str << line;
-                    strstream str2;
-#else
-                    stringstream * str = new stringstream;
-                    *str << line;
-                    stringstream str2;
-#endif
-                    theLemmatiser.LemmatiseText(str,&str2,NULL);
-/*
-                    theLemmatiser.setSep(" AND ");
-                    theLemmatiser.setDictUnique(false);
-#if defined __BORLANDC__ || defined __GNUG__ && __GNUG__ < 3
-                    str = new strstream;
-#else
-                    str = new stringstream;
-#endif
-                    *str << line;
-                    str2 << endl << endl;
-                    theLemmatiser.LemmatiseText(str,&str2,NULL);
-*/
-                    str2 << '\0';
-#if defined __BORLANDC__ || defined __GNUG__ && __GNUG__ < 3
-                    if(str2.str())
-#endif
-                        cout << str2.str();
-                    }
-#endif
 #endif
                 }
             }
         }
 #if defined PROGLEMMATISE
-    Word::deleteStaticMembers(); // Bart 20050916: memory leak. 
+    Word::deleteStaticMembers();
 #endif
     return ret;
     }

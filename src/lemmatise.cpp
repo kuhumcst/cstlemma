@@ -31,6 +31,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <ctype.h>
 #include <assert.h>
 
+#if STREAM
+#include <iostream>
+#include <iomanip> 
+using namespace std;
+#endif
 
 
 bool flex::baseformsAreLowercase = true;
@@ -40,7 +45,11 @@ bool flex::baseformsAreLowercase = true;
 
 void base::print(int n)
     {
+#if STREAM
+    cout << setw(n) << "[" << m_baseform << "] " << refcnt << endl;
+#else
     printf("%*c%s] %d\n",n,'[',m_baseform,refcnt);
+#endif
     if(m_next)
         m_next->print(n);
     }
@@ -72,7 +81,11 @@ void node::removeAmbiguous(node *& prev)
 //------------------
 void node::print(int n)
     {
+#if STREAM
+    cout << setw(n) << "{" << m_tail << "}" << endl;
+#else
     printf("%*c%s}\n",n,'{',m_tail);
+#endif
     if(m_sub)
         m_sub->print(n+2);
     if(basef)
@@ -121,7 +134,11 @@ char * type::Baseform(char * invertedWord,base *& bf,size_t & ln)/* 20120709 int
 
 void type::print()
     {
+#if STREAM
+    cout << m_tp << endl;
+#else
     printf("%s\n",m_tp);
+#endif
     if(end)
         end->print(2);
     if(m_next)

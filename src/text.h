@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "defines.h"
 #if STREAM
 # include <iostream>
+# include <iomanip>
+#include <cstdio>
 # ifndef __BORLANDC__
 using namespace std;
 # endif
@@ -65,9 +67,6 @@ class text
         static int COUNT;
 #endif
     private:
-        /*
-        token * Token;
-        */
         virtual const char * convert(const char * s)
             {
             return s;
@@ -78,7 +77,6 @@ class text
         const Word ** tunsorted;
         unsigned long int * Lines;
         unsigned long int lineno;
-        //bool sorted;
         unsigned long int total;
         unsigned long int reducedtotal;
         field * fields;
@@ -90,59 +88,11 @@ class text
     protected:
         bool InputHasTags;
     private:
-/*
-        field * fields;
-        void AddField(field * fld);
-        field * translateFormat(char * Iformat,field *& wordfield,field *& tagfield);
-*/
     protected:
         void insert(const char * w);
         void insert(const char * w, const char * tag);
     private:
-/*
     public:
-        char * ch;
-    private:
-        char * startElement;
-        char * endElement;
-        char * startAttributeName;
-        char * endAttributeName;
-        char * startValue;
-        char * endValue;
-        const char * ancestor; // if not null, restrict lemmatisation to elements that are offspring of ancestor
-        const char * element; // if not null, analyse only element's attributes and/or PCDATA
-    public:
-        const char * wordAttribute; // if null, word is PCDATA
-    private:
-        const char * POSAttribute; // if null, POS is PCDATA
-        const char * lemmaAttribute; // if null, Lemma is PCDATA
-        const char * lemmaClassAttribute; // if null, lemma class is PCDATA
-        int wordAttributeLen;
-        int POSAttributeLen;
-        int lemmaAttributeLen;
-        int lemmaClassAttributeLen;
-        crumb * Crumbs;
-        bool ClosingTag;
-        bool WordPosComing;
-        bool POSPosComing;
-        bool LemmaPosComing;
-        bool LemmaClassPosComing;
-        char * alltext;
-*/
-    public:
-        /*
-        token * getCurrentToken();
-        void CallBackStartElementName();
-        void CallBackEndElementName();
-        void CallBackStartAttributeName();
-        void CallBackEndAttributeNameInserting();
-        void CallBackEndAttributeNameCounting();
-        void CallBackStartValue();
-        void CallBackEndValue();
-        void CallBackEndTag();
-        void CallBackEmptyTag();
-        void CallBackNoMoreAttributes();
-        */
         basefrm ** ppD;
         basefrm ** ppL;
         int cntD;
@@ -163,8 +113,6 @@ class text
 #if STREAM
         void Lemmatise
             (ostream * fpo
-            /*,FILE * fpnew
-            ,FILE * fpconflict*/
             ,const char * Sep
             ,tallyStruct * tally
             ,unsigned int SortOutput
@@ -174,14 +122,10 @@ class text
             ,bool baseformsAreLowercase
             ,int listLemmas
             ,bool mergeLemmas // Bart 20101102
-            );
-        text(/*istream * fpi,*/bool InputHasTags/*,char * Iformat*/,/*int keepPunctuation,*/bool nice,unsigned long int size/*,bool treatSlashAsAlternativeSeparator*/
             );
 #else
         void Lemmatise
             (FILE * fpo
-            /*,FILE * fpnew
-            ,FILE * fpconflict*/
             ,const char * Sep
             ,tallyStruct * tally
             ,unsigned int SortOutput
@@ -192,9 +136,8 @@ class text
             ,int listLemmas
             ,bool mergeLemmas // Bart 20101102
             );
-        text(/*FILE * fpi,*/bool InputHasTags/*,char * Iformat*/,/*int keepPunctuation,*/bool nice/*,unsigned long int size,bool treatSlashAsAlternativeSeparator*/
-            );
 #endif
+        text(bool InputHasTags,bool nice);
         virtual ~text();
         void createUnTaggedAlternatives(
 #ifndef CONSTSTRCHR

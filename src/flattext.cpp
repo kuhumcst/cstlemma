@@ -27,9 +27,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
+#if STREAM
+#include <iostream>
+#include <iomanip> 
+#include <cstdio>
+using namespace std;
+#endif
 
-static const char * errformat = "Unable to apply input format specification to this text.\nInput format:'%s'\nText:'%s...'\nField:%s\nLast:[%s]\n";
-
+static void printerr(const char * a, const char * b, const char *c, const char * d)
+    {
+#if STREAM
+    cout << "Unable to apply input format specification to this text.\nInput format:'" << a << "'\nText:'" << b << "...'\nField:" << c << "\nLast:[" << d << "]" << endl;
+#else
+    printf("Unable to apply input format specification to this text.\nInput format:'%s'\nText:'%s...'\nField:%s\nLast:[%s]\n",a,b,c,d);
+#endif
+    }
 
 static int sanityCheck(int slashFound,const char * buf)
     {
@@ -78,7 +90,6 @@ static bool spaces(int kar,FILE * fp, unsigned long & newlines,int & eof,int & p
                 if(kar == EOF)
 #endif
                     {
-                    //*p = '\0';
                     eof = true;
                     break;
                     }
@@ -127,7 +138,6 @@ static char * getword(FILE * fp,const char *& tag,bool InputHasTags,int keepPunc
         eof = false;
         return 0;
         }
-//    while(true)
     for(;;)
         {
         if(prevkar)
@@ -139,7 +149,7 @@ static char * getword(FILE * fp,const char *& tag,bool InputHasTags,int keepPunc
             {
 #if STREAM
             kar = fp->get();
-            if(fp->eof())
+            if(kar == EOF)
 #else
             kar = fgetc(fp);
             if(kar == EOF)
@@ -157,7 +167,6 @@ static char * getword(FILE * fp,const char *& tag,bool InputHasTags,int keepPunc
                 *p = '\0';        // the / is replaced by zero
                 p = buf2;         // p points at the start of the tag buffer
                 tag = buf2;
-//                while(true)
                 for(;;)
                     {
 #if STREAM
@@ -168,22 +177,12 @@ static char * getword(FILE * fp,const char *& tag,bool InputHasTags,int keepPunc
                     if(kar == EOF)
 #endif
                         {
-                        //*p = '\0';
                         eof = true;
                         break;
                         }
                     if(spaces(kar,fp,newlines,eof,prevkar))
                         {
-                        break; // 20120928
-                        /*
-                        if(p > buf2/ *Bart 20030225. Sometimes slash and tag are on different lines* /)
-                            {
-                            // *p = '\0';
-                            break;
-                            }
-                        else
-                            continue;
-                        */
+                        break;
                         }
                     if(kar == '/') // oops, word contains slash
                         {
@@ -198,8 +197,11 @@ static char * getword(FILE * fp,const char *& tag,bool InputHasTags,int keepPunc
                         {
                         if(p - buf2 == sizeof(buf2) - 1)
                             {
-                            //*p = '\0';
+#if STREAM
+                            cout << "BUFFER OVERFLOW A [" << buf2 << "]" << endl;
+#else
                             printf("BUFFER OVERFLOW A [%s]\n",buf2);
+#endif
                             break;
                             }
                         *p++ = (char)kar;
@@ -209,13 +211,13 @@ static char * getword(FILE * fp,const char *& tag,bool InputHasTags,int keepPunc
                 }
             }
         else if(  keepPunctuation != 1
-               && p > buf /*Bart 20030225 + 1*/
+               && p > buf 
                && ispunct(kar) 
 		       && kar != '-' /*gør-det-selv*/ 
 		       && kar != '\'' /*bli'r*/
 		       )
             {
-            if(keepPunctuation != 0) //if(keepPunctuation == 2)
+            if(keepPunctuation != 0)
                 punct = kar;
             break;
             }
@@ -223,11 +225,15 @@ static char * getword(FILE * fp,const char *& tag,bool InputHasTags,int keepPunc
             break;
         if(p - buf == sizeof(buf) - 1)
             {
+#if STREAM
+            cout << "BUFFER OVERFLOW B [" << buf << "]" << endl;;
+#else
             printf("BUFFER OVERFLOW B [%s]\n",buf);
+#endif
             break;// overflow?
             }
         if(kar == '/')
-            ++slashFound; // Bart 20030801.
+            ++slashFound;
         *p++ = (char)kar;
         }
     *p = '\0';
@@ -270,7 +276,7 @@ char * getwordI(FILE * fpin,const char *& tag,field * format,field * wordfield,f
         kars[0] = (char)lastkar;
         if(i >= sizeof(line) - 1)
             {
-            printf(errformat,globIformat,line,nextfield->isA(),line);
+            printerr(globIformat,line,nextfield->isA(),line);
             exit(0);
             }
         line[i++] = (char)lastkar;
@@ -292,7 +298,7 @@ char * getwordI(FILE * fpin,const char *& tag,field * format,field * wordfield,f
         kars[0] = kar == EOF ? '\0' : (char)kar;
         if(i >= sizeof(line) - 1)
             {
-            printf(errformat,globIformat,line,nextfield->isA(),line);
+            printerr(globIformat,line,nextfield->isA(),line);
             exit(0);
             }
         line[i] = kars[0];
@@ -307,17 +313,9 @@ char * getwordI(FILE * fpin,const char *& tag,field * format,field * wordfield,f
         else if(plastkar)
             lastkar = *plastkar;
         }
-    while(nextfield /*&& kar != EOF*/);
-    /*
-    if(kar == EOF)
-        {
-        tag = 0;
-        format->reset();
-        return 0;
-        }*/
+    while(nextfield);
     if(tagfield)
         tag = tagfield->getString();
-//    format->reset();
     return wordfield->getString();
     }
 
@@ -351,56 +349,24 @@ void flattext::printUnsorted(
 
 #if STREAM
 flattext::flattext(istream * fpi,bool a_InputHasTags,char * Iformat,int keepPunctuation,bool nice,
-           unsigned long int size,bool treatSlashAsAlternativesSeparator
-           /*
-           ,bool XML
-           ,const char * ancestor // if not null, restrict lemmatisation to elements that are offspring of ancestor
-           ,const char * element // if null, analyse all PCDATA that is text
-           ,const char * wordAttribute // if null, word is PCDATA
-           ,const char * POSAttribute // if null, POS is PCDATA
-           ,const char * lemmaAttribute // if null, Lemma is PCDATA
-           ,const char * lemmaClassAttribute // if null, lemma class is PCDATA
-           */
-           )
+           unsigned long int size,bool treatSlashAsAlternativesSeparator)
 #else
 flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctuation,bool nice,
-           unsigned long int size,bool treatSlashAsAlternativesSeparator
-           /*
-           ,bool XML
-           ,const char * ancestor // if not null, restrict lemmatisation to elements that are offspring of ancestor
-           ,const char * element // if null, analyse all PCDATA that is text
-           ,const char * wordAttribute // if null, word is PCDATA
-           ,const char * POSAttribute // if null, POS is PCDATA
-           ,const char * lemmaAttribute // if null, Lemma is PCDATA
-           ,const char * lemmaClassAttribute // if null, lemma class is PCDATA
-           */
-           )
+           unsigned long int size,bool treatSlashAsAlternativesSeparator)
 #endif
-           :text(/*fpi,*/a_InputHasTags/*,Iformat*/,/*keepPunctuation,*/nice/*,size,treatSlashAsAlternativesSeparator*/)
+           :text(a_InputHasTags,nice)
     {
 #ifdef COUNTOBJECTS
     ++COUNT;
 #endif
     fields = 0;
-    /*
-    reducedtotal = 0;
-    Root = 0;
-    basefrmarrD = 0;
-    basefrmarrL = 0;
-
-#ifndef CONSTSTRCHR
-    const 
-#endif
-        char * w;
-    total = 0;
-    */
     const char * Tag;
     field * wordfield = 0;
     field * tagfield = 0;
     field * format = 0;
     int slashFound = 0;
     if(nice)
-        printf("counting words\n");
+        LOG1LINE("counting words");
     lineno = 0;
     unsigned long newlines;
 #ifndef CONSTSTRCHR
@@ -413,7 +379,11 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
             format = translateFormat(Iformat,wordfield,tagfield);
             if(!wordfield)
                 {
+#if STREAM
+                cout << "Input format " << Iformat << " must specify '$w'." << endl;
+#else
                 printf("Input format %s must specify '$w'.\n",Iformat);
+#endif
                 exit(0);
                 }
             while(total < size && (w = getwordI(fpi,Tag,format,wordfield,tagfield,newlines)) != 0)
@@ -445,7 +415,11 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
             }
         if(nice)
             {
+#if STREAM
+            cout << "... " << total << " words counted in " << lineno << " lines" << endl;
+#else
             printf("... %lu words counted in %lu lines\n",total,lineno);
+#endif
             }
 #if STREAM
         fpi->clear();
@@ -454,23 +428,19 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
         rewind(fpi);
 #endif
         if(nice)
-            printf("allocating array of pointers to words\n");
+            LOG1LINE("allocating array of pointers to words");
         tunsorted =  new const Word * [total];
-//        Token = NULL;
         if(nice)
-            printf("allocating array of line offsets\n");
+            LOG1LINE("allocating array of line offsets");
         Lines =  new unsigned long int [lineno+1];
         for(int L = lineno+1;--L >= 0;)
             Lines[L] = 0;
         if(nice)
-            printf("...allocated array\n");
-        /** /
-        FILE * ft = fopen("wordlist.txt","wb");
-        / **/
+            LOG1LINE("...allocated array");
 
         total = 0;
         if(nice)
-            printf("reading words\n");
+            LOG1LINE("reading words");
         lineno = 0;
         if(InputHasTags)
             {
@@ -498,10 +468,17 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
                         {
                         if(!Tag)
                             {
+#if STREAM
+                            if(total > 1 && lineno > 1)
+                                cout << "Tag missing in word #" << total << " (\"" << w << "\") (line #" << lineno << ")." << endl;
+                            else
+                                cout << "Tag missing in word #" << total << " (\"" << w << "\") (line #" << lineno << "). (Is the input text tagged?)" << endl;
+#else
                             if(total > 1 && lineno > 1)
                                 printf("Tag missing in word #%lu (\"%s\") (line #%lu).\n",total,w,lineno);
                             else
                                 printf("Tag missing in word #%lu (\"%s\") (line #%lu). (Is the input text tagged?)\n",total,w,lineno);
+#endif
                             exit(0);
                             }
                         if(slashFound && treatSlashAsAlternativesSeparator)
@@ -547,20 +524,6 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
 #endif
         }
     makeList();
-    /*
-    Root = Hash->convertToList(N);
-    delete Hash;
-    */
-    //        qsort(Root,N,sizeof(Word *),cmpUntagged);
     if(nice)
-        printf("...read words from flat text\n");
-    /** /
-    for(unsigned int g = 0;g < total;++g)
-        {
-        if(tunsorted[g] && tunsorted[g]->m_word)
-            fprintf(ft,"%s\n",tunsorted[g]->m_word);
-        }
-    fclose(ft);
-    / **/
-//    sorted = false;
+        LOG1LINE("...read words from flat text");
     }

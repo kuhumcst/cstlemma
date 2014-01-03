@@ -28,6 +28,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string.h>
 #include <ctype.h>
 
+#if STREAM
+#include <iostream>
+#include <iomanip> 
+using namespace std;
+#endif
+
+
 #ifdef COUNTOBJECTS
 int OutputClass::COUNT = 0;
 #endif
@@ -39,7 +46,7 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
     int locloctestType = 0;
     if(!format)
         {
-        printf("format string missing.\n");
+        LOG1LINE("format string missing.");
         exit(0);
 //        return NULL;
         }
@@ -78,8 +85,13 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
         function * tmp = gfnc(*f,SortInput,loctestType);
         if(!tmp)
             {
+#if STREAM
+            cout << "unknown field " << *f << " in format \"" << allFormat << "\"" << endl;
+            cout << "                            " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
+#else
             printf("unknown field %c in format \"%s\"\n",*f,allFormat);
             printf("                            %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
+#endif
             exit(0);
 //            return NULL;
             }
@@ -99,8 +111,13 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
         newf = Format(newf,gfnc,tree.addChild(),allFormat,SortInput,locloctestType);
         if(!newf || *newf != ']')
             {
+#if STREAM
+            cout << "No matching ] in format \"" << allFormat << "\"" << endl;
+            cout <<"                          " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
+#else
             printf("No matching ] in format \"%s\"\n",allFormat);
             printf("                          %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
+#endif
             exit(0);
             }
         f = newf+1;
@@ -110,8 +127,13 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
         {
         if(testType == 0)
             {
+#if STREAM
+            cout << "No countable expression found in format \"" << allFormat << "\"" << endl;
+            cout << "                                          " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
+#else
             printf("No countable expression found in format \"%s\"\n",allFormat);
             printf("                                          %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
+#endif
             exit(0);
             }
         return f;
@@ -130,10 +152,14 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
         ++f;
         if(!isdigit(*f))
             {
+#if STREAM
+            cout << "format \"" << allFormat << "\" must have one or more digits after " << *--f << "." << endl;
+            cout << "         " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
+#else
             printf("format \"%s\" must have one or more digits after %c.\n",allFormat,*--f);
             printf("         %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
+#endif
             exit(0);
-//            return NULL;
             }
         else
             {
@@ -202,10 +228,14 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
 
     if(condition > -1 && !(loctestType & NUMBERTEST))
         {
+#if STREAM
+        cout << "format \"" << allFormat << "\" has illegal test." << endl;
+        cout << "         " << setw((int)(strlen(allFormat) - strlen(f) - condition)) << "^" << endl;
+#else
         printf("format \"%s\" has illegal test.\n",allFormat);
         printf("         %*c\n",(int)(strlen(allFormat) - strlen(f) - condition),'^');
+#endif
         exit(0);
-//        return NULL;
         }
 
     testType |= loctestType;

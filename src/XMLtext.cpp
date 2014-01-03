@@ -39,17 +39,7 @@ Words can also be found in elements.
 #include <string.h>
 #include <assert.h>
 #include <stdlib.h>
-/*
-get$("text-context.xml",STR):?TXT
-&:?U
-&whl'(@(!TXT:?A "<w lemma=\"" ? (\" ?:?TXT))&!U !A "<w lemma=\"":?U)
-&put$(str$!U,"text-context.xml",NEW);
 
-*/
-// -Xaw -Xllemma -Xpana -I"$w\s" -L -e1 -f flexrules.utf8 -t -p -l- -c"$B" -B"$w" -i text-context.xml -o text-context.lemma.xml
-
-// -Xap -Xllemma -Xpana -Xwword -I"$w\s" -L -eU -f res.da\flexrules.tag.utf8 -t -p -l- -c"$B" -B"$w" -i lemmaanaword.xml -o lemmaanaword.lemma.xml
-// -Xap -Xllemma -Xpana         -I"$w\s" -L -eU -f res.da\flexrules.tag.utf8 -t -p -l- -c"$B" -B"$w" -i lemmaana.xml -o lemmaana.lemma.xml
 static void printXML(
 #if STREAM
                      ostream * fpo
@@ -177,7 +167,11 @@ class crumb
             {
             if(next)
                 next->print();
+#if STREAM
+            cout << "->" << e;
+#else
             printf("->%s",e);
+#endif
             }
         bool is(const char * elm)
             {
@@ -483,31 +477,11 @@ void CallBackEmptyTag(void * arg)
     ((XMLtext *)arg)->CallBackEmptyTag();
     }
 
-//static int wordReader::Put(wordReader & WordReader,char * (wordReader::*fnc)(int kar),int kar);
-
-//static int (*xput)(wordReader & WordReader,char * (wordReader::*fnc)(int kar),int kar) = Put;
-
-
-
-
-
-
-
-
-
 #if STREAM
 XMLtext::XMLtext(istream * fpi,optionStruct & Option)
 #else
 XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
 #endif
-/*
-            ancestor // if not null, restrict lemmatisation to elements that are offspring of ancestor
-            element // if null, analyse all PCDATA that is text
-            wordAttribute // if null, word is PCDATA
-            POSAttribute // if null, POS is PCDATA
-            lemmaAttribute // if null, Lemma is PCDATA
-            lemmaClassAttribute // if null, lemma class is PCDATA
-*/
            :text(Option.InputHasTags,Option.nice)
            ,Token(NULL)
            ,ancestor(Option.ancestor)
@@ -538,7 +512,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
     field * tagfield = 0;
     field * format = 0;
     if(Option.nice)
-        printf("counting words\n");
+        LOG1LINE("counting words");
     lineno = 0;
     
     if(Option.XML && Option.Iformat)
@@ -555,7 +529,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
             alltext = new char[filesize+1];
             char * p = alltext;
             while((kar = fpi->get()) && !fpi->eof())
-                *p++ = kar;
+                *p++ = (char)kar;
             *p = '\0';
             fpi->clear();
             fpi->seekg(0, ios::beg);
@@ -623,7 +597,11 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
             format = translateFormat(Option.Iformat,wordfield,tagfield);
             if(!wordfield)
                 {
+#if STREAM
+                cerr << "Input format " << Option.Iformat << " must specify '$w'." << endl;
+#else
                 printf("Input format %s must specify '$w'.\n",Option.Iformat);
+#endif
                 exit(0);
                 }
             }
@@ -694,22 +672,26 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
                 lineno = WordReader.getLineno();
                 if(Option.nice)
                     {
+#if STREAM
+                    cout << "... " << total << " words counted in " << lineno << " lines" << endl;
+#else
                     printf("... %lu words counted in %lu lines\n",total,lineno);
-                    printf("allocating array of pointers to words\n");
+#endif
+                    LOG1LINE("allocating array of pointers to words");
                     }
                 tunsorted =  new const Word * [total];
                 Token = new token[total + 1]; // 1 extra for the epilogue after the last token
                 if(Option.nice)
-                    printf("allocating array of line offsets\n");
+                    LOG1LINE("allocating array of line offsets");
                 Lines =  new unsigned long int [lineno+1];
                 for(int L = lineno+1;--L >= 0;)
                     Lines[L] = 0;
                 if(Option.nice)
-                    printf("...allocated array\n");
+                    LOG1LINE("...allocated array");
 
                 total = 0;
                 if(Option.nice)
-                    printf("reading words\n");
+                    LOG1LINE("reading words");
                 lineno = 0;
                 ch = alltext;
                 curr_pos = alltext; // 20091106
@@ -728,6 +710,6 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
         }
     makeList();
     if(Option.nice)
-        printf("...read words from XML file\n");
+        LOG1LINE("...read words from XML file");
     }
 

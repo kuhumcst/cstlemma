@@ -33,6 +33,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <ctype.h>
 #include <assert.h>
 
+#if STREAM
+#include <iostream>
+using namespace std;
+#endif
+
 #ifdef COUNTOBJECTS
 int optionStruct::COUNT = 0;
 #endif
@@ -52,10 +57,6 @@ const char * optionStruct::Default_B_format = optionStruct::Default_b_format;
 #endif
 
 static char opts[] = "?@:A:b:B:c:C:d:De:f:FH:hi:I:k:l:Lm:n:N:o:p:q:R:s:t:u:U:v:W:x:X:y:z:" /* GNU: */ "wr";
-/*
-static char ** poptions = NULL;
-static char * options = NULL;
-*/
 static char *** Ppoptions = NULL;
 static char ** Poptions = NULL;
 static int optionSets = 0;
@@ -233,12 +234,15 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             break;
         case 'h':
         case '?':
-            printf("usage:\n");
-            printf("============================\n");
+            LOG1LINE("usage:\n============================");
 #if defined PROGMAKEDICT
-            printf("    Create binary dictionary\n");
+            LOG1LINE("    Create binary dictionary");
+#if STREAM
+            cout << progname << " -D \\" << endl;
+#else
             printf("%s -D \\\n",progname);
-            printf("         -c<format> [-N<frequency file> -n<format>] [-y[-]] \\\n"
+#endif
+            LOG1LINE("         -c<format> [-N<frequency file> -n<format>] [-y[-]] \\\n"
                    "        [-i<lemmafile>] [-o<binarydictionary>]\n"
                    "    -c  column format of dictionary (tab separated), e.g. -cBFT, which means:\n"
                    "        1st column B(ase form), 2nd column F(ull form), 3rd column T(ype)\n"
@@ -248,192 +252,206 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "        3rd column F(ull form), 4th column T(ype)\n"
                    "    -y  test output\n    -y- release output (default)\n"
                    "    -k  collapse homographs (remove \",n\" endings)(default)\n"
-                   "    -k- do not collapse homographs (keep \",n\" endings)\n");
-//                printf("--More--");getchar();
-            printf("===============================\n");
+                   "    -k- do not collapse homographs (keep \",n\" endings)\n"
+                   "===============================");
 #endif
 #if defined PROGMAKESUFFIXFLEX
-            printf("    Create or add flex patterns\n");
+            LOG1LINE("    Create or add flex patterns");
+#if STREAM
+            cout << progname << " -F \\" << endl;
+#else
             printf("%s -F \\\n",progname);
-            printf("         -c<format> [-y[-]] [-i<lemmafile>] \\\n"
+#endif
+            LOG1LINE("         -c<format> [-y[-]] [-i<lemmafile>] \\\n"
                    "        [-f<old flexpatterns>] [-o<new flexpatterns>]\n"
                    "    -c  column format, e.g. -cBFT, which means:\n"
                    "        1st column B(aseform), 2nd column F(ullform), 3rd column T(ype)\n"
                    "        For lemmatising untagged text, suppress lexical type information by\n"
                    "        specifying '?' for the column containing the type.\n"
-                   "    -y  test output\n    -y- release output (default)\n");
-            printf("    -R- Do not append refcount to base form (default)\n");// Bart 20050905
-            printf("    -R  Append refcount to base form (format: [<base form>#<refcount>])\n");// Bart 20050905
-            printf("    -C- Include all rules in output (default)\n");// Bart 20050905
-            printf("    -C<n> Do not include rules with refcount <= <n>\n");// Bart 20050905
-//            printf("--More--");getchar();
-            printf("=============\n");
+                   "    -y  test output\n    -y- release output (default)\n"
+                   "    -R- Do not append refcount to base form (default)\n"
+                   "    -R  Append refcount to base form (format: [<base form>#<refcount>])\n"
+                   "    -C- Include all rules in output (default)\n"
+                   "    -C<n> Do not include rules with refcount <= <n>\n"
+                   "=============");
 #endif
 #if defined PROGLEMMATISE
-            printf("    Lemmatise\n");
-//                printf("%s [-L] -c<format> -b<format> -B<format> [-s[<sep>]] [-u[-]] -d<binarydictionary> -f<flexpatterns> [-z<type conversion table>] [-i<input text>] [-o<output text>] [-m<conflicts>] [-n<newlemmas>] [-x<Lexical type translation table>]\n",argv[0]);
+            LOG1LINE("    Lemmatise\n");
+#if STREAM
+            cout << progname << " [-L] \\" << endl;
+#else
             printf("%s [-L] \\\n",progname);
-            printf("         -f<flex patterns> [-d<binary dictionary>] [-u[-]] [-v[-]] \\\n"
+#endif
+            LOG1LINE("         -f<flex patterns> [-d<binary dictionary>] [-u[-]] [-v[-]] \\\n"
                    "         [-I<input format>] [-i<input text>] [-o<output text>] \\\n"
                    "         [-c<format>] [-b<format>] [-B<format>] [-W<format>] [-s[<sep>]] \\\n"
                    "         [-x<Lexical type translation table>] [-v<tag friends file>] \\\n"
-                   "         [-z<type conversion table>] [-@<option file>]\n");
-            printf("    -i<input text>\tIf -t- defined: any flat text. Otherwise: words must be\n"
-                   "        followed by tags, separated by '/'. Default: standard input.\n");  
-            printf("    -I<format>\tInput format (if not word/tag (-t) or word (-t-)).\n" 
+                   "         [-z<type conversion table>] [-@<option file>]\n"
+                   "    -i<input text>\tIf -t- defined: any flat text. Otherwise: words must be\n");
+#if STREAM
+            LOG1LINE("        followed by tags, separated by '/'. Default: standard input, one line at a time.\n");
+#else
+            LOG1LINE("        followed by tags, separated by '/'. To use standard input, recompile\n"
+                   "        with #define STREAM 1 in defines.h.\n");
+#endif
+            LOG1LINE("    -I<format>\tInput format (if not word/tag (-t) or word (-t-)).\n" 
                    "        $w word to be lemmatised\n" 
                    "        $t tag\n" 
                    "        $d dummy\n" 
                    "        \\t tab\n" 
                    "        \\n new line\n" 
                    "        \\s white space\n" 
-                   "        \\S all except white space\n"); 
-            printf("    -o<output text>\tOutput format dependent on -b, -B, -c and -W arguments.\n"
-                   "        Default output: standard output\n");  
-            printf("    -d<binarydictionary>\tDictionary as produced with the -D option set.\n"  
+                   "        \\S all except white space\n"
+                   "    -o<output text>\tOutput format dependent on -b, -B, -c and -W arguments.\n"
+                   "        Default output: standard output\n"
+                   "    -d<binarydictionary>\tDictionary as produced with the -D option set.\n"  
                    "        If no dictionary is specified, only the flex patterns are used.\n"  
-                   "        Without dictionary, wrong tags in the input can not be corrected.\n");  
-            printf("    -f<flexpatterns>\tFile with flex patterns. (see -F). Best results for\n"
+                   "        Without dictionary, wrong tags in the input can not be corrected.\n"
+                   "    -f<flexpatterns>\tFile with flex patterns. (see -F). Best results for\n"
                    "        untagged input are obtained if the rules are made without lexical type\n"
-                   "        information. See -c option above.\n");  
-            printf("    -b<format string>\tdefault:" commandlineQuote "%s" commandlineQuote "\n",Default_b_format);  
-            printf("        Output format for data pertaining to the base form, according to the\n"
+                   "        information. See -c option above.");  
+#if STREAM
+            cout << "    -b<format string>\tdefault:" commandlineQuote << Default_b_format << commandlineQuote << endl;  
+#else
+            printf( "    -b<format string>\tdefault:" commandlineQuote "%s" commandlineQuote "\n",Default_b_format);  
+#endif
+            LOG1LINE("        Output format for data pertaining to the base form, according to the\n"
                    "        dictionary:\n"
                    "        $f sum of frequencies of the words $W having the base form $w\n"
-                   "           (lemmafrequency).\n");
-            /*
-            printf("        $f base form type or token frequency.\n");
-            printf("           (The frequency of the base form type is given if you have\n");
-            printf("            (a) specified $f in the -c<format> argument, or\n");
-            printf("            (b) specified a -W<format> argument, or\n");
-            printf("            (c) specified a -H0 or -H1 argument.\n");
-            printf("            Otherwise, base form token frequency is given.)\n");
-            */
+                   "           (lemmafrequency).");
 #if FREQ24
-            printf("        $n frequency of the full form $w/$t in \"standard\" corpus.\n");
+            LOG1LINE("        $n frequency of the full form $w/$t in \"standard\" corpus.");
 #endif
-//                printf("        $p probability of this lexical type (%%) = 100x$n/sum($n).\n");
-            printf("        $t lexical type\n");
-            printf("        $w base form\n");
-            printf("        $W full form(s)\n");
-            printf("        \\$ dollar\n");
-            printf("        \\[ [\n");
-            printf("        \\] ]\n");
-            printf("        Example: -b" commandlineQuote "$f $w/$t" commandlineQuote "\n");
+            LOG1LINE("        $t lexical type\n"
+                   "        $w base form\n"
+                   "        $W full form(s)\n"
+                   "        \\$ dollar\n"
+                   "        \\[ [\n"
+                   "        \\] ]\n"
+                   "        Example: -b" commandlineQuote "$f $w/$t" commandlineQuote);
+#if STREAM
+            cout <<  "    -B<format string>\tdefault:" commandlineQuote << Default_B_format << commandlineQuote << endl;  
+#else
             printf("    -B<format string>\tdefault:" commandlineQuote "%s" commandlineQuote "\n",Default_B_format);  
-            printf("        Output format for data pertaining to the base form, as predicted by\n");
-            printf("        flex pattern rules. See -b\n");
-//            printf("--More--");getchar();
-            printf("    -W<format string>\tdefault: not present.\n");  
-            printf("        Output format:\n");
-            printf("        $w full form\n");
-            printf("        $t lexical type(s) according to dictionary\n");
-            printf("        $f full form type frequency\n");
-            printf("        $i info:  -    full form not in dictionary\n");
-            printf("                  +    full form in dictionary, but other type\n");
-            printf("               (blank) full form in dictionary\n");
-            printf("        \\t tab\n");
-            printf("        $X?, [X]? Do not output X. (X can be tested, though).\n");
-            printf("        [X]+  Output X only if X occurs at least once. (X is an expression\n");
-            printf("              containing $b or $B)\n");
-            printf("        [X]>n Output X only if X occurs more than n times.\n");
-            printf("        [X]n  Output X only if X occurs exactly n times.\n");
-            printf("        [X]<n Output X only if X occurs less than n times.\n");
-            printf("        [X]   Output X if all nested conditions are met, or if X occurs\n");
-            printf("              at least once. ([X] itself is always met!)\n");
-            printf("        Example: -b" commandlineQuote "$w ($W)[>1[$W?]>1]" commandlineQuote "\n");
-            printf("                 -W" commandlineQuote "$w\\n" commandlineQuote "\n");
-            printf("                (Output lemma (full form|full form..)>1\n"
-                   "                 if different words have same base form)\n");
-//            printf("--More--");getchar();
+#endif
+            LOG1LINE("        Output format for data pertaining to the base form, as predicted by\n"
+                   "        flex pattern rules. See -b\n"
+                   "    -W<format string>\tdefault: not present.\n"
+                   "        Output format:\n"
+                   "        $w full form\n"
+                   "        $t lexical type(s) according to dictionary\n"
+                   "        $f full form type frequency\n"
+                   "        $i info:  -    full form not in dictionary\n"
+                   "                  +    full form in dictionary, but other type\n"
+                   "               (blank) full form in dictionary\n"
+                   "        \\t tab\n"
+                   "        $X?, [X]? Do not output X. (X can be tested, though).\n"
+                   "        [X]+  Output X only if X occurs at least once. (X is an expression\n"
+                   "              containing $b or $B)\n"
+                   "        [X]>n Output X only if X occurs more than n times.\n"
+                   "        [X]n  Output X only if X occurs exactly n times.\n"
+                   "        [X]<n Output X only if X occurs less than n times.\n"
+                   "        [X]   Output X if all nested conditions are met, or if X occurs\n"
+                   "              at least once. ([X] itself is always met!)\n"
+                   "        Example: -b" commandlineQuote "$w ($W)[>1[$W?]>1]" commandlineQuote "\n"
+                   "                 -W" commandlineQuote "$w\\n" commandlineQuote "\n"
+                   "                (Output lemma (full form|full form..)>1\n"
+                   "                 if different words have same base form)");
+#if STREAM
+            cout <<  "    -c<format string>\tdefault:\t" commandlineQuote << DefaultCFormat << commandlineQuote << endl;
+#else
             printf("    -c<format string>\tdefault:\t" commandlineQuote "%s" commandlineQuote "\n",DefaultCFormat);// word/lemma/tag lemma: if dictionary gives 1 solution, take dictionary, otherwise rules
-            printf("        Output format:\n");
-            printf("        $w full form\n");
-            printf("        $b base form(s) according to dictionary.\n"
+#endif
+            LOG1LINE("        Output format:\n"
+                   "        $w full form\n"
+                   "        $b base form(s) according to dictionary.\n"
                    "           (You also need to specify -b<format>)\n"
                    "           (If the full form is found in the dictionary and tag=lexical type,\n"
                    "            then only one base form is output.\n"
-                   "            Otherwise all base forms are output)\n");
-            printf("        $B base form(s) according to flex pattern rules\n"
+                   "            Otherwise all base forms are output)\n"
+                   "        $B base form(s) according to flex pattern rules\n"
                    "           (You also need to specify -B<format>)\n"
                    "           (only if full form not in dictionary, or in dictionary,\n"
-                   "            but with other lexical type.)\n");
-            printf("        $s word separator: new line character when the current word is the last\n"
-                   "           word before a line break, blank otherwise\n");
-            printf("        $t lexical type(s) according to dictionary\n");
-            printf("        $f full form frequency\n");
-            printf("        $i info: indicates - full form not in dictionary\n");
-            printf("                           + full form in dictionary, but other type\n");
-            printf("                           (blank) full form in dictionary\n");
-            printf("        \\t tab\n");
-            printf("        $X?, [X]? Do not output X. (X can be tested, though).\n");
-            printf("        $b and $B are variables: they can occur any number of times,\n");
-            printf("        including zero. This number can be tested in conditions:\n");
-            printf("        $bn   Output $b only if $b occurs exactly n-times (n >= 0).\n");
-            printf("        $Bn   Output $B only if $B occurs exactly n-times (n >= 0).\n");
-            printf("        [X]+  Output X only if X occurs at least once. (X is an expression\n");
-            printf("              containing $b or $B)\n");
-            printf("        [X]>n Output X only if X occurs more than n times.\n");
-            printf("        [X]n  Output X only if X occurs exactly n times.\n");
-            printf("        [X]<n Output X only if X occurs less than n times.\n");
-            printf("        [X]   Output X if all nested conditions are met, or if X occurs\n");
-            printf("              at least once. ([X] itself is always met!)\n");
-            printf("        Example: -c" commandlineQuote "[+$b?]>0[-$b0]$w\\n" commandlineQuote "\n");
-            printf("                 -b" commandlineQuote "$w\t/$t" commandlineQuote "\n");
-            printf("                (Output +lemma if the word is found in the dictionary,\n"
-                   "                 otherwise -lemma)\n");
-//            printf("--More--");getchar();
-            printf("    -l  force lemma to all-lowercase (default)\n");
-            printf("    -l- make case of lemma similar to full form's case\n");
-            printf("    -p  keep punctuation (default)\n");
-            printf("    -p- ignore punctuation (only together with -t- and no -W format)\n");
-            printf("    -p+ treat punctuation as tokens (only together with -t- and no -W format)\n");
-            printf("    -q  sort output\n");
-            printf("    -q- do not sort output (default)\n");
-            printf("    -q# (equivalents:-qn -qN -qf -qF)sort output by frequency\n");
-            printf("    -ql (equivalents:-qL -qw -qW)sort output by word (if -c) or lemma (if -W)\n");
-            printf("    -qp (equivalents:-qP -qt -qT)sort output by POS tag\n");
-            printf("          Combinations are allowed: -qwft means sort by word, by frequency and finally by POS tag.\n");
-            printf("    -s<sep> multiple base forms (-b -B) are <sep>-separated. Example: -s" commandlineQuote " | " commandlineQuote "\n");
+                   "            but with other lexical type.)\n"
+                   "        $s word separator: new line character when the current word is the last\n"
+                   "           word before a line break, blank otherwise\n"
+                   "        $t lexical type(s) according to dictionary\n"
+                   "        $f full form frequency\n"
+                   "        $i info: indicates - full form not in dictionary\n"
+                   "                           + full form in dictionary, but other type\n"
+                   "                           (blank) full form in dictionary\n"
+                   "        \\t tab\n"
+                   "        $X?, [X]? Do not output X. (X can be tested, though).\n"
+                   "        $b and $B are variables: they can occur any number of times,\n"
+                   "        including zero. This number can be tested in conditions:\n"
+                   "        $bn   Output $b only if $b occurs exactly n-times (n >= 0).\n"
+                   "        $Bn   Output $B only if $B occurs exactly n-times (n >= 0).\n"
+                   "        [X]+  Output X only if X occurs at least once. (X is an expression\n"
+                   "              containing $b or $B)\n"
+                   "        [X]>n Output X only if X occurs more than n times.\n"
+                   "        [X]n  Output X only if X occurs exactly n times.\n"
+                   "        [X]<n Output X only if X occurs less than n times.\n"
+                   "        [X]   Output X if all nested conditions are met, or if X occurs\n"
+                   "              at least once. ([X] itself is always met!)\n"
+                   "        Example: -c" commandlineQuote "[+$b?]>0[-$b0]$w\\n" commandlineQuote "\n"
+                   "                 -b" commandlineQuote "$w\t/$t" commandlineQuote "\n"
+                   "                (Output +lemma if the word is found in the dictionary,\n"
+                   "                 otherwise -lemma)\n"
+                   "    -l  force lemma to all-lowercase (default)\n"
+                   "    -l- make case of lemma similar to full form's case\n"
+                   "    -p  keep punctuation (default)\n"
+                   "    -p- ignore punctuation (only together with -t- and no -W format)\n"
+                   "    -p+ treat punctuation as tokens (only together with -t- and no -W format)\n"
+                   "    -q  sort output\n"
+                   "    -q- do not sort output (default)\n"
+                   "    -q# (equivalents:-qn -qN -qf -qF)sort output by frequency\n"
+                   "    -ql (equivalents:-qL -qw -qW)sort output by word (if -c) or lemma (if -W)\n"
+                   "    -qp (equivalents:-qP -qt -qT)sort output by POS tag\n"
+                   "          Combinations are allowed: -qwft means sort by word, by frequency and finally by POS tag.\n"
+                   "    -s<sep> multiple base forms (-b -B) are <sep>-separated. Example: -s" commandlineQuote " | " commandlineQuote);
+#if STREAM
+            cout << "    -s  multiple base forms (-b -B) are " commandlineQuote << DefaultSep << commandlineQuote "-separated (default)" << endl;
+#else
             printf("    -s  multiple base forms (-b -B) are " commandlineQuote "%s" commandlineQuote "-separated (default)\n",DefaultSep);
-            printf("    -t  input text is tagged (default)\n    -t- input text is not tagged\n");
-            printf("    -U  enforce unique flex rules (default)\n");
-            printf("    -U- allow ambiguous flex rules\n");
-            printf("    -u  enforce unique dictionary look-up (default)\n");
-            printf("    -u- allow ambiguous dictionary look-up\n");
-            printf("    -Hn n = 0: use lemma frequencies for disambiguation (default)\n");
-            printf("        n = 1: use lemma frequencies for disambiguation,\n");
-            printf("               show candidates for pruning between << and >>\n");
-            printf("        n = 2: do not use lemma frequencies for disambiguation.\n");
-            printf("    -v<tag friends file>: Use this to coerce the nearest fit between input\n"
+#endif
+            LOG1LINE("    -t  input text is tagged (default)\n    -t- input text is not tagged\n"
+                   "    -U  enforce unique flex rules (default)\n"
+                   "    -U- allow ambiguous flex rules\n"
+                   "    -u  enforce unique dictionary look-up (default)\n"
+                   "    -u- allow ambiguous dictionary look-up\n"
+                   "    -Hn n = 0: use lemma frequencies for disambiguation (default)\n"
+                   "        n = 1: use lemma frequencies for disambiguation,\n"
+                   "               show candidates for pruning between << and >>\n"
+                   "        n = 2: do not use lemma frequencies for disambiguation.\n"
+                   "    -v<tag friends file>: Use this to coerce the nearest fit between input\n"
                    "        tag and the dictionary's lexical types if the dictionary has more than\n"
                    "        one readings of the input word and none of these has a lexical type\n"
                    "        that exactly agrees with the input tag. Format:\n"
                    "             {<dict type> {<space> <tag>}* <newline>}*\n"
                    "        The more to the left the tag is, the better the agreement with the\n"
-                   "        dictionary'e lexical type\n");
-            printf("    -x<Lexical type translation table>: Use this to handle tagged texts with\n"
+                   "        dictionary'e lexical type\n"
+                   "    -x<Lexical type translation table>: Use this to handle tagged texts with\n"
                    "        tags that do not occur in the dictionary. Format:\n"
-                   "             {<dict type> {<space> <tag>}* <newline>}*\n");
-            printf("    -z<type conversion table>: Use this to change the meaning of $t in -b and\n"
+                   "             {<dict type> {<space> <tag>}* <newline>}*\n"
+                   "    -z<type conversion table>: Use this to change the meaning of $t in -b and\n"
                    "        -B formats. Without conversion table, $t is the lexical type of the\n"
                    "        full form. With conversion table, $t is the lexical type of the base\n"
                    "        form, as defined by the table. Format:\n"
-                   "             {<full form type> <space> <base form type> <newline>}*\n"); // Bart 20090203: wrongly stated <base form type> <space> <full form type>
-            printf("    -m<size>: Max. number of words in input. Default: 0 (meaning: unlimited)\n");
-            printf("    -A  Treat / as separator between alternative words.\n"); // Bart 20030108
-            printf("    -A- Do not treat / as separator between alternative words (default)\n");// Bart 20030108
-            printf("    -e<n> ISO8859 Character encoding. 'n' is one of 1,2,7 and 9 (ISO8859-1,2, etc).\n");// Bart 20080219
-            printf("    -eU Unicode (UTF8) input.\n");// Bart 20081106
-            printf("    -e  Don't use case conversion.\n");// Bart 20080219
-            printf("    -X  XML input. Leave XML elements unchanged.\n");// Bart 20081219
-            printf("    The next options do not allow space between option letters and argument!\n");// Bart 20090202
-            printf("    -Xa<ancestor>  Only analyse elements with specified ancestor. e.g -Xabody\n");// Bart 20090202
-            printf("    -Xe<element>  Only analyse specified element. e.g -Xew\n");// Bart 20090202, example corrected 20090826
-            printf("    -Xw<word>  Words are to be found in attribute. e.g -Xwword\n");// Bart 20090202
-            printf("    -Xp<pos>  Words' POS-tags are to be found in attribute. e.g -Xppos\n");// Bart 20090202
-            printf("    -Xl<lemma>  Destination of lemma is the specified attribute. e.g -Xllemma\n");// Bart 20090202
-            printf("    -Xc<lemmaclass>  Destination of lemma class is the specified attribute. e.g -Xllemmaclass\n");// Bart 20090202
+                   "             {<full form type> <space> <base form type> <newline>}*\n"
+                   "    -m<size>: Max. number of words in input. Default: 0 (meaning: unlimited)\n"
+                   "    -A  Treat / as separator between alternative words.\n"
+                   "    -A- Do not treat / as separator between alternative words (default)\n"
+                   "    -e<n> ISO8859 Character encoding. 'n' is one of 1,2,7 and 9 (ISO8859-1,2, etc).\n"
+                   "    -eU Unicode (UTF8) input.\n"
+                   "    -e  Don't use case conversion.\n"
+                   "    -X  XML input. Leave XML elements unchanged.\n"
+                   "    The next options do not allow space between option letters and argument!\n"
+                   "    -Xa<ancestor>  Only analyse elements with specified ancestor. e.g -Xabody\n"
+                   "    -Xe<element>  Only analyse specified element. e.g -Xew\n"
+                   "    -Xw<word>  Words are to be found in attribute. e.g -Xwword\n"
+                   "    -Xp<pos>  Words' POS-tags are to be found in attribute. e.g -Xppos\n"
+                   "    -Xl<lemma>  Destination of lemma is the specified attribute. e.g -Xllemma\n"
+                   "    -Xc<lemmaclass>  Destination of lemma class is the specified attribute. e.g -Xllemmaclass");
 #endif
             return Leave;
 #if defined PROGLEMMATISE
@@ -443,13 +461,17 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                 UseLemmaFreqForDisambiguation = *locoptarg - '0';
                 if(UseLemmaFreqForDisambiguation < 0 || UseLemmaFreqForDisambiguation > 2)
                     {
+#if STREAM
+                    cout << "-H option: specify -H0, -H1 or -H2 (found -H" << locoptarg << ")" << endl;
+#else
                     printf("-H option: specify -H0, -H1 or -H2 (found -H%s)\n",locoptarg);
+#endif
                     return Error;
                     }
                 }
             else
                 {   
-                printf("-H option: specify -H0, -H1 or -H2\n");
+                LOG1LINE("-H option: specify -H0, -H1 or -H2");
                 return Error;
                 }
             break;
@@ -473,15 +495,19 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             if(locoptarg)
                 {
                 size = strtoul(locoptarg,NULL,10);
-                printf("Max. number of words in input: ");
+                LOGANDFLUSH("Max. number of words in input: ");
                 if(size == 0)
                     {
                     size = ULONG_MAX;
-                    printf("Unlimited\n");
+                    LOG1LINE("Unlimited");
                     }
                 else
                     {
+#if STREAM
+                    cout << size << endl;
+#else
                     printf("%lu\n",size);
+#endif
                     }
                 }
             else
@@ -534,7 +560,11 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                     }
                 else
                     {
+#if STREAM
+                    cout << "Invalid argument " << locoptarg << "for -p option." << endl;
+#else
                     printf("Invalid argument %s for -p option.\n",locoptarg);
+#endif
                     return Error;
                     }
                 }
@@ -590,15 +620,15 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 #endif
 // GNU >>
         case 'r':
-            printf("12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\n");
-            printf("WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR\n");
-            printf("REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\n");
-            printf("INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\n");
-            printf("OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n");
-            printf("TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n");
-            printf("YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n");
-            printf("PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n");
-            printf("POSSIBILITY OF SUCH DAMAGES.\n");
+            LOG1LINE("12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\n"
+            "WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR\n"
+            "REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\n"
+            "INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\n"
+            "OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n"
+            "TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n"
+            "YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n"
+            "PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n"
+            "POSSIBILITY OF SUCH DAMAGES.\n");
             return Leave;
 // << GNU
 #if defined PROGMAKESUFFIXFLEX
@@ -654,15 +684,15 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 #endif
 // GNU >>
         case 'w':
-            printf("11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n");
-            printf("FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n");
-            printf("OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\n");
-            printf("PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED\n");
-            printf("OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n");
-            printf("MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\n");
-            printf("TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n");
-            printf("PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\n");
-            printf("REPAIR OR CORRECTION.\n");
+            LOG1LINE("11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n"
+            "FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n"
+            "OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\n"
+            "PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED\n"
+            "OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n"
+            "MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\n"
+            "TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n"
+            "PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\n"
+            "REPAIR OR CORRECTION.");
             return Leave;
 // << GNU
 #if defined PROGLEMMATISE
@@ -808,7 +838,11 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                             {
                             if(optarg2)
                                 {
+#if STREAM
+                                cout << "Option argument " << optarg2 << " provided for option letter " << line[off] << " that doesn't use it on line " << lineno << " in option file \"" << locoptarg << "\"" << endl;
+#else
                                 printf("Option argument %s provided for option letter %c that doesn't use it on line %d in option file \"%s\"\n",optarg2,line[off],lineno,locoptarg);
+#endif
                                 exit(1);
                                 }
                             }
@@ -816,7 +850,11 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                     }
                 else
                     {
+#if STREAM
+                    cout << "Missing option letter on line " << lineno << " in option file \"" << locoptarg << "\"" << endl;
+#else
                     printf("Missing option letter on line %d in option file \"%s\"\n",lineno,locoptarg);
+#endif
                     exit(1);
                     }
                 }
@@ -928,7 +966,11 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
         }
     else
         {
+#if STREAM
+        cout << "Cannot open option file " << locoptarg << endl;
+#else
         printf("Cannot open option file %s\n",locoptarg);
+#endif
         }
     return result;
     }
@@ -943,7 +985,7 @@ OptReturnTp optionStruct::readArgs(int argc, char * argv[])
     OptReturnTp result = GoOn;
     while((c = getopt(argc,argv, opts)) != -1)
         {
-        OptReturnTp res = doSwitch(c,optarg,argv[0]);
+        OptReturnTp res = doSwitch(c,myoptarg,argv[0]);
         if(res > result)
             result = res;
         }

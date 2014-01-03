@@ -25,6 +25,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
+#if STREAM
+#include <iostream>
+#include <iomanip> 
+using namespace std;
+#endif
+
 
 #ifdef COUNTOBJECTS
 int functionTree::COUNT = 0;
@@ -113,9 +119,15 @@ bool functionTree::OK(const OutputClass * outputObj)const
                 cnt = count(outputObj);
             if(cnt < 0)
                 {
+#if STREAM
+                cout << "Something wrong in field specification.\n"
+"The number-of-values specification " << m_nmbr << " is only valid if there is a field\n"
+"with a variable number of values." << endl;
+#else
                 printf("Something wrong in field specification.\n"
 "The number-of-values specification %d is only valid if there is a field\n"
 "with a variable number of values.\n",m_nmbr);
+#endif
                 exit(0);
                 }
         default:

@@ -313,7 +313,6 @@ int Word::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
             }
         }
 
-//    printf("word %s\n",word);
     lext * plext;
     // Lemmatiser adds tag from dictionary
     plext = Plext;
@@ -369,13 +368,21 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
             }
         else
             {
+#if STREAM
+            cout << "Error: Missing -b pattern on commandline. (Output format " << cformat << " specifies dictionary field $b)" << endl;
+#else
             printf("Error: Missing -b pattern on commandline. (Output format %s specifies dictionary field $b)\n",cformat);
+#endif
             exit(0);
             }
         }
     else if(bformat)
         {
+#if STREAM
+        cout << "Warning: -b pattern \"" << bformat << "\"specified on commandline but not used. (Output format " << cformat << " doesn't specify dictionary field $b)" << endl;
+#else
         printf("Warning: -b pattern \"%s\"specified on commandline but not used. (Output format %s doesn't specify dictionary field $b)\n",bformat,cformat);
+#endif
         }
 
     if(hasB)
@@ -386,13 +393,21 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
             }
         else
             {
+#if STREAM
+            cout << "Error: Missing -B pattern on commandline. (Output format " << cformat << " specifies flexrule field $B)" << endl;
+#else
             printf("Error: Missing -B pattern on commandline. (Output format %s specifies flexrule field $B)\n",cformat);
+#endif
             exit(0);
             }
         }
     else if(bformat)
         {
+#if STREAM
+        cout << "Warning: -B pattern specified on commandline but not used. (Output format " << cformat << " doesn't specify flexrule field $B)" << endl;
+#else
         printf("Warning: -B pattern specified on commandline but not used. (Output format %s doesn't specify flexrule field $B)\n",cformat);
+#endif
         }
     return SortInput;
     }
@@ -630,7 +645,6 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
                 *pbuf++ = *l_w++;
                 }
             *pbuf = '\0';*/
-//            printf("word %s stem %s maxFreq %d baseTp %s\n",word,stem,maxFreq,baseTp);
 #if PFRQ || FREQ24
             cntD += addBaseFormD(stem/*buf*/,baseTp/*LemmaTag(Tp)*/,/*1,*/maxFreq);
 #else
@@ -661,8 +675,6 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
 #endif
                 // and type info matches.
                 {
-/*            printf("word %s constructed %s freq %d maxFreq %d baseTp %s\n",
-                word,plext->constructBaseform(word),plext->S.frequency,maxFreq,baseTp);*/
 #if PFRQ || FREQ24
                 cntD += addBaseFormD(plext->constructBaseform(m_word),baseTp,/*1,*/plext->S.frequency);
 #else
@@ -697,46 +709,24 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
                     unsigned int off;
                     char * stem = commonStem(Plext,nmbr,tp,maxFreq,off);
                     if(stem)
-                        {/*
-                        static char buf[256];
-                        const char * l_w;
-                        char * pbuf = buf;
-                        for(l_w = word;*l_w && off;--off)
-                            {
-                            *pbuf++ = *l_w++;
-                            }
-                        for(l_w = stem;*l_w;)
-                            {
-                            *pbuf++ = *l_w++;
-                            }
-                        *pbuf = '\0';*/
+                        {
 #if PFRQ || FREQ24
-                        addBaseFormD(stem/*buf*/,/*LemmaTag*/(tp),/*1,*/maxFreq);
+                        addBaseFormD(stem,tp,maxFreq);
 #else
-                        addBaseFormD(stem/*buf*/,/*LemmaTag*/(tp));
+                        addBaseFormD(stem,tp);
 #endif
-/*
-                        printf("stem %s tp %s baseTp %s\n",stem,tp,baseTp);
-stem fire tp V baseTp N
-stem jens tp N baseTp EGEN
-stem tabe tp V baseTp ADJ
-stem stege tp V baseTp ADJ
-stem mµtte tp V baseTp ADJ
-stem ende tp V baseTp ADJ
-*/
                         return cnt;
                         }
                     }
                 }
             plext = Plext;
-//            while(true)
             for(;;)
                 {
                 if(plext->S.frequency >= maxFreq)
 #if PFRQ || FREQ24
-                    /*cntD +=*/ addBaseFormD(plext->constructBaseform(m_word),/**/LemmaTag/**/(plext->Type),/*0,*/plext->S.frequency);
+                    addBaseFormD(plext->constructBaseform(m_word),LemmaTag(plext->Type),plext->S.frequency);
 #else
-                    /*cntD +=*/ addBaseFormD(plext->constructBaseform(m_word),/**/LemmaTag/**/(plext->Type));
+                    addBaseFormD(plext->constructBaseform(m_word),LemmaTag(plext->Type));
 #endif
                     // We choose not to count the dictionary lemmas if the constructed lemma already is counted on.
                     if(--nmbr)

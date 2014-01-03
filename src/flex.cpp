@@ -30,6 +30,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <ctype.h>
 #include <assert.h>
 
+#if STREAM
+#include <iostream>
+#include <iomanip> 
+using namespace std;
+#endif
+
 #ifdef COUNTOBJECTS
 int base::COUNT = 0;
 int node::COUNT = 0;
@@ -125,7 +131,7 @@ base * node::add(char * tail,char * baseform,bool fullWord,node *& prev,bool emp
         {
         if(!this->m_tail[0])
             {
-            printf("ASSERT FAILED\n");
+            LOG1LINE("ASSERT FAILED");
             }
         assert(this->m_tail[0]); // We do not allow empty tails. 
         // The rule [] (word remains unchanged) can therefore not be stored 
@@ -188,10 +194,18 @@ node::node(node * next,char * tail,char * baseform,bool fullWord,bool empty)
     strcpy(this->m_tail,tail);
     if(!*tail && !empty)
         {
+#if STREAM
+        cout << "TAIL IS EMPTY BUT empty IS FALSE. (Found text:\"" << baseform << "\")" << endl;
+#else
         printf("TAIL IS EMPTY BUT empty IS FALSE. (Found text:\"%s\")\n",baseform);
+#endif
         }
     else if(*tail && empty)
+#if STREAM
+        cout << "TAIL IS NOT EMPTY BUT empty IS TRUE (Found text:\"" << baseform << "\")" << endl;
+#else
         printf("TAIL IS NOT EMPTY BUT empty IS TRUE (Found text:\"%s\")\n",baseform);
+#endif
     basef = new base(baseform,fullWord);
     ++mutated;
 #ifdef COUNTOBJECTS
@@ -209,10 +223,18 @@ node::node(node * next,char * tail,int n,char * baseform,bool fullWord,bool empt
     this->m_tail[n] = '\0';
     if(!*tail && !empty)
         {
+#if STREAM
+        cout << "TAIL IS EMPTY BUT empty IS FALSE " << baseform << endl;
+#else
         printf("TAIL IS EMPTY BUT empty IS FALSE %s\n",baseform);
+#endif
         }
     else if(*tail && empty)
+#if STREAM
+        cout << "TAIL IS NOT EMPTY BUT empty IS TRUE " << baseform << endl;
+#else
         printf("TAIL IS NOT EMPTY BUT empty IS TRUE %s\n",baseform);
+#endif
     basef = new base(baseform,fullWord);
     ++mutated;
 #ifdef COUNTOBJECTS
@@ -348,7 +370,11 @@ type::type(const char * tp,char * tail,char * baseform,bool fullWord,type * next
         end = new node(0,tail,baseform,fullWord,false);
     else
         {
+#if STREAM
+        cout << "type::type TYPE " << tp << " TAIL 0" << endl;
+#else
         printf("type::type TYPE %s TAIL 0\n",tp);
+#endif
         end = new node(0,tail,baseform,fullWord,false);
         }
     ++mutated;
@@ -428,6 +454,27 @@ flex::~flex()
 #ifdef COUNTOBJECTS
     --COUNT;
     extern int LemmaCOUNT, DictNodeCOUNT;
+#if STREAM
+    cout << basefrm::COUNT << " basefrm\n " 
+        << baseformpointer::COUNT << "baseformpointer\n " 
+        << dictionary::COUNT << "dictionary\n "  
+        << field::COUNT << "field\n " 
+        << base::COUNT << "base\n " 
+        << node::COUNT << "node\n " 
+        << type::COUNT << "type\n " 
+        << flex::COUNT << "flex\n " 
+        << FreqFile::COUNT << "FreqFile\n " 
+        << function::COUNT << "function\n " 
+        << functionTree::COUNT << "functionTree\n " 
+        << Lemmatiser::COUNT << "cstlemman " 
+        << lext::COUNT << "lext\n " 
+        << LemmaCOUNT << "Lemma\n " 
+        << DictNodeCOUNT << "DictNode\n "  
+        << optionStruct::COUNT << "optionStruct\n " 
+        << OutputClass::COUNT << "OutputClass\n " 
+        << text::COUNT << "text\n "  
+        << Word::COUNT << "Word" << endl;
+#else
     printf(
         "%d basefrm\n%d "
         "baseformpointer\n%d "
@@ -471,6 +518,7 @@ flex::~flex()
         Word::COUNT
         );
     getchar();
+#endif
 #endif
     }
 
@@ -532,7 +580,11 @@ a rule and what was not (a blank line, a comment, or something garbage-like.
         char * close = strchr(basef,'\t');
         if(!close)
             {
+#if STREAM
+            cout << "missing '\\t' (TAB) in line " << cnt << endl;
+#else
             printf("missing '\\t' (TAB) in line %d\n",cnt);
+#endif
             return 0;
             }
         *close++ = '\0';
