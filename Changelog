@@ -1,4 +1,15 @@
 ------------------------------
+Version 5.0 (3 March 2005)
+------------------------------
+When lemmatizing (-L option):
+Made #define STREAM 1 work as intended: handle standard input line-wise.
+If #define STREAM 0, stdio.h functions are used. In that case, input
+MUST come from a named file. (-i option).
+
+stdio.h is not removed everywhere. E.g. makedict functionality (-D option)
+still uses fprintf even if STREAM 1 is defined in defines.h.
+
+------------------------------
 Version 2.4 (3 March 2005)
 ------------------------------
 Removed (undocumented) requirement that word classes must be capitalised.
