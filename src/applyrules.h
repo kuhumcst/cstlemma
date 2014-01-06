@@ -22,17 +22,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef APPLYRULES_H
 #define APPLYRULES_H
 
+#include "defines.h"
+#if defined PROGLEMMATISE
 #include <stdio.h>
 
 bool newStyleRules();
-bool readRules(FILE * flexrulefile,const char * flexFileName); // 2nd argument added 20081107
-//bool readRules(FILE * flexrulefile);
-bool readRules(const char * flexFileName); // 20081107
-//bool readRules(const char * filename);
+bool readRules(FILE * flexrulefile,const char * flexFileName);
+bool readRules(const char * flexFileName);
 const char * applyRules(const char * word);
 const char * applyRules(const char * word,const char * tag);
 void deleteRules();
 extern bool oneAnswer;
 void setNewStyleRules(bool val);
 
+#endif
 #endif

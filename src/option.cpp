@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "option.h"
-#if (defined PROGLEMMATISE || defined PROGMAKEDICT)
+#if (defined PROGLEMMATISE) || (defined PROGMAKEDICT)
 #include "freqfile.h"
 #endif
 #include "caseconv.h"
@@ -86,7 +86,7 @@ optionStruct::optionStruct()
     lemmaClassAttribute = NULL; // if null, lemma class is PCDATA
     z = NULL;
 #endif
-#if (defined PROGMAKESUFFIXFLEX || defined PROGLEMMATISE)
+#if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
     flx = NULL;
 #endif
 #if defined PROGLEMMATISE
@@ -224,7 +224,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                     break;
                 }
             break;
-#if (defined PROGMAKESUFFIXFLEX || defined PROGLEMMATISE)
+#if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
         case 'f':
             flx = locoptarg;
             break;
@@ -519,7 +519,6 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             CollapseHomographs = locoptarg == NULL || *locoptarg != '-';
             break;
         case 'n':
-//Bart 20021223            if(freq)
                 {
                 if(!freq)
                     {
@@ -529,7 +528,6 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                 }
             break;
         case 'N':
-//Bart 20021223            if(freq)
                 {
                 if(!freq)
                     {
@@ -767,11 +765,11 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
         char * p;
         char line[1000];
         int lineno = 0;
-        size_t bufsize = 0;/*20120709 int -> size_t*/
+        size_t bufsize = 0;
         while(fgets(line,sizeof(line) - 1,fpopt))
             {
             lineno++;
-            size_t off = strspn(line," \t");/*20120709 int -> size_t*/
+            size_t off = strspn(line," \t");
             if(line[off] == ';')
                 continue; // comment line
             if(line[off] == '-')
@@ -780,7 +778,7 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                 if(line[off])
                     {
                     char * optarg2 = line + off + 1;
-                    size_t off2 = strspn(optarg2," \t");/*20120709 int -> size_t*/
+                    size_t off2 = strspn(optarg2," \t");
                     if(!optarg2[off2])
                         optarg2 = NULL;
                     else
@@ -885,7 +883,7 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
         while(fgets(line,sizeof(line) - 1,fpopt))
             {
             poptions[lineno] = options+bufsize;
-            size_t off = strspn(line," \t");/*20120709 int -> size_t*/
+            size_t off = strspn(line," \t");
             if(line[off] == ';')
                 continue; // comment line
             if(line[off] == '-')
@@ -894,7 +892,7 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                 if(line[off])
                     {
                     char * optarg2 = line + off + 1;
-                    size_t off2 = strspn(optarg2," \t");/*20120709 int -> size_t*/
+                    size_t off2 = strspn(optarg2," \t");
                     if(!optarg2[off2])
                         optarg2 = NULL;
                     else
@@ -938,7 +936,7 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                                     }
                                 }
                             }
-                        if(!*optarg2 && /*Bart 20030905: allow empty string for e.g. -s option*/!string)
+                        if(!*optarg2 && /*allow empty string for e.g. -s option*/!string)
                             optarg2 = NULL;
                         }
                     if(optarg2)

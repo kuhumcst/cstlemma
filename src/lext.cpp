@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,6 +20,7 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "lext.h"
+#if defined PROGLEMMATISE
 #include "caseconv.h"
 #include "utf8func.h"
 #include <string.h>
@@ -35,22 +36,11 @@ const char * lext::constructBaseform(const char * fullform) const
     size_t off = S.Offset;
     const char * w;
     char * pbuf = buf;
-// Bart 20100303: ISO -> Unicode
     if(off > 0)
         {
         strcpy(buf,changeCase(fullform,true,off));
-    /*
-    strcpy(buf,fullform);
-    NToLower(buf,buf+off);*/
         pbuf = buf + strlen(buf);
         }
-    /*
-    for(w = fullform;*w && off;--off)
-        {
-        *pbuf++ = (char)Lower(*w);
-        w++;
-        }
-        */
     for(w = BaseFormSuffix;*w;)
         {
         *pbuf++ = *w++;
@@ -59,3 +49,4 @@ const char * lext::constructBaseform(const char * fullform) const
     return buf;
     }
 
+#endif

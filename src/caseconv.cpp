@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005, 2009  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014, 2009  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -436,7 +436,6 @@ bool isAllUpperUTF8(const char * s)
     }
 
 bool (*IsAllUpper)(const char * s) = NULL;
-//void (*allToUpper)(char * s) = NULL;
 
 
 void AllToLowerISO(char * s)
@@ -515,55 +514,7 @@ int strCaseCmpN0(const char *s, const char *p,ptrdiff_t & is,ptrdiff_t & ip)
     ip = i;
     return ret;
     }
-/*
-int strCaseCmpNISO(const char *s, const char *p,int & is,int & ip)
-    {
-    if(LowerEquivalent)
-        {
-        int i;
-        int ret;
-        for(i = 0;;++i,++s,++p)
-            {
-            if(*s)
-                {
-                int S = LowerEquivalent[*s & 0xFF];
-                if(*p)
-                    {
-                    int P = LowerEquivalent[*p & 0xFF];
-                    if(S != P)
-                        {
-                        ret = S - P;
-                        break;
-                        }
-                    }
-                else
-                    {
-                    ret = 1;
-                    break;
-                    }
-                }
-            else
-                {
-                if(*p)
-                    {
-                    ret = -1;
-                    break;
-                    }
-                else
-                    {
-                    ret = 0;
-                    break;
-                    }
-                }
-            }
-        is = i;
-        ip = i;
-        return ret;
-        }
-    else
-        return strCaseCmpN0(s, p,is,ip);
-    }
-*/
+
 const char * allToLowerISO(const char * s)
     {
     static char buf[256];
@@ -605,13 +556,7 @@ void AllToUpperISO(char * s)
             }
         }
     }
-/*
-void toLower(char * s)
-    {
-    if(LowerEquivalent)
-        *s = (char)LowerEquivalent[*s & 0xFF];
-    }
-*/
+
 void toUpper(char * s)
     {
     if(UpperEquivalent)
@@ -635,35 +580,20 @@ bool isAllUpper(const char * s)
         }
     }
 
-
 bool isAlphaISO(int s)
     {
     return alpha[s & 0xFF];
     }
 
-
-/*
-bool isUpper0(const char * s){return true;}
-unsigned int Upper0(int k){return k;}
-unsigned int Lower0(int k){return k;}
-*/
 bool isUpper0(const char * s){return 'A' <= *s && *s <= 'Z';}
 
 bool isUpper19(const char * s){return (UpperEquivalent[(int)(*s & 0xFF)] == (int)(*s & 0xFF));}
-/*
-unsigned int Upper19(int k){return UpperEquivalent[(int)(k & 0xFF)];}
-unsigned int Lower19(int k){return LowerEquivalent[(int)(k & 0xFF)];}
-*/
 
 bool (*is_Upper)(const char * s) = isUpper0;
-//unsigned int (*Upper)(int k) = Upper0;
-//unsigned int (*Lower)(int k) = Lower0;
 bool (*is_Alpha)(int k) = isAlphaISO;
 const char * (*allToLower)(const char * s);
-//void (*AllToLower)(char * s);
-//void (*NToLower)(char * s,const char * stop) = NToLower0; // 20100303, partly replaces Lower
-int (*strcasecmpN)(const char *s, const char *p,ptrdiff_t & is,ptrdiff_t & ip) = strCaseCmpN0; // 20100303, partly replaces Lower
-int (*strcmpN)(const char *s, const char *p,ptrdiff_t & is,ptrdiff_t & ip) = strCaseCmpN0; // 20100303, partly replaces Lower
+int (*strcasecmpN)(const char *s, const char *p,ptrdiff_t & is,ptrdiff_t & ip) = strCaseCmpN0; // partly replaces Lower
+int (*strcmpN)(const char *s, const char *p,ptrdiff_t & is,ptrdiff_t & ip) = strCaseCmpN0; // partly replaces Lower
 
 void setEncoding(int encoding)
     {
@@ -674,33 +604,17 @@ void setEncoding(int encoding)
               || encoding >= (int)(sizeof(alphas)/sizeof(alphas[0]))
               )
            )
-        encoding = DEFAULTENCODING; // Bart 20081104
+        encoding = DEFAULTENCODING;
 
     if(encoding == ENUNICODE)
         {
         space = spaces[DEFAULTENCODING];
-        /**/
+        
         is_Upper = isUpperUTF8;
-        //Upper = upperEquivalent;
-        //Lower = lowerEquivalent;
-        /**/
-        /** /
-            is_Upper = isUpper0;
-//            Upper = Upper0;
-//            Lower = Lower0;
-        //*/
-
-        /*alpha = alphas[DEFAULTENCODING];//0;
-        LowerEquivalent = lowerEquivalents[encoding];//0;
-        UpperEquivalent = upperEquivalents[encoding];//0;
-        */
         is_Alpha = isAlpha;
         allToLower = allToLowerUTF8;
-//        AllToLower = AllToLowerUTF8;
-//        NToLower = NToLowerUTF8;
         strcasecmpN = strCaseCmpN;
         strcmpN = strCmpN;
-//        allToUpper = AllToUpper;
         IsAllUpper = isAllUpperUTF8;
         }
     else
@@ -712,24 +626,16 @@ void setEncoding(int encoding)
         if(encoding == DEFAULTENCODING)
             {
             is_Upper = isUpper0;
-//            Upper = Upper0;
-//            Lower = Lower0;
-//            NToLower   = NToLower0;
             strcasecmpN = strCaseCmpN0;
             strcmpN = strCaseCmpN0;
             }
         else
             {
             is_Upper = isUpper19;
-//            Upper = Upper19;
-//            Lower = Lower19;
-//            NToLower   = NToLowerISO;
             strcmpN = strCaseCmpN0;
             }
         is_Alpha = isAlphaISO;
         allToLower = allToLowerISO;
-//        AllToLower = AllToLowerISO;
-//        allToUpper = AllToUpperISO;
         IsAllUpper = isAllUpper;
         }
     }

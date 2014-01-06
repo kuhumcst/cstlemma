@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,6 +20,7 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "readfreq.h"
+#if defined PROGMAKEDICT
 #include "fieldfnc.h"
 #include <string.h>
 #include <stdlib.h>
@@ -199,14 +200,14 @@ static bool readFreq(FILE * fpin,bool last)
 
 void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
     {
-    size_t nflds = strlen(format);/*20120709 int -> size_t*/
+    size_t nflds = strlen(format);
     fieldfnc * fieldFncs = new fieldfnc[nflds];
     bool hasBaseform = false;
     bool hasFullform = false;
     bool hasFreq = false;
     bool hasType = false;
     line = 0;
-    for(size_t n = 0;n < nflds;++n)/*20120709 int -> size_t*/
+    for(size_t n = 0;n < nflds;++n)
         {
         switch(format[n])
             {
@@ -263,7 +264,7 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
         delete [] fieldFncs;
         return;
         }
-    // Bart 20091026
+    // 20091026
     // Before, the word class information was always required, even if the
     // dictionary wasn't going to have this information.
     // Now we merely ask that there is agreement between the requirements 
@@ -284,8 +285,8 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
         {
         }
 
-    for(size_t a = 0;a < nflds;++a)/*20120709 int -> size_t*/
-        for(size_t b = a + 1;b < nflds;++b)/*20120709 int -> size_t*/
+    for(size_t a = 0;a < nflds;++a)
+        for(size_t b = a + 1;b < nflds;++b)
             if(fieldFncs[a] == fieldFncs[b] && fieldFncs[a] != readNothing)
                 {
                 printf("Invalid format string %s (duplicates)\n",format);
@@ -297,7 +298,7 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
     for(;;)
         {
 		kar = 0;
-        for(size_t i = 0;i < nflds;++i)/*20120709 int -> size_t*/
+        for(size_t i = 0;i < nflds;++i)
             {
             if(fieldFncs[i](fpin,fieldFncs[i+1] == NULL))
                 {
@@ -385,3 +386,4 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
         }
     }
 
+#endif

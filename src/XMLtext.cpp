@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005, 2009  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014, 2009  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -30,6 +30,8 @@ Words can also be found in elements.
 */
 
 #include "XMLtext.h"
+#if defined PROGLEMMATISE
+
 #include "wordReader.h"
 #include "word.h"
 #include "field.h"
@@ -132,10 +134,10 @@ class crumb
     {
     private:
         char * e;
-        size_t L;/*20120709 int -> size_t*/
+        size_t L;
         crumb * next;
     public:
-        crumb(const char * s,size_t len,crumb * Crumbs):L(len),next(Crumbs)/*20120709 int -> size_t*/
+        crumb(const char * s,size_t len,crumb * Crumbs):L(len),next(Crumbs)
             {
             e = new char[len+1];
             strncpy(e,s,len);
@@ -149,7 +151,7 @@ class crumb
             {
             return e;
             }
-        crumb * pop(const char * until,size_t len)/*20120709 int -> size_t*/
+        crumb * pop(const char * until,size_t len)
             {
             crumb * nxt = next;
             if(L == len && !strncmp(e,until,len))
@@ -713,3 +715,4 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
         LOG1LINE("...read words from XML file");
     }
 
+#endif

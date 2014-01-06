@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,6 +20,8 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "lemmtags.h"
+#if defined PROGLEMMATISE
+
 #include "caseconv.h"
 #include <stdio.h>
 #include <string.h>
@@ -70,7 +72,7 @@ static bool taglinecheck(const char * xx)
             return true;
         }
 #else
-    size_t d; /*20120709 int -> size_t*/
+    size_t d; 
     size_t len = strlen(xx);
     return strspn(xx,"ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ_\t ") == strlen(xx) // line consists only of capital letters and white space
         && (d = strcspn(xx,"\t ")) > 0 // line contains identifier
@@ -148,3 +150,4 @@ bool readLemmaTags(FILE * fpx,bool nice)
         }
     return true;
     }
+#endif

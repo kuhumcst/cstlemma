@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -49,7 +49,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
-//#define COUNTOBJECTS  // Bart 20050916: for finding memory leak. 
+//#define COUNTOBJECTS  // for finding memory leak. 
                        // Printout of counts in ~flex()
 
 #define SORTWORD 1

@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -19,8 +19,9 @@ You should have received a copy of the GNU General Public License
 along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#include "defines.h"
 #include "field.h"
+#if defined PROGLEMMATISE
+
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
@@ -46,7 +47,7 @@ char * readValue::read(char * kar,field *& nextfield)
     char * nxt = kar;
     if(next)
         nxt = next->read(kar,nextfield);
-    if(nxt && /*Bart 20081218*/*nxt)
+    if(nxt && *nxt)
         {
         size_t ln = strlen(nxt);
         if(pos + ln >= len)
@@ -60,10 +61,8 @@ char * readValue::read(char * kar,field *& nextfield)
         strcpy(word + pos,nxt);
         pos += ln;
         assert(strlen(word) < len);
-        nextfield = this; // Bart 20050224
+        nextfield = this;
         }
-/*            else
-        word[pos] = '\0';*/
     return NULL; // Value takes all!
     }
 
@@ -102,7 +101,6 @@ char * readWhiteSpace::read(char * kar,field *& nextfield)
             nextfield = NULL;
             return kar; // add to first
             }
-     //   nextfield = next;
         //assert(nextfield != this);
         }
     else
@@ -119,7 +117,6 @@ char * readAllButWhiteSpace::read(char * kar,field *& nextfield)
             if(next)
                 {
                 next->read(kar,nextfield);
-//                    nextfield = next;
                 return NULL;
                 }
             else
@@ -141,7 +138,6 @@ char * readAllButWhiteSpace::read(char * kar,field *& nextfield)
 
 char * readTab::read(char * kar,field *& nextfield)
     {
-//            int k = *kar;
     if(*kar == '\t')
         {
         nextfield = next;
@@ -153,7 +149,6 @@ char * readTab::read(char * kar,field *& nextfield)
 
 char * readNewLine::read(char * kar,field *& nextfield)
     {
-//            int k = *kar;
     if(*kar == '\n')
         {
         nextfield = next;
@@ -192,14 +187,12 @@ char * readLitteral::read(char * kar,field *& nextfield)
     {
     if(pos == len - 1) // all matched
         {
-//                nextfield = next;
         if(next)
             next->read(kar,nextfield);
         return NULL;
         }
     else
         {
-//                int k = *kar;
         matched[pos] = *kar;
         if(*kar == litteral[pos])
             {
@@ -234,3 +227,4 @@ char * readLitteral::read(char * kar,field *& nextfield)
             }
         }
     }
+#endif

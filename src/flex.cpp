@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,8 +20,11 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "flex.h"
+#if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
 #include "caseconv.h"
+#if defined PROGMAKESUFFIXFLEX
 #include "readlemm.h"
+#endif
 #if defined PROGLEMMATISE
 #include "applyrules.h"
 #endif
@@ -103,7 +106,7 @@ node * node::remove()
     return ret;
     }
 
-bool node::Baseform(char * invertedWord,base *& bf,size_t & ln)/* 20120709 int -> size_t */
+bool node::Baseform(char * invertedWord,base *& bf,size_t & ln)
     {
     int cmp = strncmp(m_tail,invertedWord,m_len);
     if(!cmp)
@@ -155,12 +158,12 @@ ending(tail,baseform,fullWord,next,empty)
         }
     }
 //-----------------
-bool node::BaseformSub(char * invertedWord,base *& bf,size_t & ln)/*20120709 int -> size_t*/
+bool node::BaseformSub(char * invertedWord,base *& bf,size_t & ln)
     {
     if(m_len && m_sub)
         {
         if(   m_sub->Baseform(invertedWord+m_len,bf,ln) 
-           /* Bart 20030909. The lemma should not reduce to nothing, so either
+           /* The lemma should not reduce to nothing, so either
               the word must have some remaining "stem" or the replacement
               string must not be empty. */
           && (training || invertedWord[m_len] || *bf->bf())
@@ -171,7 +174,7 @@ bool node::BaseformSub(char * invertedWord,base *& bf,size_t & ln)/*20120709 int
             }
         }
     if(  basef
-           /* Bart 20030909. The lemma should not reduce to nothing, so either
+           /* The lemma should not reduce to nothing, so either
               the word must have some remaining "stem" or the replacement
               string must not be empty. */
       && (training || invertedWord[m_len] || *basef->bf())
@@ -255,8 +258,6 @@ node::node(node * next,char * tail,int n,node * sub):m_next(next),basef(0),m_sub
 #endif
     }
 
-
-
 base::base(char * baseform,bool fullWord,base * next):m_next(next)
 #if defined PROGMAKESUFFIXFLEX
            ,m_fullWord(fullWord),needed(true),added(true)
@@ -274,7 +275,6 @@ base::base(char * baseform,bool fullWord,base * next):m_next(next)
     ++COUNT;
 #endif
     }
-
 
 base * base::add(char * baseform,bool fullWord,base *& prev)
     {
@@ -419,7 +419,7 @@ base * type::add(const char * tp,char * tail,char * baseform,bool fullWord,type 
         }
     }
 
-bool type::Baseform(char * invertedWord,const char * tag,base *& bf,size_t & ln)/* 20120709 int -> size_t */
+bool type::Baseform(char * invertedWord,const char * tag,base *& bf,size_t & ln)
     {
     int cmp = strcmp(this->m_tp,tag);
     if(!cmp)
@@ -431,22 +431,6 @@ bool type::Baseform(char * invertedWord,const char * tag,base *& bf,size_t & ln)
     else
         return false;
     }
-
-/*
-void flex::fix()
-    {
-    if(types)
-        types->fix();
-    }
-
-void flex::consolidate()
-    {
-    if(!consolidated && types)
-        consolidated = types->consolidate();
-    }
-*/
-
-
 
 flex::~flex()
     {
@@ -528,7 +512,7 @@ void flex::trim(char * s)
         *t = '\0';
     }
 
-bool flex::Baseform2(char * word,const char * tag,base *& bf,size_t & offset)/* 20120709 int -> size_t */
+bool flex::Baseform2(char * word,const char * tag,base *& bf,size_t & offset)
     {
     if(types)
         {
@@ -545,30 +529,20 @@ bool flex::Baseform2(char * word,const char * tag,base *& bf,size_t & offset)/* 
 base * flex::add(char * line)
     {
     if(strchr(line,' '))
-        return 0; // 20080221
-    base * ret/* = 0*/;
+        return 0;
+    base * ret;
     static int cnt = 0;
     ++cnt;
     char * tp;
-/*    if('A' <= *line && *line <= 'Z')
-        { Bart 20050303 
-This code is a rudiment from the time when the flex rules still were hand-
-written and more guesswork was needed from the program to decide what was
-a rule and what was not (a blank line, a comment, or something garbage-like.    
-*/
-        char * c = line;
-        while(*c && !isSpace(*c))
-            ++c;
-        if(!*c)
-            return 0; // line w/o flex rule
-        *c = '\0';
-        tp = line; // line starts with word class, followed by white space.
-        line = c + 1;
-/*        }
-    else
-        {
-        tp = N;
-        } Bart 20050303 */
+
+    char * c = line;
+    while(*c && !isSpace(*c))
+        ++c;
+    if(!*c)
+        return 0; // line w/o flex rule
+    *c = '\0';
+    tp = line; // line starts with word class, followed by white space.
+    line = c + 1;
     if(!*line)
         return 0; // no flex rule following white space.
 
@@ -633,5 +607,4 @@ bool flex::readFromFile(FILE * fpflex)
     return true;
     }
 
-
-
+#endif

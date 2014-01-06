@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #ifndef TAGS_H
 #define TAGS_H
+
+#include "defines.h"
+#if defined PROGLEMMATISE
 #include <stdio.h>
 
 class tagpairs
@@ -42,13 +45,7 @@ class tagpairs
         int Closeness(const char * tag,const char * t);
     };
 
-/*
-extern char ** dictTags;
-extern char ** textTags;
-extern int tagcnt;
-
-bool readTags(FILE * fpx,bool nice);
-*/
 
 extern const char NOT_KNOWN[];
+#endif
 #endif

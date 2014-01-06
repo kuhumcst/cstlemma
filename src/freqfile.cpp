@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,6 +20,8 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "freqfile.h"
+#if defined PROGMAKEDICT
+
 #include <string.h>
 
 #ifdef COUNTOBJECTS
@@ -66,3 +68,4 @@ void FreqFile::addFormat(char * a_format)
         strcpy(this->format,a_format);
         }
     }
+#endif

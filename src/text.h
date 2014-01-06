@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define TEXT_H
 
 #include "defines.h"
+#if defined PROGLEMMATISE
+
 #if STREAM
 # include <iostream>
 # include <iomanip>
@@ -121,7 +123,7 @@ class text
             ,bool DictUnique
             ,bool baseformsAreLowercase
             ,int listLemmas
-            ,bool mergeLemmas // Bart 20101102
+            ,bool mergeLemmas
             );
 #else
         void Lemmatise
@@ -134,7 +136,7 @@ class text
             ,bool DictUnique
             ,bool baseformsAreLowercase
             ,int listLemmas
-            ,bool mergeLemmas // Bart 20101102
+            ,bool mergeLemmas
             );
 #endif
         text(bool InputHasTags,bool nice);
@@ -165,4 +167,5 @@ class text
 extern char * globIformat;
 extern int findSlashes(const char * buf);
 
+#endif
 #endif

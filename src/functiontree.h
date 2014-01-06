@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -22,8 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef FUNCTIONTREE_H
 #define FUNCTIONTREE_H
 
-#include "comparison.h"
 #include "defines.h"
+#if defined PROGLEMMATISE
+
+#include "comparison.h"
 
 class function;
 class OutputClass;
@@ -100,4 +102,5 @@ class functionTree
         bool skip(const OutputClass * outputObj)const;
     };
 
+#endif
 #endif

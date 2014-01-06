@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,6 +20,8 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "wordReader.h"
+#if defined PROGLEMMATISE
+
 #include "field.h"
 #include "XMLtext.h"
 #include "utf8func.h"
@@ -649,3 +651,4 @@ int wordReader::Put(CHAR * (wordReader::*fnc)(int kar),int kar)
     return rawput(fnc,kar);
     }
 
+#endif

@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define FIELD_H
 
 #include "defines.h"
+#if defined PROGLEMMATISE
+
 #include <stdlib.h> // gcc: size_t
 
 class field
@@ -34,7 +36,7 @@ class field
     protected:
         field * next;
     public:
-        virtual const char * isA() = 0; //20080213
+        virtual const char * isA() = 0;
         field();
         virtual ~field()
             {
@@ -65,9 +67,9 @@ class readValue : public field
     private:
         char * word;
         size_t len;
-        size_t pos;/*20120709 int -> size_t */
+        size_t pos;
     public:
-        const char * isA() //20080213
+        const char * isA()
             {
             return "Value";
             }
@@ -111,7 +113,7 @@ class readWhiteSpace : public field
     private:
         bool found;
     public:
-        const char * isA() //20080213
+        const char * isA()
             {
             return "WhiteSpace";
             }
@@ -130,7 +132,7 @@ class readAllButWhiteSpace : public field
     private:
         bool found;
     public:
-        const char * isA() //20080213
+        const char * isA()
             {
             return "AllButWhiteSpace";
             }
@@ -147,7 +149,7 @@ class readAllButWhiteSpace : public field
 class readTab : public field
     {
     public:
-        const char * isA() //20080213
+        const char * isA()
             {
             return "Tab";
             }
@@ -159,7 +161,7 @@ class readTab : public field
 class readNewLine : public field
     {
     public:
-        const char * isA() //20080213
+        const char * isA()
             {
             return "NewLine";
             }
@@ -178,7 +180,7 @@ class readLitteral : public field
         int pos;
         int givebacklen;
     public:
-        const char * isA() //20080213
+        const char * isA()
             {
             return "Litteral";
             }
@@ -196,4 +198,5 @@ class readLitteral : public field
             field::reset();
             }
     };
+#endif
 #endif

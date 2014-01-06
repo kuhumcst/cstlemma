@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define BASEFORMPOINTER_H
 
 #include "defines.h"
+#if defined PROGLEMMATISE
+
 #if STREAM
 # include <iostream>
 # ifndef __BORLANDC__
@@ -66,10 +68,6 @@ class baseformpointer
         int count()
             {
             return (hidden ? 0 : 1) + (next ? next->count() : 0);
-            /*if(next)
-                return 1 + next->count();
-            else
-                return 1;*/
             }
 #if STREAM
         void printfbf(ostream *fp,functionTree * fns,const char * sep);
@@ -79,16 +77,16 @@ class baseformpointer
         void printFn(FILE *fp,bfn Fn,const char * sep);
 #endif
 #if PFRQ || FREQ24
-        baseformpointer(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency);/*20120709 int -> size_t*/
+        baseformpointer(const char * s,const char * t,size_t len,unsigned int frequency);
 #else
-        baseformpointer(const char * s,const char * t,size_t len);/*20120709 int -> size_t*/
+        baseformpointer(const char * s,const char * t,size_t len);
 #endif
         ~baseformpointer();
         void reassign(basefrm * bf);
 #if PFRQ || FREQ24
-        int addBaseForm(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency);/*20120709 int -> size_t*/
+        int addBaseForm(const char * s,const char * t,size_t len,unsigned int frequency);
 #else
-        int addBaseForm(const char * s,const char * t,size_t len);/*20120709 int -> size_t*/
+        int addBaseForm(const char * s,const char * t,size_t len);
 #endif
         void assignTo(basefrm **& pbf)
             {
@@ -105,4 +103,5 @@ class baseformpointer
     };
 
 
+#endif
 #endif

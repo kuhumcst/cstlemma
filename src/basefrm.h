@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define BASEFRM_H
 
 #include "defines.h"
+#if defined PROGLEMMATISE
 #include "outputclass.h"
 #include <string.h>
 #if STREAM
@@ -54,7 +55,6 @@ class basefrm : public OutputClass
     private:
         Word ** fullForm; // list of full forms
         unsigned int nfullForm:8;
-//        int cnting;
 #if FREQ24
         unsigned int freq24:24; // 0 for new words; >= 0 for words from the
         // dictionary: the number of times the word is found in a 
@@ -77,7 +77,7 @@ class basefrm : public OutputClass
 #if STREAM
             *m_fp << lemmaFreq();
 #else
-            fprintf(m_fp,"%d",lemmaFreq()/*nfullForm*//*cnting*/); // shows the frequency of the lemma in the current text.
+            fprintf(m_fp,"%d",lemmaFreq()); // shows the frequency of the lemma in the current text.
 #endif
             }
 #if FREQ24
@@ -90,10 +90,6 @@ class basefrm : public OutputClass
 #endif
             }
 #endif
-            /*        void P() const
-            {
-            fprintf(m_fp,"%u",freq); need sum of frequencies here
-            }*/
         void W() const;
         void L() const;
     public:
@@ -114,13 +110,11 @@ class basefrm : public OutputClass
         int cmpf(const basefrm * b) const{return b->lemmaFreq() - lemmaFreq();}
         int cmpt(const basefrm * b) const{return strcmp(m_t,b->m_t);}
         int cmps(const basefrm * b) const{return strcmp(m_s,b->m_s);}
-//        int cmpf(basefrm * b){return freq24 - b->freq24;}
-//        void inc(basefrm * b){cnting += b->cnting;}
         baseformpointer & m_owner;
 #if FREQ24
-        basefrm(const char * s,const char * t,baseformpointer & owner,size_t len,/*int cnt,*/unsigned int frequency):fullForm(NULL),nfullForm(0),freq24(frequency),m_owner(owner)/*20120709 int -> size_t*/
+        basefrm(const char * s,const char * t,baseformpointer & owner,size_t len,/*int cnt,*/unsigned int frequency):fullForm(NULL),nfullForm(0),freq24(frequency),m_owner(owner)
 #else
-        basefrm(const char * s,const char * t,baseformpointer & owner,size_t len/*int cnt,*/):fullForm(NULL),nfullForm(0),m_owner(owner)/*20120709 int -> size_t*/
+        basefrm(const char * s,const char * t,baseformpointer & owner,size_t len/*int cnt,*/):fullForm(NULL),nfullForm(0),m_owner(owner)
 #endif
             {
             this->m_s = new char[len+1];
@@ -146,7 +140,6 @@ class basefrm : public OutputClass
             return !strcmp(s,this->m_s) && !strcmp(t,this->m_t);
             }
         int Closeness(const char * tag);
-//        void remove(baseformpointer * tobermoved);
         void removeFullForm(Word * w);
     };
 
@@ -154,4 +147,5 @@ class tagpairs;
 extern tagpairs * TagFriends;
 
 
+#endif
 #endif

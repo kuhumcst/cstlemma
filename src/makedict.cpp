@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "makedict.h"
+#if defined PROGMAKEDICT
 #include "freqfile.h"
 #include "lem.h"
 #include "readlemm.h"
@@ -258,7 +259,7 @@ public:
                 {
                 assert(bf);
                 char * bfoff = bf + S.Offset;
-                size_t len = strlen(bfoff); /*20120709 int -> size_t*/
+                size_t len = strlen(bfoff); 
                 if(!strncmp(BaseForm,bfoff,len) && BaseForm[len] == ',')
                     {
                     S.frequency += n;
@@ -510,11 +511,11 @@ public:
 
     tcount BreadthFirst_position(tcount Pos,tchildrencount length);
 
-    void BreadthFirst_print(size_t indent,tchildrencount length,FILE * fp);/* 20120709 int -> size_t */
-    void BreadthFirst_print(size_t indent,tchildrencount length,FILE * fp,char * wrd);/* 20120709 int -> size_t */
+    void BreadthFirst_print(size_t indent,tchildrencount length,FILE * fp);
+    void BreadthFirst_print(size_t indent,tchildrencount length,FILE * fp,char * wrd);
     void BreadthFirst_printBin(FILE * fp);
-    void print(size_t indent,FILE * fp);/*20120709 int -> size_t*/
-    void print(size_t indent,FILE * fp,char * wrd);/*20120709 int -> size_t*/
+    void print(size_t indent,FILE * fp);
+    void print(size_t indent,FILE * fp,char * wrd);
     int printLeaf()
         {
         assert(leaf);
@@ -760,14 +761,14 @@ tcount DictNode::BreadthFirst_position(tcount Pos,tchildrencount length)
     return subPos;
     }
 
-void DictNode::BreadthFirst_print(size_t indent,tchildrencount length,FILE * fp,char * wrd)/* 20120709 int -> size_t */
+void DictNode::BreadthFirst_print(size_t indent,tchildrencount length,FILE * fp,char * wrd)
     {
     DictNode * nxt;
     fprintf(fp,"%d\n",(int)length);
-    size_t len = strlen(wrd); /*20120709 int -> size_t*/
+    size_t len = strlen(wrd); 
     for(nxt = this;nxt;nxt = nxt->next)
         {
-        for(size_t i = indent;i;--i)/*20120709 int -> size_t*/
+        for(size_t i = indent;i;--i)
             fputc(' ',fp);
         fprintf(fp,"%s%s",wrd,nxt->m_flexform);
         fprintf(fp,"[%d]",nxt->m_n);
@@ -790,13 +791,13 @@ void DictNode::BreadthFirst_print(size_t indent,tchildrencount length,FILE * fp,
     wrd[len] = '\0';
     }
 
-void DictNode::BreadthFirst_print(size_t indent,tchildrencount length,FILE * fp)/* 20120709 int -> size_t */
+void DictNode::BreadthFirst_print(size_t indent,tchildrencount length,FILE * fp)
     {
     DictNode * nxt;
     fprintf(fp,"%d\n",(int)length);
     for(nxt = this;nxt;nxt = nxt->next)
         {
-        for(size_t i = indent;i;--i)/*20120709 int -> size_t*/
+        for(size_t i = indent;i;--i)
             fputc(' ',fp);
         fprintf(fp,"%s",nxt->m_flexform);
         fprintf(fp,"[%d]",nxt->m_n);
@@ -845,10 +846,10 @@ void DictNode::BreadthFirst_printBin(FILE * fp)
         }
     }
 
-void DictNode::print(size_t indent,FILE * fp,char * wrd)/*20120709 int -> size_t*/
+void DictNode::print(size_t indent,FILE * fp,char * wrd)
     {
-    size_t len = strlen(wrd); /*20120709 int -> size_t*/
-    for(size_t i = indent;i;--i)/*20120709 int -> size_t*/
+    size_t len = strlen(wrd); 
+    for(size_t i = indent;i;--i)
         fputc(' ',fp);
     fprintf(fp,"%s|%s",wrd,m_flexform);
     fprintf(fp,"[%d]",m_n);
@@ -869,9 +870,9 @@ void DictNode::print(size_t indent,FILE * fp,char * wrd)/*20120709 int -> size_t
         next->print(indent,fp,wrd);
     }
 
-void DictNode::print(size_t indent,FILE * fp)/*20120709 int -> size_t*/
+void DictNode::print(size_t indent,FILE * fp)
     {
-    for(size_t i = indent;i;--i)/*20120709 int -> size_t*/
+    for(size_t i = indent;i;--i)
         fputc(' ',fp);
     fprintf(fp,"%s",m_flexform);
     fprintf(fp,"[%d]",m_n);
@@ -913,18 +914,6 @@ static DictNode * root;
 static bool add(char * baseform,char * flexform,char * lextype)
     {
     ptrdiff_t i;
-    /* 20120906
-    if(removeBogus(flexform))
-        {
-        static int boguscnt = 0;
-        boguscnt++;
-        printf("%d Comma detected in flex form. Type: %s Baseform: %s Flexform: %s\n",boguscnt,lextype,baseform,flexform);
-        }
-        */
-    /*if(flex::baseformsAreLowercase) // test added Bart 20090203 and AllToLowerISO --> AllToLower
-        AllToLower(baseform);// should be lower already, but some characters,
-                      // notably Ü (U umlaut), are not converted to lower case
-                      */
     ptrdiff_t j;
     strcmpN(baseform,flexform,i,j);
     if(root->add(flexform,lextype,baseform+i,i))
@@ -943,10 +932,6 @@ static void addFreq(int n,char * flexform,char * lextype,char * bf)
     ptrdiff_t i = 0;
     if(bf)
         {
-        /*if(flex::baseformsAreLowercase) // test added Bart 20090203 and AllToLowerISO --> AllToLower
-            AllToLower(bf);// should be lower already, but some characters,
-                          // notably Ü (U umlaut), are not converted to lower case
-                          */
         ptrdiff_t j;
         strcmpN(bf,flexform,i,j);
         }
@@ -1256,3 +1241,4 @@ int makedict(FILE * fpin,FILE * fpout,bool nice,const char * format,const FreqFi
     return 0;
     }
 
+#endif

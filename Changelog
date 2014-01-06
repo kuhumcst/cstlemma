@@ -1,5 +1,16 @@
 ------------------------------
-Version 5.0 (3 March 2005)
+Version 5.01 (6 January 2014)
+------------------------------
+No functional changes. Deleted comments that were change notifications and
+commented-out code. Made sure that setting PROGMAKEDICT, PROGMAKESUFFIXFLEX or
+PROGLEMMATISE has the effect of neutralizing irrelevant code. Only if all three
+are defined, all code is compiled, creating a Swiss Army Knive that can 
+(1) Create a built-in dictionary
+(2) Create an old-style flex rule list (Use the program affixtrain for new style!)
+(3) Lemmatise a text.
+
+------------------------------
+Version 5.0 (3 January 2014)
 ------------------------------
 When lemmatizing (-L option):
 Made #define STREAM 1 work as intended: handle standard input line-wise.

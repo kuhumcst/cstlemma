@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -23,11 +23,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define LEM_H
 // types that ar used for serializing (writing to file) the dictionary
 
-#include <stddef.h>
 #include "defines.h"
+#if (defined PROGLEMMATISE) || (defined PROGMAKEDICT)
+
+#include <stddef.h>
 
 typedef unsigned char tchildren;
-//typedef unsigned int tchildren;
 #if defined VERYBIGDICT
 typedef ptrdiff_t tindex;
 typedef size_t tlength;
@@ -44,12 +45,10 @@ typedef INT32 tcount;
 #define PERCLD "%d"
 #endif
 
-//typedef short int tfrequency; // One could consider a smaller type and a logarithmic scale
-//typedef short int toffset;
 typedef struct
     {
     unsigned int Offset:8;       // String length max 255
     unsigned int frequency:24;   // Max frequency 16.777.215
     } tsundry;
-//typedef char tcount; // tcount must be signed
+#endif
 #endif

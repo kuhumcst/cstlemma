@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define OUTPUTCLASS_H
 
 #include "defines.h"
+#if defined PROGLEMMATISE
 
 #define NUMBERTEST 1
 #define STRINGTEST 2
@@ -59,4 +60,5 @@ class OutputClass
 #endif
     };
 
+#endif
 #endif

@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -22,18 +22,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
 
-
-#include <stdio.h>
+#include "defines.h"
+#if defined PROGLEMMATISE
 #include "lext.h"
+#include <stdio.h>
 
-/*
-class flex;
-class Word;
-class taggedWord;
-class basefrm;
-class taggedWord;
-class dictionary;
-*/
 extern lext * LEXT;
 
 class dictionary
@@ -49,10 +42,10 @@ class dictionary
         static bool readNodes(FILE * fp);
         static void cleanup();
         
-        static void printlex(tindex pos, FILE * fp);/*20120709 int -> size_t, long -> tindex*/
-        static void printlex2(char * head,tindex pos, FILE * fp);/*20120709 int -> size_t, long -> tindex*/
-        static void printnode(size_t indent, tindex pos, FILE * fp);/*20120709 int -> size_t, long -> tindex*/
-        static void printnode2(char * head,tindex pos, FILE * fp);/*20120709 int -> size_t, long -> tindex*/
+        static void printlex(tindex pos, FILE * fp);
+        static void printlex2(char * head,tindex pos, FILE * fp);
+        static void printnode(size_t indent, tindex pos, FILE * fp);
+        static void printnode2(char * head,tindex pos, FILE * fp);
         static bool findwordSub(const char * word,tcount & Pos,int & Nmbr);
     public:
         static bool findword(const char * word,tcount & Pos,int & Nmbr);
@@ -64,4 +57,5 @@ class dictionary
     };
 
 
+#endif
 #endif

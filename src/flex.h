@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define FLEX_H
 
 #include "defines.h"
+#if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
 
 #include <stdio.h>
 
@@ -108,7 +109,7 @@ class node
         static int mutated;
         node * m_next;
         char * m_tail;
-        size_t m_len;/*20120709 int -> size_t*/
+        size_t m_len;
         base * basef;
         node * m_sub;
     public:
@@ -129,8 +130,8 @@ class node
             }
         node * Next(){return m_next;}
         base * addsub(char * tail,int n,char * baseform,bool fullWord,node *& prev);
-        bool Baseform(char * invertedWord,base *& bf,size_t & ln);/* 20120709 int -> size_t */
-        bool BaseformSub(char * word,base *& bf,size_t & ln);/*20120709 int -> size_t*/
+        bool Baseform(char * invertedWord,base *& bf,size_t & ln);
+        bool BaseformSub(char * word,base *& bf,size_t & ln);
         base * add(char * tail,char * baseform,bool fullWord,node *& prev,bool empty);
         void cut(int c);
         node * remove();
@@ -141,10 +142,10 @@ class node
         void unmark(){marked = false;if(m_next)m_next->unmark();}
         void mark(){marked = true;}
         node * removeAllMarked();
-        size_t itsLen(){return m_len;}/*20120709 int -> size_t*/
+        size_t itsLen(){return m_len;}
         void write(FILE * fp,const char * type,int indent,char buf[]);
         void write(FILE * fp,const char * type,char buf[]);
-        void removeUnusedPatterns(node *& prev,/*const char * type,char buf[],*/bool first);
+        void removeUnusedPatterns(node *& prev,bool first);
         void removeUnneededPatterns(node *& prev,const char * type,char buf[],bool first,traverseTp how);
         void resetRefCount();
         void resetAdded();
@@ -185,7 +186,7 @@ class type
 #endif
             }
         base * add(const char * tp,char * tail,char * baseform,bool fullWord,type *& prev);
-        bool Baseform(char * invertedWord,const char * tag,base *& bf,size_t & ln);/* 20120709 int -> size_t */
+        bool Baseform(char * invertedWord,const char * tag,base *& bf,size_t & ln);
         type * remove();
 #if defined PROGMAKESUFFIXFLEX
         void write(FILE * fp,bool nice);
@@ -198,7 +199,7 @@ class type
         void remove(base * bf);
 #endif
 #if defined PROGLEMMATISE
-        char * Baseform(char * invertedWord,base *& bf,size_t & ln);/* 20120709 int -> size_t */
+        char * Baseform(char * invertedWord,base *& bf,size_t & ln);
         void print();
         void removeAmbiguous(type *& prev);
 #endif
@@ -224,8 +225,7 @@ class flex
         ~flex();
         void trim(char * s);
         base * add(char * line);
-        bool Baseform2(char * word,const char * tag,base *& bf,size_t & offset);/* 20120709 int -> size_t */
-        bool Baseform(const char * word,const char * tag,const char *& bf,size_t & borrow);/* 20120709 int -> size_t */
+        bool Baseform2(char * word,const char * tag,base *& bf,size_t & offset);
         bool readFromFile(FILE * fpflex);
 #if defined PROGMAKESUFFIXFLEX
     private:
@@ -254,8 +254,10 @@ class flex
             );
 #endif
 #if defined PROGLEMMATISE
+    public:
         static bool baseformsAreLowercase;
-        char * Baseform(const char * word,const char *& bf,size_t & borrow); /*20120709 int -> size_t*/// returns tag
+        bool Baseform(const char * word,const char * tag,const char *& bf,size_t & borrow);
+        char * Baseform(const char * word,const char *& bf,size_t & borrow); // returns tag
         void print();
         void removeAmbiguous();
         bool readFromFile(FILE * fpflex,const char * flexFileName);
@@ -378,4 +380,5 @@ remove the now unnecessary [ed]e d rule (incorporated by the [d]d rule).
  51093    *    12            ADJ       [vred]v r e d 
  50553          2            ADJ     [rede]r e d 
 */
+#endif
 #endif

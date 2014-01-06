@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 #include "flex.h"
+#if defined PROGLEMMATISE
 #include "utf8func.h" // Inc
 #include "caseconv.h"
 #include "readlemm.h"
@@ -37,11 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 using namespace std;
 #endif
 
-
 bool flex::baseformsAreLowercase = true;
-
-
-
 
 void base::print(int n)
     {
@@ -95,10 +92,9 @@ void node::print(int n)
     }
 //-----------------
 
-char * type::Baseform(char * invertedWord,base *& bf,size_t & ln)/* 20120709 int -> size_t */
+char * type::Baseform(char * invertedWord,base *& bf,size_t & ln)
     {
-    base * BF = 0;
-    /*int LN = -1; 20120709 int -> size_t */
+    base * BF = 0;    
     size_t LN = 0;
     char * TP = 0;
     if(m_next)
@@ -179,7 +175,7 @@ void flex::print()
         types->print();
     }
 
-bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t & borrow)/*20120709 int -> size_t */
+bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t & borrow)
     {
     if(newStyleRules())
         {
@@ -189,8 +185,8 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
 
     if(types)
         {
-        size_t offset = 0;/* 20120709 int -> size_t */
-        size_t wlen = strlen(word);/*20120709 int -> size_t*/
+        size_t offset = 0;
+        size_t wlen = strlen(word);
         if(wlen > 256)
             {
             if(baseformsAreLowercase)
@@ -198,21 +194,17 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
                 size_t length = 0;
                 word = changeCase(word,true,length);
 
-//                AllToLower(word); // destructive, because overwriting word!
-                                // But this is exceptional to begin with.
                 }
             bf = word;
             borrow = wlen;
             return true;
             }
         static char aWord[256];
-//        strcpy(aWord,word);
         if(baseformsAreLowercase)
             {
             size_t length = 0;
             strncpy(aWord,changeCase(word,true,length),sizeof(aWord)-1);
             aWord[sizeof(aWord)-1] = '\0';
-//            AllToLower(aWord);
             }
         else
             strcpy(aWord,word);
@@ -223,7 +215,6 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
             borrow = wlen - offset;
             static char buf[256];
             char * b = buf;
-            //while(true)
             for(;;)
                 {
                 strncpy(b,word,borrow);
@@ -233,13 +224,11 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
                     {
                     size_t length = 0;
                     strcpy(b,changeCase(b,true,length));
-                    //AllToLower(b);
                     }
-                else if(IsAllUpper(word)) // Bart 20090203: made UTF8-capable
+                else if(IsAllUpper(word)) // made UTF8-capable
                     {
                     size_t length = 0;
                     strcpy(b,changeCase(b,false,length));
-//                    allToUpper(b);
                     }
                 else if(borrow == 0 && is_Upper(word))
                     {
@@ -248,9 +237,6 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
                     length = 0;
                     char * nb = b + skipUTF8char(b);
                     strcpy(nb,changeCase(nb,true,length));
-                    //allToUpper(b);
-                    //AllToLower(b + skipUTF8char(b));
-                    //toUpper(b); 20100305
                     }
 
                 b += strlen(b);
@@ -274,7 +260,7 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
         return false;
     }
 
-char * flex::Baseform(const char * word,const char *& bf,size_t & borrow)/*20120709 int -> size_t*/
+char * flex::Baseform(const char * word,const char *& bf,size_t & borrow)
     {
     if(newStyleRules())
         {
@@ -286,30 +272,25 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow)/*20120
 
     if(types)
         {
-        size_t offset = 0;/* 20120709 int -> size_t */
-        size_t wlen = strlen(word);/*20120709 int -> size_t*/
+        size_t offset = 0;
+        size_t wlen = strlen(word);
         if(wlen > 256)
             {
             if(baseformsAreLowercase)
                 {
                 size_t length = 0;
                 word = changeCase(word,true,length);
-
-//                AllToLower(word); // destructive, because overwriting word!
-                                // But this is exceptional to begin with.
                 }
             bf = word;
             borrow = wlen;
             return 0;
             }
         static char aWord[256];
-//        strcpy(aWord,word);
         if(baseformsAreLowercase)
             {
             size_t length = 0;
             strncpy(aWord,changeCase(word,true,length),sizeof(aWord)-1);
             aWord[sizeof(aWord)-1] = '\0';
-//            AllToLower(aWord);
             }
         else
             strcpy(aWord,word);
@@ -321,7 +302,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow)/*20120
             borrow = wlen - offset;
             static char buf[256];
             char * b = buf;
-            //while(true)
+            
             for(;;)
                 {
                 strncpy(b,word,borrow);
@@ -330,7 +311,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow)/*20120
                     {
                     size_t length = 0;
                     strcpy(b,changeCase(b,true,length));
-                    //AllToLower(b); // We have no lexical type information to 
+                    // We have no lexical type information to 
                     }
                 // decide whether capitals should be used, so we assume all 
                 // lower case.
@@ -378,3 +359,4 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow)/*20120
             }
         return true;
         }
+#endif

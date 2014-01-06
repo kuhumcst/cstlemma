@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "basefrm.h"
+#if defined PROGLEMMATISE
 #include "basefrmpntr.h"
 #include "functio.h"
 #include "functiontree.h"
@@ -87,7 +88,7 @@ function * basefrm::getBasefrmFunctionNoW(int character,bool & DummySortInput,in
     switch(character)
         {
         case 'f':
-            basefrm::hasW = true; // Bart 20050720. Lemma frequency is sum of
+            basefrm::hasW = true; // Lemma frequency is sum of
                                   // full form frequencies, so full form 
                                   // pointers must be added to each base form.
             return new functionNoArgB(&basefrm::F);
@@ -254,7 +255,7 @@ void basefrm::addFullForms(basefrm * other)
                 }
             else 
                 {
-                if(cmp == 0) // Bart 20060705. Without this block, duplicate 
+                if(cmp == 0) // Without this block, duplicate 
                     // fullforms sometimes enter the list.
                     // This happens especially when the dictionary is used and
                     // it contains homographs:
@@ -408,3 +409,4 @@ void basefrm::W() const
     print(basefrm::m_fp,m_s);
     }
 
+#endif

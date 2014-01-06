@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,8 +20,10 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "field.h"
 #include "text.h"
+#if defined PROGLEMMATISE
+
+#include "field.h"
 #include "word.h"
 #include "basefrm.h"
 #include "flex.h"
@@ -500,7 +502,7 @@ void text::Lemmatise(FILE * fpo
         tally->newcnt = this->newcnt;
         tally->newcntTypes = this->newcntTypes;
         }
-    if(mergeLemmas) // Bart 20101102
+    if(mergeLemmas)
         {
         basefrmarrD = new basefrm * [0];
         basefrmarrL = new basefrm * [cntL+cntD];
@@ -833,20 +835,6 @@ bool text::setFormat(const char * cformat,const char * bformat,const char * Bfor
     return Word::setFormat(cformat,bformat,Bformat,a_InputHasTags);
     }
 
-/*
-#if STREAM
-ostream * token::fp = 0;
-void token::setFile(ostream * a_fp)
-#else
-FILE * token::fp = 0;
-void token::setFile(FILE * a_fp)
-#endif
-    {
-    token::fp = a_fp;
-    }
-*/
-
-
 void text::makeList()
     {
     if(Hash)
@@ -856,3 +844,4 @@ void text::makeList()
         Hash = NULL;
         }
     }
+#endif

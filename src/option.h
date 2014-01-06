@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -21,7 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "defines.h"
 
+#if defined PROGMAKEDICT
 class FreqFile;
+#endif
+
 typedef enum {MAKEDICT,MAKEFLEXPATTERNS,LEMMATISE} whattodoTp;
 typedef enum {GoOn = 0,Leave = 1,Error = 2} OptReturnTp;
 
@@ -61,7 +64,7 @@ struct optionStruct
 #if defined PROGLEMMATISE
     const char * dictfile;  // -d
 #endif
-#if (defined PROGMAKESUFFIXFLEX || defined PROGLEMMATISE)
+#if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
     const char * flx;       // -f
 #endif
 #if defined PROGLEMMATISE

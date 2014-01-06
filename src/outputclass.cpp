@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,6 +20,8 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "outputclass.h"
+#if defined PROGLEMMATISE
+
 #include "functiontree.h"
 #include "functio.h"
 #include "comparison.h"
@@ -177,7 +179,7 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
                 else 
                     break;
                 }
-            //while(true);
+            ;
             tree.setNmbr(nmbr);
             }
         }
@@ -199,7 +201,7 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
             else 
                 break;
             }
-        //while(true);
+        ;
         tree.setNmbr(nmbr);
         }
     else if(*f == '+')
@@ -242,3 +244,4 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
     return Format(f,gfnc,tree.addNext(),allFormat,SortInput,testType);
     }
 
+#endif

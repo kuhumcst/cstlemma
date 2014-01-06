@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "makedict.h"
 #endif
 
-#if (defined PROGMAKESUFFIXFLEX || defined PROGLEMMATISE)
+#if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
 #include "flex.h"
 #endif
 #if defined PROGLEMMATISE
@@ -41,7 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include  <io.h>
 #endif
 #endif
-#if (defined PROGMAKEDICT || defined PROGLEMMATISE)
+#if (defined PROGLEMMATISE) || (defined PROGMAKEDICT)
 #include <stdarg.h>
 #include <time.h>
 #include <limits.h>
@@ -189,6 +189,7 @@ Lemmatiser::~Lemmatiser()
 #endif
     }
 
+#if (defined PROGLEMMATISE) || (defined PROGMAKEDICT)
 static void cannotOpenFile(const char * s1,const char * name, const char * s2)
     {
 #if STREAM
@@ -197,6 +198,7 @@ static void cannotOpenFile(const char * s1,const char * name, const char * s2)
     printf("%s \"%s\" %s\n",s1,name,s2);
 #endif
     }
+#endif
 
 #if defined PROGMAKEDICT
 int Lemmatiser::MakeDict()
@@ -703,7 +705,7 @@ int Lemmatiser::openFiles()
 #endif
         }
     else
-        { // Bart 20021105
+        {
         if(Option.z)
             {
             fpz = fopen(Option.z,"rb");  /* "r" -> "rb" 20130122 */
@@ -1062,7 +1064,6 @@ void Lemmatiser::LemmatiseText(FILE * fpin,FILE * fpout,tallyStruct * tally)
                     && ((listLemmas & 3) == 3) // both of -b and -B are specified
                     && !strcmp(Option.Bformat,Option.bformat) // -b and -B options are the same format
                        // true: outputs must be merged
-                       // Bart 20101102
                    );
     delete Text;
     }
@@ -1155,7 +1156,7 @@ int Lemmatiser::LemmatiseFile()
         fpin = new ifstream(Option.argi,ios::in|ios::binary);
         if(!fpin || !fpin->good())
 #else
-        fpin = fopen(Option.argi,"rb"); // Bart 20090107 rt -> rb
+        fpin = fopen(Option.argi,"rb");
         if(!fpin)
 #endif
             {
@@ -1273,77 +1274,4 @@ void Lemmatiser::LemmatiseEnd()
     delete TagFriends;
     }
 
-
-        // functions to change Option on the fly
-/*
-void Lemmatiser::setIformat(const char * format)
-    {            // -I
-    Option.setIformat(format);
-    }
-
-void Lemmatiser::setBformat(const char * format)            // -B
-    {            // -I
-    Option.setBformat(format);
-    changed = true;
-    }
-
-void Lemmatiser::setbformat(const char * format)            // -b
-    {            // -I
-    Option.setbformat(format);
-    changed = true;
-    }
-
-void Lemmatiser::setcformat(const char * format)            // -c
-    {            // -I
-    Option.setcformat(format);
-    changed = true;
-    }
-
-void Lemmatiser::setWformat(const char * format)            // -W
-    {            // -I
-    Option.setWformat(format);
-    changed = true;
-    }
-
-void Lemmatiser::setSep(const char * a)
-    {            // -I
-    Option.setSep(a);
-    }
-
-void Lemmatiser::setUseLemmaFreqForDisambiguation(int n)    // -H 0, 1 or 2
-    {
-    Option.setUseLemmaFreqForDisambiguation(n);
-    }
-
-void Lemmatiser::setkeepPunctuation(bool b)
-    {
-    Option.setkeepPunctuation(b);
-    }
-
-void Lemmatiser::setsize(unsigned long int n)
-    {
-    Option.setsize(n);
-    }
-
-void Lemmatiser::settreatSlashAsAlternativesSeparator(bool b)
-    {
-    Option.settreatSlashAsAlternativesSeparator(b);
-    }
-
-void Lemmatiser::setUseLemmaFreqForDisambiguation(bool b)
-    {
-    Option.setUseLemmaFreqForDisambiguation(b);
-    changed = true;
-    }
-
-void Lemmatiser::setDictUnique(bool b)
-    {
-    Option.setDictUnique(b);
-    }
-
-void Lemmatiser::setbaseformsAreLowercase(bool b)
-    {
-    Option.setbaseformsAreLowercase(b);
-    }
-*/
 #endif

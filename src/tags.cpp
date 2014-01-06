@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,6 +20,8 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "tags.h"
+#if defined PROGLEMMATISE
+
 #include "caseconv.h"
 #include <stdio.h>
 #include <string.h>
@@ -37,14 +39,6 @@ tags (but also "PRON" and "V") can occur in the text. Before dictionary
 look-up, e.g. "V_PAST" is converted to "V".
 */
 
-/*
-static char * X = NULL;
-char ** textTags = NULL; //List of tags that may occur in the text, but are not in the dictionary
-char ** dictTags = NULL; //List of corresponding tags as found in the dictionary
-// tags that occur in the text as well as in the dictionary are not listed.
-int tagcnt = 0;
-*/
-//bool readTags(FILE * fpx,bool nice)
 tagpairs::tagpairs(FILE * fpx,bool nice):textTags(NULL),dictTags(NULL),tagcnt(0),X(NULL)
     {
 #ifdef COUNTOBJECTS
@@ -123,8 +117,8 @@ tagpairs::~tagpairs()
 
 const char * tagpairs::translate(const char * Tp)
     {
-    static int i = 0; // Bart 20030911
-    if(tagcnt && !strcmp(Tp,textTags[i])) // Bart 20051209 added "tagcnt &&"
+    static int i = 0;
+    if(tagcnt && !strcmp(Tp,textTags[i]))
         return dictTags[i]; // optimisation. (Often the same tag must be translated many times in sequence).
     for(i = 0;i < tagcnt;++i)
         {
@@ -158,3 +152,4 @@ int tagpairs::Closeness(const char * tag,const char * t)
         }
     return -1;
     }
+#endif

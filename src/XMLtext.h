@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #ifndef XMLTEXT_H
 #define XMLTEXT_H
+
+#include "defines.h"
+#if defined PROGLEMMATISE
 
 #include <stddef.h>
 #include "text.h"
@@ -131,4 +134,5 @@ class XMLtext : public text
             );
     };
 
+#endif
 #endif

@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define WORD_H
 
 #include "defines.h"
+#if defined PROGLEMMATISE
 #include "outputclass.h"
 #include "basefrmpntr.h"
 #include <string.h>
@@ -59,7 +60,7 @@ class Word : public OutputClass
 #endif
     public:
         static Word * Root;
-        static int LineNumber; // Bart 20050221. The number of the line where the previous word was found. For line-wise output. 0 is initial value
+        static int LineNumber; // The number of the line where the previous word was found. For line-wise output. 0 is initial value
         static bool DictUnique;
         static int NewLinesAfterWord;
 //  protected:
@@ -421,13 +422,7 @@ class taggedWord : public Word
             this->m_tag = new char[strlen(tag) + 1];
             strcpy(this->m_tag,tag);
             }
-        /*
-        taggedWord(Word & w):Word(w)
-            {
-            m_tag = ((taggedWord &)w).m_tag;
-            }
-        */
-        taggedWord(taggedWord & w):Word(w) // Bart 20081111 (Word & w) ==> (taggedWord & w)
+        taggedWord(taggedWord & w):Word(w) // (Word & w) ==> (taggedWord & w)
             {
             m_tag = w.m_tag;
             }
@@ -453,4 +448,5 @@ class taggedWord : public Word
             }
     };
 
+#endif
 #endif

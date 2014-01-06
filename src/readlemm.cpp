@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,6 +20,8 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "readlemm.h"
+#if (defined PROGMAKEDICT) || (defined PROGMAKESUFFIXFLEX)
+
 #include "fieldfnc.h"
 #include <string.h>
 
@@ -81,7 +83,7 @@ static bool readBaseform(FILE * fpin,bool last)
 //Cardinal must stay in dictionary!            removeCardinal(s_baseform,s_bm - 1);
             break;
             }
-        if(kar != '\r')// Was commented out Bart 20050216
+        if(kar != '\r')
             s_baseform[s_bm++] = (char)kar;
         }
     return false;
@@ -112,7 +114,7 @@ static bool readFullform(FILE * fpin,bool last)
             flexform[la] = '\0';
             return false;
             }
-        if(kar != '\r')// Was commented out Bart 20050216
+        if(kar != '\r')
             flexform[la++] = (char)kar;
         }
     }
@@ -142,7 +144,7 @@ static bool readType(FILE * fpin,bool last)
             lextype[le] = '\0';
             return false;
             }
-        if(kar != '\r')// Was commented out Bart 20050216
+        if(kar != '\r')
             lextype[le++] = (char)kar;
         }
     }
@@ -182,9 +184,8 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
         {
         FIELDS[ind++] = NULL;
         }
-    //Bart 20030113
     int neededFields = 0;
-    /*bool*/ T = false;
+    T = false;
     for(unsigned int n = 0;n < sizeof(FIELDS)/sizeof(FIELDS[0]) && format[n];++n)
         {
         switch(format[n])
@@ -284,7 +285,7 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
 					eof = true;
 				}
         }
-    s_bm = la = le = 0; // Bart 20050728
+    s_bm = la = le = 0;
     if(err)
         {
         fclose(err);
@@ -294,23 +295,4 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
         remove("discarded");
     return cnt;
     }
-/*
-bool removeBogus(char * dictFlexform)
-    {
-    // mineralvand,2erne --> mineralvanderne
-    char * komma = strchr(dictFlexform,',');
-    if(komma)
-        {
-        char * num = komma+1;
-        if('0' <= *num && *num <= '9')
-            {
-            while(*num && '0' <= *num && *num <= '9')
-                ++num;
-            while(*num)
-                *komma++ = *num++;
-            return true;
-            }
-        }
-    return false;
-    }
-*/
+#endif

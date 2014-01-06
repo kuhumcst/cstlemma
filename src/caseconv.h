@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005, 2009  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014, 2009  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 

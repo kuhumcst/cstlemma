@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 //#include "makesuffixflex.h"
 #include "flex.h"
+#if defined PROGMAKESUFFIXFLEX
 
 #include "caseconv.h"
 #include "readlemm.h"
@@ -59,6 +60,7 @@ void unchanged()
     type::mutated = 0;
     }
 
+#if defined PROGMAKESUFFIXFLEX
 void base::removeNonFullWordsAsAlternatives()
     {
     while(m_next && !m_next->isFullWord())
@@ -67,7 +69,7 @@ void base::removeNonFullWordsAsAlternatives()
         m_next->removeNonFullWordsAsAlternatives();
     }
 
-void base::removeUnusedPatterns(base *& prev/*,const char * Type,char buf[]*/)
+void base::removeUnusedPatterns(base *& prev)
     {
     if(refcnt == 0)
         {
@@ -75,7 +77,7 @@ void base::removeUnusedPatterns(base *& prev/*,const char * Type,char buf[]*/)
 #if 1
         prev = remove();
         if(prev)
-            prev->removeUnusedPatterns(prev/*,Type,buf*/);
+            prev->removeUnusedPatterns(prev);
 #else
         if(m_next)
             m_next->removeUnusedPatterns(m_next/*,Type,buf*/);
@@ -84,6 +86,8 @@ void base::removeUnusedPatterns(base *& prev/*,const char * Type,char buf[]*/)
     else if(m_next)
         m_next->removeUnusedPatterns(m_next/*,Type,buf*/);
     }
+#endif
+
 #if TEST
 void base::test(char * Text,char * save,char * buf,const char * Type)
     {
@@ -123,9 +127,10 @@ This rather special rule would give wrong results for many other words ending in
 
 */
 
+#if defined PROGMAKESUFFIXFLEX
 bool base::removeUnneededPatterns(base *& prev,const char * Type,char tailBuffer[],node * parent)
     {
-    size_t len = parent->itsLen();/* 20120709 int -> size_t */
+    size_t len = parent->itsLen();
     if(  !strncmp(m_baseform,tailBuffer,len) 
       && tailBuffer[len] /*We do not want to reduce the tail to nothing*/
       )
@@ -139,7 +144,7 @@ bool base::removeUnneededPatterns(base *& prev,const char * Type,char tailBuffer
         // On the other hand, we don't want to shorten the rule [b]b, as 
         // nothing would remain.
         {
-        size_t offset;/* 20120709 int -> size_t */
+        size_t offset;
         base * BaseOfHigherUpRule;
         if(Flex.Baseform2(tailBuffer+1,Type,BaseOfHigherUpRule,offset))
             // BaseOfHigherUpRule and offset now contain the prediction based 
@@ -148,8 +153,8 @@ bool base::removeUnneededPatterns(base *& prev,const char * Type,char tailBuffer
             // the root of the tree than this object, because the tail pattern
             // is shorter.
             {
-            size_t wlen = strlen(tailBuffer+1); /*20120709 int -> size_t*/ // the length of the left-trimmed tail
-            size_t borrow = wlen - offset; /*20120709 int -> size_t*/ //the number of characters that weren't
+            size_t wlen = strlen(tailBuffer+1);  // the length of the left-trimmed tail
+            size_t borrow = wlen - offset;  //the number of characters that weren't
                             //used for deciding the base form by Flex.Baseform2
             if(  !BaseOfHigherUpRule->Next() // we only want to employ 
                                             // singe-valued baseforms
@@ -561,7 +566,7 @@ void node::removeUnneededPatterns(node *& prev,const char * Type,char tailBuffer
     bool done = false;
     bool ambivalent = false;
 
-    size_t len = strlen(tailBuffer);/*20120709 int -> size_t*/
+    size_t len = strlen(tailBuffer);
     if(m_sub || basef)
         strcpy(tailBuffer+len,m_tail);
     
@@ -640,8 +645,8 @@ base * flex::update(char * baseForm,char * word,const char * tag,bool partial)
     // such that stem+basef = baseForm and stem+end = word.
     if(types)
         {
-        size_t wlen = strlen(word); /*20120709 int -> size_t*/
-        size_t offset = 0;/* 20120709 int -> size_t */
+        size_t wlen = strlen(word); 
+        size_t offset = 0;
         Strrev(word);
         // Now the full form word is inverted!
         base * Base;
@@ -813,17 +818,17 @@ base * flex::add(const char * tag,char * end,char * baseform,bool fullWord)
     }
 
 
-    int flex::updateFlexRulesIfNeeded(char * dictBaseform,char * dictFlexform, char * dictType)
-        {
-        update(dictBaseform,dictFlexform,dictType,false);
-        return 2;
-        }
+int flex::updateFlexRulesIfNeeded(char * dictBaseform,char * dictFlexform, char * dictType)
+    {
+    update(dictBaseform,dictFlexform,dictType,false);
+    return 2;
+    }
 
 void node::write(FILE * fp,const char * Type,int indent,char tailBuffer[])
     {
     if(m_sub)
         {
-        size_t Len = strlen(tailBuffer);/*20120709 int -> size_t*/
+        size_t Len = strlen(tailBuffer);
         strcpy(tailBuffer+Len," ");
         strcpy(tailBuffer+Len+1,m_tail);
         m_sub->write(fp,Type,indent+2,tailBuffer);
@@ -831,7 +836,7 @@ void node::write(FILE * fp,const char * Type,int indent,char tailBuffer[])
         }
     if(basef)
         {
-        size_t Len = strlen(tailBuffer);/*20120709 int -> size_t*/
+        size_t Len = strlen(tailBuffer);
         strcpy(tailBuffer+Len," ");
         strcpy(tailBuffer+Len+1,m_tail);
         Strrev(tailBuffer);
@@ -847,14 +852,14 @@ void node::write(FILE * fp,const char * Type,char tailBuffer[])
     {
     if(m_sub)
         {
-        size_t Len = strlen(tailBuffer);/*20120709 int -> size_t*/
+        size_t Len = strlen(tailBuffer);
         strcpy(tailBuffer+Len,m_tail);
         m_sub->write(fp,Type,tailBuffer);
         tailBuffer[Len] = '\0';
         }
     if(basef)
         {
-        size_t Len = strlen(tailBuffer);/*20120709 int -> size_t*/
+        size_t Len = strlen(tailBuffer);
         strcpy(tailBuffer+Len,m_tail);
         Strrev(tailBuffer);
         basef->write(fp,Type,tailBuffer);
@@ -897,11 +902,9 @@ void type::removeNonFullWordsAsAlternatives()
 
 void type::removeUnusedPatterns(type *& prev)
     {
-/*    char tailBuffer[256];
-    tailBuffer[0] = '\0';*/
     if(end)
         {
-        end->removeUnusedPatterns(end/*,tp,tailBuffer*/,true);
+        end->removeUnusedPatterns(end,true);
         if(!end)
             {
             prev = remove();
@@ -1018,13 +1021,6 @@ bool  addrule(char * baseform,char * flexform,char * lextype)
     cnt += Flex.updateFlexRulesIfNeeded(baseform,flexform,lextype);
     return true;
     }
-/*
-int flex::extractFlexPatternsFromTaggedText(FILE * fpdict,const char * format)
-    {
-    readLemmas(fpdict,format,addrule,true);
-    return cnt;
-    }
-*/
 
 void flex::makeFlexRules
         (FILE * fpdict
@@ -1042,11 +1038,11 @@ void flex::makeFlexRules
     flex::CutoffRefcount = CutoffRefcount;
     flex::showRefcount = showRefcount;
     training = true;
-    for(int SRep = 0;/*true*//*see test below*/;++SRep)
+    for(int SRep = 0;/*see test below*/;++SRep)
         {
-        for(int Rep = 0;/*true*/;++Rep)
+        for(int Rep = 0;;++Rep)
             {
-            for(int rep = 0;/*true*/;++rep)
+            for(int rep = 0;;++rep)
                 {
                 rewind(fpdict);
                 resetRefCount();
@@ -1162,3 +1158,5 @@ void Exit()
     exit(0);
     }
 
+#endif
+#endif

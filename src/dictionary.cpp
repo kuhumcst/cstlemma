@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005, 2009  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014, 2009  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "dictionary.h"
+#if defined PROGLEMMATISE
+
 #include "utf8func.h"
 #include "caseconv.h"
 #include <string.h>
@@ -45,7 +47,6 @@ struct Nodes
                          // this number is given by numberOfChildren)
     int * initialchars;  // (optimization) string with all first characters. 
                          //     (Not part of the dictionary file!)
-//    char * initialchars;
                          // First ntoplevel characters for each of the 
                          // ntoplevel nodes. May contain zero bytes!
                          // If first character of candidate string isn't in
@@ -133,15 +134,12 @@ bool dictionary::findword(const char * word,tcount & Pos,int & Nmbr)
 bool dictionary::findwordSub(const char * word,tcount & Pos,int & Nmbr)
     {
     int kar = UTF8char(word,staticUTF8);
-//    int kar = 0xFF & *word;
     const char * w = word;
     int nmbr = NODES.ntoplevel;
-//    int i = 0;
     tcount pos = 0;
     while(nmbr > 0)
         {
         int kar2 = NODES.initialchars[pos];
-//        int kar2 = 0xFF & NODES.initialchars[pos];
         if(kar2 < kar)
             {
             ++pos;
@@ -157,14 +155,6 @@ bool dictionary::findwordSub(const char * word,tcount & Pos,int & Nmbr)
                 if(s[p])
                     return false;
                 w += q;
-/*
-                while(*++s && *s == *++w)
-                    ;
-                if(*s)
-                    {
-                    return false;
-                    }
-*/
                 }
             nmbr = NODES.numberOfChildren[pos];
             pos = NODES.pos[pos];
@@ -172,7 +162,6 @@ bool dictionary::findwordSub(const char * word,tcount & Pos,int & Nmbr)
                 {
                 pos = -pos; // Make it a valid index.
                 kar = UTF8char(w,staticUTF8);
-//                kar = 0xFF & *++w; // Next initial character to find.
                 }
             else if(*w && *++w)
                 {
@@ -331,21 +320,21 @@ void dictionary::cleanup()
     delete [] NODES.pos;
     }
 
-void dictionary::printlex(tindex pos, FILE * fp)/*20120709 long -> tindex*/
+void dictionary::printlex(tindex pos, FILE * fp)
     {
     fprintf(fp,"%s %s %d %d",LEXT[pos].BaseFormSuffix,LEXT[pos].Type,LEXT[pos].S.Offset,LEXT[pos].S.frequency);
     }
 
-void dictionary::printlex2(char * head,tindex pos, FILE * fp)/*20120709 int -> size_t, long -> tindex*/
+void dictionary::printlex2(char * head,tindex pos, FILE * fp)
     {
     fprintf(fp,"%.*s%s/%s %d",(int)LEXT[pos].S.Offset,head,LEXT[pos].BaseFormSuffix,LEXT[pos].Type,LEXT[pos].S.frequency);
     }
 
-void dictionary::printnode(size_t indent, tindex pos, FILE * fp)/*20120709 int -> size_t, long -> tindex*/
+void dictionary::printnode(size_t indent, tindex pos, FILE * fp)
     {
     tchildren n = NODES.numberOfChildren[pos];
     tchildrencount i;
-    for(size_t j = indent;j;--j)/*20120709 int -> size_t*/
+    for(size_t j = indent;j;--j)
         fputc(' ',fp);
     fprintf(fp,"%s",NODES.strings[pos]);
     if(NODES.pos[pos] < 0)
@@ -369,9 +358,9 @@ void dictionary::printnode(size_t indent, tindex pos, FILE * fp)/*20120709 int -
         }
     }
 
-void dictionary::printnode2(char * head, tindex pos, FILE * fp)/*20120709 int -> size_t, long -> tindex*/
+void dictionary::printnode2(char * head, tindex pos, FILE * fp)
     {
-    size_t len = strlen(head); /*20120709 int -> size_t*/
+    size_t len = strlen(head);
     strcpy(head+len,NODES.strings[pos]);
     tchildren n = NODES.numberOfChildren[pos];
     tchildrencount i;
@@ -395,8 +384,4 @@ void dictionary::printnode2(char * head, tindex pos, FILE * fp)/*20120709 int ->
         }
     head[len] = '\0';
     }
-
-
-
-
-
+#endif

@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,6 +20,7 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "basefrmpntr.h"
+#if defined PROGLEMMATISE
 #include "basefrm.h"
 #include "functiontree.h"
 #include <stdio.h>
@@ -47,7 +48,7 @@ void baseformpointer::testPrint()
     }
 
 #if FREQ24
-baseformpointer::baseformpointer(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency):owning(true),next(NULL),hidden(false)/*20120709 int -> size_t*/
+baseformpointer::baseformpointer(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency):owning(true),next(NULL),hidden(false)
     {
     bf = new basefrm(s,t,*this,len,/*cnt,*/frequency);
 #ifdef COUNTOBJECTS
@@ -56,7 +57,7 @@ baseformpointer::baseformpointer(const char * s,const char * t,size_t len,/*int 
     }
 #else
 #if PFRQ
-baseformpointer::baseformpointer(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency)/*20120709 int -> size_t*/
+baseformpointer::baseformpointer(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency)
         :owning(true),next(NULL),hidden(false),pfrq(frequency)
     {
     bf = new basefrm(s,t,*this,len);
@@ -65,7 +66,7 @@ baseformpointer::baseformpointer(const char * s,const char * t,size_t len,/*int 
 #endif
     }
 #else
-baseformpointer::baseformpointer(const char * s,const char * t,size_t len):owning(true),next(NULL),hidden(false)/*20120709 int -> size_t*/
+baseformpointer::baseformpointer(const char * s,const char * t,size_t len):owning(true),next(NULL),hidden(false)
     {
     bf = new basefrm(s,t,*this,len);
 #ifdef COUNTOBJECTS
@@ -280,7 +281,7 @@ void baseformpointer::DissambiguateByTagFriends(const char * tag)
     }
 
 #if PFRQ || FREQ24
-int baseformpointer::addBaseForm(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency)/*20120709 int -> size_t*/
+int baseformpointer::addBaseForm(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency)
     {
     if(!bf->equal(s,t))
         {
@@ -299,7 +300,7 @@ int baseformpointer::addBaseForm(const char * s,const char * t,size_t len,/*int 
 //        printf("Equal!");
     }
 #else
-int baseformpointer::addBaseForm(const char * s,const char * t,size_t len) /*20120709 int -> size_t*/
+int baseformpointer::addBaseForm(const char * s,const char * t,size_t len) 
     {
     if(!bf->equal(s,t))
         {
@@ -317,4 +318,5 @@ int baseformpointer::addBaseForm(const char * s,const char * t,size_t len) /*201
         return 0;
 //        printf("Equal!");
     }
+#endif
 #endif

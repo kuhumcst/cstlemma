@@ -20,22 +20,10 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-/*
-D:\projects\lemmatiser\bin\vc6\Release\cstlemma.exe -L -e1 -p+ -q- -t- -U- -H2 -fD:\projects\tvarsok\ru\rules_0utf8.lem -B$w -l -c$w/$B$s -i D:\dokumenter\russisk\russisk.txt -o D:\dokumenter\russisk\russisk.lemmatised.txt -m0
-cstlemma -L -q- -U- -H2 -m0 -t- -c"$B\n" -B"$w" -f  D:\projects\cstlemma\res.de\nflex_de5 -i  D:\projects\train\test\ae.txt -o D:\projects\train\test\ae.lemma.txt
-*/
-
-/*
-This doesn't work yet:
-(new style rules with POS-tags)
-
-/var/csttools/bin/cstlemma -L -eU -p -qwft -t -U- -H2 -f'/var/csttools/res/web/da/lemmatiser/tags/2/flexrules' -B'$f $w/$t ($W)\n' -l -d'/var/csttools/res/web/da/lemmatiser/dict' -u- -W'$f $w/$t' -z'/var/csttools/res/web/da/lemmatiser/tags/lemmatags' -v'/var/csttools/res/web/da/lemmatiser/tags/friends' -x'/var/csttools/res/web/da/lemmatiser/tags/translation' -i /var/www/uploads/tagged/32828.UTF8 -o /var/www/uploads/lemmatised/32828.UTF8 -m0
-cstlemma -L -eU -p -qwft -t -U- -H2 -fD:\projects\cstlemma\res.da\tags\2\flexrules -B"$f $w/$t ($W)\n" -l -dD:\projects\cstlemma\res.da\dict.UTF8 -u- -W"$f $w/$t" -zD:\projects\cstlemma\res.da\tags\lemmatags -vD:\projects\cstlemma\res.da\tags\friends -xD:\projects\cstlemma\res.da\tags\translation -i D:\projects\cstlemma\res.da\tags\32828.UTF8 -o D:\projects\cstlemma\res.da\tags\32828.UTF8
-V:\csttools\bin\cstlemma -L -eU -p -qfwt -t -U- -H2 -f"V:\csttools\res\web\da\lemmatiser\tags\0\flexrules" -B"$f $w/$t ($W)\n" -l -b"$f $w/$t ($W)\n" -d"V:\csttools\res\web\da\lemmatiser\tags\dict.UTF8" -u- -W"$f $w/$t" -z"V:\csttools\res\web\da\lemmatiser\tags\lemmatags" -v"V:\csttools\res\web\da\lemmatiser\tags\friends" -x"V:\csttools\res\web\da\lemmatiser\tags\translation" -i V:\www\uploads\tagged\41536 -o V:\www\uploads\lemmatised\41536 -m0
-*/
+#include "applyrules.h"
+#if defined PROGLEMMATISE
 
 #include "hashmap.h"
-#include "applyrules.h"
 #include "flex.h"
 #include "utf8func.h"
 #include "caseconv.h"
@@ -60,14 +48,14 @@ struct var
 
 static const char * flexFileName;
 static char bufbuf[] = "\0\0\0\0\t\t\t\n"; //20090811: corrected wrong value // "lemma == word" default rule set
-static char * buf = bufbuf; // 20120710 Setting buf directly to a constant string generates a warning in newer gcc
+static char * buf = bufbuf; // Setting buf directly to a constant string generates a warning in newer gcc
 static long end = 8;
 static char * result = 0;
 #define TESTING 0
 #if TESTING
 static char * replacement = 0; // FOR TEST PURPOSE
 #endif
-static bool NewStyle = true;/*20090729*///false;
+static bool NewStyle = true;
 
 void setNewStyleRules(bool val)
     {
@@ -80,7 +68,7 @@ static char * readRules(FILE * flexrulefile,long & end)
         {
         int start;
         if(fread(&start,sizeof(int),1,flexrulefile) != 1)
-            return 0; // 20120710
+            return 0;
         if(start != 0)
             {
             return 0; // not the new format
@@ -628,19 +616,6 @@ bool readRules(const char * flexFileName)
         Hash = new hash<rules>(&rules::tagName,10);
     return flexFileName != 0;
     }
-/*
-bool readRules(const char * filename)
-    {
-    FILE * f = fopen(filename,"rb");
-    if(f)
-        {
-        buf = readRules(f);
-        return buf != 0;
-        }
-    return false;
-    }
-*/
-
 
 void deleteRules()
     {
@@ -661,7 +636,6 @@ const char * applyRules(const char * word)
     if(buf)
         {
         size_t len = strlen(word);
-        //const char * loword = 0;
         if(flex::baseformsAreLowercase)
             {
             size_t length = 0;
@@ -770,3 +744,4 @@ const char * applyRules(const char * word,const char * tag)
     return 0;
     }
 
+#endif

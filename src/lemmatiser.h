@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -32,15 +32,12 @@ using namespace std;
 # endif
 #endif
 
-
-
-struct optionStruct;
 #if defined PROGLEMMATISE
 class tagpairs;
 #endif
+
+struct optionStruct;
 struct tallyStruct;
-//class istream;
-//class std::ostream;
 
 class Lemmatiser
     {
@@ -59,35 +56,14 @@ class Lemmatiser
         bool SortInput; // derived from other options
 
         static int instance;
-#if (defined PROGLEMMATISE)// || defined PROGMAKEDICT)
+#if (defined PROGLEMMATISE)
         dictionary dict;
+        static tagpairs * TextToDictTags;
 #endif
         optionStruct & Option;
         int status;
-#if defined PROGLEMMATISE
-        static tagpairs * TextToDictTags;
-#endif
         bool changed;
     public:
-        // functions to change Option on the fly
-        /*
-        void setIformat(const char * format);            // -I
-        void setBformat(const char * format);            // -B
-        void setbformat(const char * format);            // -b
-        void setcformat(const char * format);            // -c
-        void setWformat(const char * format);            // -W
-        void setSep(const char * a);
-        void setUseLemmaFreqForDisambiguation(int n);    // -H 0, 1 or 2
-        void setkeepPunctuation(bool b);
-        void setsize(unsigned long int n);
-        void settreatSlashAsAlternativesSeparator(bool b);
-        void setUseLemmaFreqForDisambiguation(bool b);
-        void setDictUnique(bool b);
-        void setbaseformsAreLowercase(bool b);
-        */
-#if defined PROGLEMMATISE
-        static const char * translate(const char * tag);
-#endif
         int getStatus()
             {
             return status;
@@ -95,15 +71,10 @@ class Lemmatiser
         Lemmatiser(optionStruct & Option);
         ~Lemmatiser();
 #if defined PROGLEMMATISE
+        static const char * translate(const char * tag);
         int setFormats();
         int openFiles();
         void showSwitches();
-#endif
-        int MakeDict();
-#if defined PROGMAKESUFFIXFLEX
-        int MakeFlexPatterns();
-#endif
-#if defined PROGLEMMATISE
 #if STREAM
         void LemmatiseText(istream * fpin,ostream * fpout,tallyStruct * tally);
 #else
@@ -112,6 +83,12 @@ class Lemmatiser
         int LemmatiseFile();
         int LemmatiseInit();
         void LemmatiseEnd();
+#endif
+#if defined PROGMAKEDICT
+        int MakeDict();
+#endif
+#if defined PROGMAKESUFFIXFLEX
+        int MakeFlexPatterns();
 #endif
     };
 

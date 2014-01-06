@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -22,12 +22,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef READLEMM_H
 #define REDALEMM_H
 
+#include "defines.h"
+#if (defined PROGMAKEDICT) || (defined PROGMAKESUFFIXFLEX)
 #include <stdio.h>
 
 typedef bool (*adder)(char * b,char * f,char * t);
 
 int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomographs,int & failed,bool & T);
-//bool removeBogus(char * dictFlexform);
 bool removeCardinal(char * baseform,int bm);
+#endif
 
 #endif

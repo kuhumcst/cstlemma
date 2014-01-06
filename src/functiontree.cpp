@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -20,6 +20,7 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "functiontree.h"
+#if defined PROGLEMMATISE
 #include "functio.h"
 #include "comparison.h"
 #include <stdio.h>
@@ -178,3 +179,4 @@ bool functionTree::skip(const OutputClass * outputObj)const
     else 
         return !OK(outputObj);
     }
+#endif

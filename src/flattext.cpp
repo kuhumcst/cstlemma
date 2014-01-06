@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005, 2009  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014, 2009  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "flattext.h"
+#if defined PROGLEMMATISE
 #include "word.h"
 #include "field.h"
 #include "caseconv.h"
@@ -75,9 +76,10 @@ static bool spaces(int kar,FILE * fp, unsigned long & newlines,int & eof,int & p
             {
             ++newlines;
             }
-        // Bart 20050823 We need to look for new line after the blank. If we wait, the first word of the next line will become the last word of the current line.
-        // If there is no new line character, the first character of the next word will be read.
-        // Put this in a safe place: prevkar.
+        // We need to look for new line after the blank. If we wait, the first
+        // word of the next line will become the last word of the current line.
+        // If there is no new line character, the first character of the next
+        // word will be read. Put this in a safe place: prevkar.
         else 
             {
             do
@@ -186,7 +188,7 @@ static char * getword(FILE * fp,const char *& tag,bool InputHasTags,int keepPunc
                         }
                     if(kar == '/') // oops, word contains slash
                         {
-                        ++slashFound; // Bart 20030801. Token may need special treatment as "/"-separated alternatives.
+                        ++slashFound; // Token may need special treatment as "/"-separated alternatives.
                         *slash = '/'; // put the slash back into the word (somewhere in buf)
                         *p = '\0';    // prepare buf2 for being copied back to buf
                         strcpy(slash+1,buf2); // do the copying
@@ -527,3 +529,4 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
     if(nice)
         LOG1LINE("...read words from flat text");
     }
+#endif

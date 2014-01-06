@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -22,11 +22,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef READFREQ_H
 #define READFREQ_H
 
+#include "defines.h"
+#if defined PROGMAKEDICT
+
 #include <stdio.h>
 
 typedef void (*adderFreq)(int n,char * f,char * t,char * b);
 
 void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T);
 
-
+#endif
 #endif

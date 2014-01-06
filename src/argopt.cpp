@@ -1,7 +1,7 @@
 /*
 CSTLEMMA - trainable lemmatiser
 
-Copyright (C) 2002, 2005  Center for Sprogteknologi, University of Copenhagen
+Copyright (C) 2002, 2014  Center for Sprogteknologi, University of Copenhagen
 
 This file is part of CSTLEMMA.
 
@@ -30,8 +30,8 @@ int myoptind = 0;
 int getopt(int argc,char *argv[],char *opts)
     {
     static char emptystr[] = "";
-    char *index/* = NULL*/;
-    int optc/* = -1*/;
+    char *index;
+    int optc;
     
     if (!myoptind)    /* argv[0] points to the command verb */
         ++myoptind;
@@ -86,7 +86,7 @@ int getopt(int argc,char *argv[],char *opts)
                     else
                         {
                         myoptarg = argv[myoptind++]; 
-                        if(myoptarg[strlen(myoptarg) - 1] == '\r') // Bart 20030806 Last argument has trailing '\r' under Linux !
+                        if(myoptarg[strlen(myoptarg) - 1] == '\r') // Last argument has trailing '\r' under Linux !
                             myoptarg[strlen(myoptarg) - 1] = '\0';
                         return optc;
                         }
@@ -95,7 +95,7 @@ int getopt(int argc,char *argv[],char *opts)
                     {
                     myoptind++;
                     myoptarg = index; 
-                    if(myoptarg[strlen(myoptarg) - 1] == '\r') // Bart 20030806 Last argument has trailing '\r' under Linux !
+                    if(myoptarg[strlen(myoptarg) - 1] == '\r') // Last argument has trailing '\r' under Linux !
                         myoptarg[strlen(myoptarg) - 1] = '\0';
                     return optc;
                     }
