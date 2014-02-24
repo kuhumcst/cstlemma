@@ -1,4 +1,9 @@
 -------------------------------
+Version 5.04 (24 February 2014)
+-------------------------------
+Introduced default -I format for XML input.
+
+-------------------------------
 Version 5.03 (24 February 2014)
 -------------------------------
 Null terminated strings read with fread.

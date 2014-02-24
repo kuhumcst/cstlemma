@@ -1082,12 +1082,30 @@ void Lemmatiser::LemmatiseText(FILE * fpin,FILE * fpout,tallyStruct * tally)
 
 int Lemmatiser::LemmatiseFile()
     {
-    if((Option.Iformat != 0) && (Option.keepPunctuation != 1))
+    if(Option.XML && !Option.Iformat)
+        {
+        // 20140224
+        // Set default for input format
+        if(Option.InputHasTags)
+            Option.Iformat = dupl("$w/$t\\s");
+        else
+            Option.Iformat = dupl("$w\\s");
+        }
+    if(Option.XML && (Option.keepPunctuation != 1))
         {
 #if STREAM
-        cout << "-I and -p should not both be specified" << endl;
+        cout << "Automatic tokenization (-p option) is not supported for XML input." << endl;
 #else
-        printf("-I and -p should not both be specified\n");
+        printf("Automatic tokenization (-p option) is not supported for XML input.\n");
+#endif
+        return -1;
+        }
+    else if((Option.Iformat != 0) && (Option.keepPunctuation != 1))
+        {
+#if STREAM
+        cout << "You can specify -I or -p, not both." << endl;
+#else
+        printf("You can specify -I or -p, not both.\n");
 #endif
         return -1;
         }

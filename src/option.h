@@ -34,6 +34,8 @@ typedef enum {GoOn = 0,Leave = 1,Error = 2} OptReturnTp;
 #define commandlineQuote "\'"
 #endif
 
+extern char * dupl(const char * s);
+
 struct optionStruct
     {
 #ifdef COUNTOBJECTS
