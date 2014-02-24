@@ -1,3 +1,9 @@
+-------------------------------
+Version 5.02 (24 February 2014)
+-------------------------------
+The -X option, without further option arguments, was not working. Now it does.
+If the -I option was used, the program could hang if the input didn't conform to the -I format.
+
 ------------------------------
 Version 5.01 (6 January 2014)
 ------------------------------
