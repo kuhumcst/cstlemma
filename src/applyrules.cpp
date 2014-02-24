@@ -75,13 +75,14 @@ static char * readRules(FILE * flexrulefile,long & end)
             }
         fseek(flexrulefile,0,SEEK_END);
         end = ftell(flexrulefile);
-        char * buf = new char[end];
+        char * buf = new char[end+1]; // 20140224 +1
         if(buf && end > 0)
             {
             rewind(flexrulefile);
             if(fread(buf,1,end,flexrulefile) != (size_t)end)
                 return 0; // 20120710
             NewStyle = true;
+            buf[end] = '\0';// 20140224 new
             }
         return buf;
         }
@@ -592,13 +593,14 @@ bool readRules(FILE * flexrulefile,const char * flexFileName)
         {
         fseek(flexrulefile,0,SEEK_END);
         end = ftell(flexrulefile);
-        buf = new char[end];
+        buf = new char[end+1];// 20140224 +1
         if(buf && end > 0)
             {
             rewind(flexrulefile);
             if(fread(buf,1,end,flexrulefile) != (size_t)end)
                 return 0;// 20120710
             NewStyle = true;
+            buf[end] = '\0';// 20140224 new
             }
         return buf != 0;
         }

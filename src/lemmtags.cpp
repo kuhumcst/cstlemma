@@ -51,13 +51,17 @@ const char * LemmaTag(const char * tag)
 static bool taglinecheck(const char * xx)
     {
 #if 1 /* 20120122 */
-    // Lines starting with # or ; or // or /* are considered comment lines.
+    // Lines starting with # or ; or // are considered comment lines.
+    // 20140224 /**/ comments are no longer supported. They should have been multi-line
     // Comments can be preceded by whitespace.
     size_t whitePrefix = strspn(xx," \t\v");
     switch(xx[whitePrefix])
         {
         case '#':
         case ';':
+        case '\0':
+        case '\n':
+        case '\r':
             return false;
         case '/':
             switch(xx[whitePrefix+1])
@@ -89,7 +93,7 @@ bool readLemmaTags(FILE * fpx,bool nice)
     if(nice)
         printf("cnt = %ld\n",cnt);
     rewind(fpx);
-    lemmaX = new char[cnt+1];
+    lemmaX = new char[cnt+1];// 20140224 +1
     size_t readbytes = fread(lemmaX,1,cnt,fpx);
     if(readbytes != (size_t)cnt)
         {
@@ -99,6 +103,7 @@ bool readLemmaTags(FILE * fpx,bool nice)
                );
         return false;
         }
+    lemmaX[cnt] = 0;// 20140224 new
     fulltagcnt = 0;
     char * nxt;
     char * xx;
@@ -112,8 +117,10 @@ bool readLemmaTags(FILE * fpx,bool nice)
     lemmaTags = new char*[fulltagcnt];
     fullTags = new char*[fulltagcnt];
     fulltagcnt = 0;
+    int line = 0;
     for(xx = lemmaX;(nxt = strchr(xx,'\n')) != NULL;xx = nxt + 1)
         {
+        ++line;
         *nxt = '\0';
         if(taglinecheck(xx))
             {
@@ -137,7 +144,7 @@ bool readLemmaTags(FILE * fpx,bool nice)
                 }
             else
                 {
-                printf("error in tag translation table\n");
+                printf("error in tag translation table in line %d: [%s].\n",line,xx);
                 }
             ++fulltagcnt;
             }

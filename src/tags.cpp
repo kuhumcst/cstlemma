@@ -53,6 +53,7 @@ tagpairs::tagpairs(FILE * fpx,bool nice):textTags(NULL),dictTags(NULL),tagcnt(0)
     X = new char[cnt+1];
     if(fread(X,cnt,1,fpx) == 1)
         {
+        X[cnt] = '\0';// 20140224 new
         tagcnt = 0;
         char * nxt;
         char * xx;

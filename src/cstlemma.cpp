@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#define CSTLEMMAVERSION "5.02"
+#define CSTLEMMAVERSION "5.03"
 #define CSTLEMMADATE "2014.02.24"
 #define CSTLEMMACOPYRIGHT "2002-2014 Center for Sprogteknologi"
 

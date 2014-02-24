@@ -1,4 +1,9 @@
 -------------------------------
+Version 5.03 (24 February 2014)
+-------------------------------
+Null terminated strings read with fread.
+
+-------------------------------
 Version 5.02 (24 February 2014)
 -------------------------------
 The -X option, without further option arguments, was not working. Now it does.
