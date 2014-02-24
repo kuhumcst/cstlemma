@@ -109,7 +109,7 @@ static void showtime(clock_t t0)
     span *= 1000;
     msec = span / CLOCKS_PER_SEC;
 #if STREAM
-    clog << "\nTime: " << sec << "." << msec;
+    clog << "\nTime: " << sec << "." << msec << endl ;
 #else
     info("\nTime: %ld.%.3ld",sec,msec);
 #endif
@@ -308,7 +308,7 @@ int Lemmatiser::MakeFlexPatterns()
 int Lemmatiser::setFormats()
     {
 #if STREAM
-    clog << "\nFormats:";
+    clog << "\nFormats:" << endl;
 #else
     info("\nFormats:");
 #endif
@@ -316,7 +316,7 @@ int Lemmatiser::setFormats()
     if(Option.Iformat)
         {
 #if STREAM
-        clog << "-I\t" << Option.Iformat << "\tInput format.";
+        clog << "-I\t" << Option.Iformat << "\tInput format." << endl;
 #else
         info("-I\t%s\tInput format.",Option.Iformat);
 #endif
@@ -364,19 +364,19 @@ int Lemmatiser::setFormats()
     else if(Option.cformat && !Option.Wformat)
         {
 #if STREAM
-        clog << "-c\t" << Option.cformat << "\tOutput format";
+        clog << "-c\t" << Option.cformat << "\tOutput format" << endl;
 #else
         info("-c\t%s\tOutput format",Option.cformat);
 #endif
         if(Option.bformat)
 #if STREAM
-            clog << "-b\t" << Option.bformat << "\tDictionary base form output format.";
+            clog << "-b\t" << Option.bformat << "\tDictionary base form output format." << endl;
 #else
             info("-b\t%s\tDictionary base form output format.",Option.bformat);
 #endif
         if(Option.Bformat)
 #if STREAM
-            clog << "-B\t" << Option.Bformat << "\tComputed base form output format.";
+            clog << "-B\t" << Option.Bformat << "\tComputed base form output format." << endl;
 #else
             info("-B\t%s\tComputed base form output format.",Option.Bformat);
 #endif
@@ -387,7 +387,7 @@ int Lemmatiser::setFormats()
         if(Option.bformat)
             {
 #if STREAM
-            clog << "-b\t" << Option.bformat << "\tOutput format for data pertaining to the base form, according to the dictionary";
+            clog << "-b\t" << Option.bformat << "\tOutput format for data pertaining to the base form, according to the dictionary" << endl;
 #else
             info("-b\t%s\tOutput format for data pertaining to the base form, according to the dictionary",Option.bformat);
 #endif
@@ -397,7 +397,7 @@ int Lemmatiser::setFormats()
             {
             listLemmas |= 2;
 #if STREAM
-            clog << "-B\t" << Option.Bformat << "\tOutput format for data pertaining to the base form, as predicted by flex pattern rules.";
+            clog << "-B\t" << Option.Bformat << "\tOutput format for data pertaining to the base form, as predicted by flex pattern rules." << endl;
 #else
             info("-B\t%s\tOutput format for data pertaining to the base form, as predicted by flex pattern rules.",Option.Bformat);
 #endif
@@ -410,7 +410,7 @@ int Lemmatiser::setFormats()
 //                format = Wformat;
         if(Option.Wformat)
 #if STREAM
-            clog << "-W\t" << Option.Wformat << "\tOutput format for data pertaining to full forms.";
+            clog << "-W\t" << Option.Wformat << "\tOutput format for data pertaining to full forms." << endl;
 #else
             info("-W\t%s\tOutput format for data pertaining to full forms.",Option.Wformat);
 #endif
@@ -420,7 +420,7 @@ int Lemmatiser::setFormats()
         SortInput = basefrm::setFormat(Option.Wformat,Option.bformat,Option.Bformat,Option.InputHasTags);
         if(SortInput)
 #if STREAM
-            clog << "Input is sorted before processing (due to $f field in -W<format> argument)";
+            clog << "Input is sorted before processing (due to $f field in -W<format> argument)" << endl;
 #else
             info("Input is sorted before processing (due to $f field in -W<format> argument)");
 #endif
@@ -430,7 +430,7 @@ int Lemmatiser::setFormats()
         SortInput = text::setFormat(Option.cformat,Option.bformat,Option.Bformat,Option.InputHasTags);
         if(SortInput)
 #if STREAM
-            clog << "Input is sorted before processing (due to $f field in -c<format> argument)";
+            clog << "Input is sorted before processing (due to $f field in -c<format> argument)" << endl;
 #else
             info("Input is sorted before processing (due to $f field in -c<format> argument)");
 #endif
@@ -443,70 +443,87 @@ int Lemmatiser::setFormats()
         }
     if(!Option.XML)
 #if STREAM
-        clog << "-X-\tNot XML input.";
+        clog << "-X-\tNot XML input." << endl;
 #else
         info("-X-\tNot XML input.");
 #endif
     else
         {
-#if STREAM
-        clog << "-X\tXML-aware scanning of input";
-#else
-        info("-X\tXML-aware scanning of input");
-#endif
-        if(Option.ancestor)
-#if STREAM
-            clog << "-Xa" << Option.ancestor << "\tOnly analyse elements with ancestor " << Option.ancestor;
-#else
-            info("-Xa%s\tOnly analyse elements with ancestor %s",Option.ancestor,Option.ancestor);
-#endif
-        if(Option.element)
-#if STREAM
-            clog << "-Xe" << Option.element << "\tOnly analyse elements " << Option.element;
-#else
-            info("-Xe%s\tOnly analyse elements %s",Option.element,Option.element);
-#endif
-        if(Option.wordAttribute)
+        if(  Option.ancestor 
+          || Option.element 
+          || Option.wordAttribute 
+          || Option.POSAttribute 
+          || Option.lemmaAttribute 
+          || Option.lemmaClassAttribute
+          )
             {
 #if STREAM
-            clog << "-Xw" << Option.wordAttribute << "\tLook for word in attribute " << Option.wordAttribute;
+            clog << "\tXML-aware scanning of input" << endl;
 #else
-            info("-Xw%s\tLook for word in attribute %s",Option.wordAttribute,Option.wordAttribute);
+            info("\tXML-aware scanning of input");
 #endif
-            if(!Option.lemmaAttribute)
+            if(Option.ancestor)
 #if STREAM
-                clog << "\tStore lemma in attribute " << Option.wordAttribute;
+                clog << "-Xa" << Option.ancestor << "\tOnly analyse elements with ancestor " << Option.ancestor << endl;
 #else
-                info("\tStore lemma in attribute %s",Option.wordAttribute);
+                info("-Xa%s\tOnly analyse elements with ancestor %s",Option.ancestor,Option.ancestor);
+#endif
+            if(Option.element)
+#if STREAM
+                clog << "-Xe" << Option.element << "\tOnly analyse elements " << Option.element << endl;
+#else
+                info("-Xe%s\tOnly analyse elements %s",Option.element,Option.element);
+#endif
+            if(Option.wordAttribute)
+                {
+#if STREAM
+                clog << "-Xw" << Option.wordAttribute << "\tLook for word in attribute " << Option.wordAttribute << endl;
+#else
+                info("-Xw%s\tLook for word in attribute %s",Option.wordAttribute,Option.wordAttribute);
+#endif
+                if(!Option.lemmaAttribute)
+#if STREAM
+                    clog << "\tStore lemma in attribute " << Option.wordAttribute << endl;
+#else
+                    info("\tStore lemma in attribute %s",Option.wordAttribute);
+#endif
+                }
+            if(Option.POSAttribute)
+                {
+                if(Option.InputHasTags)
+#if STREAM
+                    clog << "-Xp" << Option.POSAttribute << "\tLook for Part of Speech in attribute " << Option.POSAttribute << endl;
+#else
+                    info("-Xp%s\tLook for Part of Speech in attribute %s",Option.POSAttribute,Option.POSAttribute);
+#endif
+                else
+#if STREAM
+                    clog << "-Xp" << Option.POSAttribute << "\tLook for Part of Speech in attribute " << Option.POSAttribute << " (ignored because of option -t-)" << endl;
+#else
+                    info("-Xp%s\tLook for Part of Speech in attribute %s (ignored because of option -t-)",Option.POSAttribute,Option.POSAttribute);
+#endif
+                }
+            if(Option.lemmaAttribute)
+#if STREAM
+                clog << "-Xl" << Option.lemmaAttribute << "\tStore lemma in attribute " << Option.lemmaAttribute << endl;
+#else
+                info("-Xl%s\tStore lemma in attribute %s",Option.lemmaAttribute,Option.lemmaAttribute);
+#endif
+            if(Option.lemmaClassAttribute)
+#if STREAM
+                clog << "-Xc" << Option.lemmaClassAttribute << "\tStore lemma class in attribute " << Option.lemmaClassAttribute << endl;
+#else
+                info("-Xc%s\tStore lemma class in attribute %s",Option.lemmaClassAttribute,Option.lemmaClassAttribute);
 #endif
             }
-        if(Option.POSAttribute)
+        else
             {
-            if(Option.InputHasTags)
 #if STREAM
-                clog << "-Xp" << Option.POSAttribute << "\tLook for Part of Speech in attribute " << Option.POSAttribute;
+            clog << "-X+\tXML-aware scanning of input" << endl;
 #else
-                info("-Xp%s\tLook for Part of Speech in attribute %s",Option.POSAttribute,Option.POSAttribute);
-#endif
-            else
-#if STREAM
-                clog << "-Xp" << Option.POSAttribute << "\tLook for Part of Speech in attribute " << Option.POSAttribute << " (ignored because of option -t-)";
-#else
-                info("-Xp%s\tLook for Part of Speech in attribute %s (ignored because of option -t-)",Option.POSAttribute,Option.POSAttribute);
+            info("-X\tXML-aware scanning of input");
 #endif
             }
-        if(Option.lemmaAttribute)
-#if STREAM
-            clog << "-Xl" << Option.lemmaAttribute << "\tStore lemma in attribute " << Option.lemmaAttribute;
-#else
-            info("-Xl%s\tStore lemma in attribute %s",Option.lemmaAttribute,Option.lemmaAttribute);
-#endif
-        if(Option.lemmaClassAttribute)
-#if STREAM
-            clog << "-Xc" << Option.lemmaClassAttribute << "\tStore lemma class in attribute " << Option.lemmaClassAttribute;
-#else
-            info("-Xc%s\tStore lemma class in attribute %s",Option.lemmaClassAttribute,Option.lemmaClassAttribute);
-#endif
         }
     changed = false;
     return 0;
@@ -519,20 +536,15 @@ int Lemmatiser::openFiles()
     FILE * fpv= 0;
     FILE * fpx = 0;
     FILE * fpz = 0;
-#if STREAM
-            clog << "-Xc" << Option.lemmaClassAttribute << "\tStore lemma class in attribute " << Option.lemmaClassAttribute;
-#else
-            info("-Xc%s\tStore lemma class in attribute %s",Option.lemmaClassAttribute,Option.lemmaClassAttribute);
-#endif
     if(Option.flx)
         {
         fpflex = fopen(Option.flx,"rb");
         if(fpflex)
             {
 #if STREAM
-            clog << "-Xc" << Option.lemmaClassAttribute << "\tStore lemma class in attribute " << Option.lemmaClassAttribute;
+            clog << "-f" << Option.flx << "\t File with flex patterns." << endl;
 #else
-            info("-Xc%s\tStore lemma class in attribute %s",Option.lemmaClassAttribute,Option.lemmaClassAttribute);
+            info("-f%s\tFile with flex patterns.",Option.flx);
 #endif
             }
         else if(Option.InputHasTags)
@@ -556,7 +568,7 @@ int Lemmatiser::openFiles()
                     if(_access((*tmp ? tmp : "."),0) == -1)
                         {
 #if STREAM
-                        clog << "-f\t" << std::setw(20) << Option.flx << "\t(Flexpatterns): Folder " << tmp << " does not exist or is not readable. Cannot open flex pattern files.";
+                        clog << "-f\t" << std::setw(20) << Option.flx << "\t(Flexpatterns): Folder " << tmp << " does not exist or is not readable. Cannot open flex pattern files." << endl;
 #else
                         info("-f\t%-20s\t(Flexpatterns): Folder %s does not exist or is not readable. Cannot open flex pattern files.",Option.flx,tmp);
 #endif
@@ -573,7 +585,7 @@ int Lemmatiser::openFiles()
                     if(d == NULL)
                         {
 #if STREAM
-                        clog << "-f\t" << std::setw(20) << Option.flx << "\t(Flexpatterns): Folder " << tmp << " does not exist or is not readable. Cannot open flex pattern files.";
+                        clog << "-f\t" << std::setw(20) << Option.flx << "\t(Flexpatterns): Folder " << tmp << " does not exist or is not readable. Cannot open flex pattern files." << endl;
 #else
                         info("-f\t%-20s\t(Flexpatterns): Folder %s does not exist or is not readable. Cannot open flex pattern files.",Option.flx,tmp);
 #endif
@@ -586,7 +598,7 @@ int Lemmatiser::openFiles()
                     }
 #endif
 #if STREAM
-            clog << "-f\t" << std::setw(20) << Option.flx << "\t(Flexpatterns): Cannot open file. Assuming that tag-specific files exist in folder " << ((slash < tmp) ? "." : tmp) << " with prefix " << slash + 1 << ".";
+            clog << "-f\t" << std::setw(20) << Option.flx << "\t(Flexpatterns): Cannot open file. Assuming that tag-specific files exist in folder " << ((slash < tmp) ? "." : tmp) << " with prefix " << slash + 1 << "." << endl;
 #else
             info("-f\t%-20s\t(Flexpatterns): Cannot open file. Assuming that tag-specific files exist in folder %s with prefix %s."
                 ,Option.flx
@@ -599,7 +611,7 @@ int Lemmatiser::openFiles()
         else
             {
 #if STREAM
-            clog << "-f\t" << std::setw(20) << Option.flx << "\t(Flexpatterns): Cannot open file.";
+            clog << "-f\t" << std::setw(20) << Option.flx << "\t(Flexpatterns): Cannot open file." << endl;
 #else
             info("-f\t%-20s\t(Flexpatterns): Cannot open file.",Option.flx);
 #endif
@@ -621,7 +633,7 @@ int Lemmatiser::openFiles()
             }
         else
 #if STREAM
-            clog << "-d\t" << std::setw(20) << Option.dictfile << "\tDictionary";
+            clog << "-d\t" << std::setw(20) << Option.dictfile << "\tDictionary" << endl;
 #else
             info("-d\t%-20s\tDictionary",Option.dictfile);
 #endif
@@ -629,7 +641,7 @@ int Lemmatiser::openFiles()
     else
         {
 #if STREAM
-        clog << "-d\tDictionary: File not specified.";
+        clog << "-d\tDictionary: File not specified." << endl;
 #else
         info("-d\tDictionary: File not specified.");
 #endif
@@ -648,14 +660,14 @@ int Lemmatiser::openFiles()
                 }
             else
 #if STREAM
-                clog << "-v\t" << std::setw(20) << Option.v << "\tTag friends file";
+                clog << "-v\t" << std::setw(20) << Option.v << "\tTag friends file" << endl;
 #else
                 info("-v\t%-20s\tTag friends file",Option.v);
 #endif
             }
         else
 #if STREAM
-            clog << "-v\tTag friends file: File not specified.";
+            clog << "-v\tTag friends file: File not specified." << endl;
 #else
             info("-v\tTag friends file: File not specified.");
 #endif
@@ -670,14 +682,14 @@ int Lemmatiser::openFiles()
                 }
             else
 #if STREAM
-            clog << "-v\tTag friends file: File not specified.";
+            clog << "-v\tTag friends file: File not specified." << endl;
 #else
             info("-v\tTag friends file: File not specified.");
 #endif
             }
         else
 #if STREAM
-            clog << "-x\tLexical type translation table: File not specified.";
+            clog << "-x\tLexical type translation table: File not specified." << endl;
 #else
             info("-x\tLexical type translation table: File not specified.");
 #endif
@@ -692,14 +704,14 @@ int Lemmatiser::openFiles()
                 }
             else
 #if STREAM
-                clog << "-z\t" << std::setw(20) << Option.z << "\tFull form - Lemma type conversion table";
+                clog << "-z\t" << std::setw(20) << Option.z << "\tFull form - Lemma type conversion table" << endl;
 #else
                 info("-z\t%-20s\tFull form - Lemma type conversion table",Option.z);
 #endif
             }
         else
 #if STREAM
-            clog << "-z\tFull form - Lemma type conversion table: File not specified.";
+            clog << "-z\tFull form - Lemma type conversion table: File not specified." << endl;
 #else
             info("-z\tFull form - Lemma type conversion table: File not specified.");
 #endif
@@ -716,7 +728,7 @@ int Lemmatiser::openFiles()
                 }
             else
 #if STREAM
-                clog << "-z\t" << std::setw(20) << Option.z << "\tFull form - Lemma type conversion table";
+                clog << "-z\t" << std::setw(20) << Option.z << "\tFull form - Lemma type conversion table" << endl;
 #else
                 info("-z\t%-20s\tFull form - Lemma type conversion table",Option.z);
 #endif
@@ -797,14 +809,14 @@ int Lemmatiser::openFiles()
 void Lemmatiser::showSwitches()
     {
 #if STREAM
-    clog << "\nSwitches:";
+    clog << "\nSwitches:" << endl;
 #else
     info("\nSwitches:");
 #endif
     if(Option.InputHasTags)
         {
 #if STREAM
-        clog << "-t\tInput has tags.";
+        clog << "-t\tInput has tags." << endl;
 #else
         info("-t\tInput has tags.");
 #endif
@@ -812,14 +824,14 @@ void Lemmatiser::showSwitches()
     else
         {
 #if STREAM
-        clog << "-t-\tInput has no tags.";
+        clog << "-t-\tInput has no tags." << endl;
 #else
         info("-t-\tInput has no tags.");
 #endif
         if(Option.POSAttribute)
             {
 #if STREAM
-            clog << "\tThe PoS-attrribute '" << Option.POSAttribute << "' (-Xp" << Option.POSAttribute << ") is ignored.";
+            clog << "\tThe PoS-attrribute '" << Option.POSAttribute << "' (-Xp" << Option.POSAttribute << ") is ignored." << endl;
 #else
             info("\tThe PoS-attrribute '%s' (-Xp%s) is ignored.",Option.POSAttribute,Option.POSAttribute);
 #endif
@@ -829,19 +841,19 @@ void Lemmatiser::showSwitches()
             {
             if(Option.keepPunctuation == 1)
 #if STREAM
-                clog << "-p\tKeep punctuation.";
+                clog << "-p\tKeep punctuation." << endl;
 #else
                 info("-p\tKeep punctuation.");
 #endif
             else if(Option.keepPunctuation == 2)
 #if STREAM
-                clog << "-p+\tTreat punctuation as separate tokens.";
+                clog << "-p+\tTreat punctuation as separate tokens." << endl;
 #else
                 info("-p+\tTreat punctuation as separate tokens.");
 #endif
             else
 #if STREAM
-                clog << "-p-\tIgnore punctuation.";
+                clog << "-p-\tIgnore punctuation." << endl;
 #else
                 info("-p-\tIgnore punctuation.");
 #endif
@@ -854,19 +866,19 @@ void Lemmatiser::showSwitches()
             {
             SortInput = true;
 #if STREAM
-            clog << "-q\tSort output.";
+            clog << "-q\tSort output." << endl;
 #else
             info("-q\tSort output.");
 #endif
 #if STREAM
-            clog << "Input is sorted before processing (due to option -q)\n";
+            clog << "Input is sorted before processing (due to option -q)\n" << endl;
 #else
             info("Input is sorted before processing (due to option -q)\n");
 #endif
             if(SortFreq(Option.SortOutput))
                 {
 #if STREAM
-                clog << "-q#\tSort output by frequence.";
+                clog << "-q#\tSort output by frequence." << endl;
 #else
                 info("-q#\tSort output by frequence.");
 #endif
@@ -875,7 +887,7 @@ void Lemmatiser::showSwitches()
         else
             {
 #if STREAM
-            clog << "-q-\tDo not sort output.(default)";
+            clog << "-q-\tDo not sort output.(default)" << endl;
 #else
             info("-q-\tDo not sort output.(default)");
 #endif
@@ -884,57 +896,57 @@ void Lemmatiser::showSwitches()
 
     if(!SortInput)
 #if STREAM
-        clog << "Input is not sorted before processing (no option -q and no $f field in -c<format> or -W<format> argument)";
+        clog << "Input is not sorted before processing (no option -q and no $f field in -c<format> or -W<format> argument)" << endl;
 #else
         info("Input is not sorted before processing (no option -q and no $f field in -c<format> or -W<format> argument)");
 #endif
     if(!strcmp(Option.Sep,"\t"))
 #if STREAM
-        clog << "-s\tAmbiguous output is tab-separated";
+        clog << "-s\tAmbiguous output is tab-separated" << endl;
 #else
         info("-s\tAmbiguous output is tab-separated");
 #endif
     else if(!strcmp(Option.Sep," "))
 #if STREAM
-        clog << "-s" commandlineQuote " " commandlineQuote "\tAmbiguous output  is blank-separated";
+        clog << "-s" commandlineQuote " " commandlineQuote "\tAmbiguous output  is blank-separated" << endl;
 #else
         info("-s" commandlineQuote " " commandlineQuote "\tAmbiguous output  is blank-separated");
 #endif
     else if(!strcmp(Option.Sep,Option.DefaultSep))
 #if STREAM
-        clog << "-s" << Option.Sep << "\tAmbiguous output is " commandlineQuote  << Option.Sep << commandlineQuote "-separated (default)";
+        clog << "-s" << Option.Sep << "\tAmbiguous output is " commandlineQuote  << Option.Sep << commandlineQuote "-separated (default)" << endl;
 #else
         info("-s%s\tAmbiguous output is " commandlineQuote "%s" commandlineQuote "-separated (default)",Option.Sep,Option.Sep);
 #endif
     else
 #if STREAM
-        clog << "-s" << Option.Sep << "\tAmbiguous output is " commandlineQuote << Option.Sep << commandlineQuote "-separated";
+        clog << "-s" << Option.Sep << "\tAmbiguous output is " commandlineQuote << Option.Sep << commandlineQuote "-separated" << endl;
 #else
         info("-s%s\tAmbiguous output is " commandlineQuote "%s" commandlineQuote "-separated",Option.Sep,Option.Sep);
 #endif
 
     if(Option.RulesUnique)
 #if STREAM
-        clog << "-U\tenforce unique flex rules (default)";
+        clog << "-U\tenforce unique flex rules (default)" << endl;
 #else
         info("-U\tenforce unique flex rules (default)");
 #endif
     else
 #if STREAM
-        clog << "-U-\tallow ambiguous flex rules";
+        clog << "-U-\tallow ambiguous flex rules" << endl;
 #else
         info("-U-\tallow ambiguous flex rules");
 #endif
 
     if(Option.DictUnique)
 #if STREAM
-        clog << "-u\tenforce unique dictionary look-up (default)";
+        clog << "-u\tenforce unique dictionary look-up (default)" << endl;
 #else
         info("-u\tenforce unique dictionary look-up (default)");
 #endif
     else
 #if STREAM
-        clog << "-u-\tallow ambiguous dictionary look-up";
+        clog << "-u-\tallow ambiguous dictionary look-up" << endl;
 #else
         info("-u-\tallow ambiguous dictionary look-up");
 #endif
@@ -942,7 +954,7 @@ void Lemmatiser::showSwitches()
         {
         case 0: 
 #if STREAM
-            clog << "-H0\tuse lemma frequencies for disambigation (default)";
+            clog << "-H0\tuse lemma frequencies for disambigation (default)" << endl;
 #else
             info("-H0\tuse lemma frequencies for disambigation (default)");
 #endif
@@ -950,7 +962,7 @@ void Lemmatiser::showSwitches()
             break;
         case 1: 
 #if STREAM
-            clog << "-H1\tuse lemma frequencies for disambigation, show pruned lemmas between <<>>";
+            clog << "-H1\tuse lemma frequencies for disambigation, show pruned lemmas between <<>>" << endl;
 #else
             info("-H1\tuse lemma frequencies for disambigation, show pruned lemmas between <<>>");
 #endif
@@ -958,7 +970,7 @@ void Lemmatiser::showSwitches()
             break;
         case 2: 
 #if STREAM
-            clog << "-H2\tdon't use lemma frequencies for disambigation";
+            clog << "-H2\tdon't use lemma frequencies for disambigation" << endl;
 #else
             info("-H2\tdon't use lemma frequencies for disambigation");
 #endif
@@ -966,26 +978,26 @@ void Lemmatiser::showSwitches()
         }
     if(Option.baseformsAreLowercase)
 #if STREAM
-        clog << "-l\tlemmas are forced to lowercase (default)";
+        clog << "-l\tlemmas are forced to lowercase (default)" << endl;
 #else
         info("-l\tlemmas are forced to lowercase (default)");
 #endif
     else
 #if STREAM
-        clog << "-l-\tlemmas are same case as full form";
+        clog << "-l-\tlemmas are same case as full form" << endl;
 #else
         info("-l-\tlemmas are same case as full form");
 #endif
 
     if(Option.size < ULONG_MAX)
 #if STREAM
-        clog << "-m" << Option.size << "\tReading max " << Option.size << " words from input";
+        clog << "-m" << Option.size << "\tReading max " << Option.size << " words from input" << endl;
 #else
         info("-m%lu\tReading max %lu words from input",Option.size,Option.size);
 #endif
     else
 #if STREAM
-        clog << "-m0\tReading unlimited number of words from input (default).";
+        clog << "-m0\tReading unlimited number of words from input (default)." << endl;
 #else
         info("-m0\tReading unlimited number of words from input (default).");
 #endif
@@ -994,20 +1006,20 @@ void Lemmatiser::showSwitches()
         {
         if('0' < *Option.arge && *Option.arge <= '9')
 #if STREAM
-            clog << "-e" << Option.arge << "\tUse ISO8859-" << Option.arge << " Character encoding for case conversion.";
+            clog << "-e" << Option.arge << "\tUse ISO8859-" << Option.arge << " Character encoding for case conversion." << endl;
 #else
             info("-e%s\tUse ISO8859-%s Character encoding for case conversion.",Option.arge,Option.arge);
 #endif
         else
 #if STREAM
-            clog << "-e" << Option.arge << "\tUse Unicode Character encoding for case conversion.";
+            clog << "-e" << Option.arge << "\tUse Unicode Character encoding for case conversion." << endl;
 #else
             info("-e%s\tUse Unicode Character encoding for case conversion.",Option.arge);
 #endif
         }
     else
 #if STREAM
-        clog << "-e-\tDon't use case conversion.";
+        clog << "-e-\tDon't use case conversion." << endl;
 #else
         info("-e-\tDon't use case conversion.");
 #endif
@@ -1070,6 +1082,15 @@ void Lemmatiser::LemmatiseText(FILE * fpin,FILE * fpout,tallyStruct * tally)
 
 int Lemmatiser::LemmatiseFile()
     {
+    if((Option.Iformat != 0) && (Option.keepPunctuation != 1))
+        {
+#if STREAM
+        cout << "-I and -p should not both be specified" << endl;
+#else
+        printf("-I and -p should not both be specified\n");
+#endif
+        return -1;
+        }
     if(changed)
         setFormats();
     clock_t t0;
@@ -1093,7 +1114,7 @@ int Lemmatiser::LemmatiseFile()
             }
         else
 #if STREAM
-            clog << "-o\t" << std::setw(20) << Option.argo << "\tOutput text";
+            clog << "-o\t" << std::setw(20) << Option.argo << "\tOutput text" << endl;
 #else
             info("-o\t%-20s\tOutput text",Option.argo);
 #endif
@@ -1102,7 +1123,7 @@ int Lemmatiser::LemmatiseFile()
         {
         DoInfo = false;
 #if STREAM
-        clog << "-o\tOutput text: Using standard output.";
+        clog << "-o\tOutput text: Using standard output." << endl;
 #else
         info("-o\tOutput text: Using standard output.");
 #endif
@@ -1116,28 +1137,28 @@ int Lemmatiser::LemmatiseFile()
         {
         case 0:
 #if STREAM
-            clog << "-p-\tignore punctuation (only together with -t- and no -W format)\n";
+            clog << "-p-\tignore punctuation (only together with -t- and no -W format)\n" << endl;
 #else
             info("-p-\tignore punctuation (only together with -t- and no -W format)\n");
 #endif
             break;
         case 1:
 #if STREAM
-            clog << "-p\tkeep punctuation (default)\n";
+            clog << "-p\tkeep punctuation (default)\n" << endl;
 #else
             info("-p\tkeep punctuation (default)\n");
 #endif
             break;
         case 2:
 #if STREAM
-            clog << "-p+\ttreat punctuation as tokens (only together with -t- and no -W format)\n";
+            clog << "-p+\ttreat punctuation as tokens (only together with -t- and no -W format)\n" << endl;
 #else
             info("-p+\ttreat punctuation as tokens (only together with -t- and no -W format)\n");
 #endif
             break;
         default:
 #if STREAM
-            clog << "-p:\tUnknown argument.\n";
+            clog << "-p:\tUnknown argument.\n" << endl;
 #else
             info("-p:\tUnknown argument.\n");
 #endif
@@ -1166,7 +1187,7 @@ int Lemmatiser::LemmatiseFile()
         else
             {
 #if STREAM
-            clog << "-i\t" << std::setw(20) << Option.argi << "\tInput text";
+            clog << "-i\t" << std::setw(20) << Option.argi << "\tInput text" << endl;
 #else
             info("-i\t%-20s\tInput text",Option.argi);
 #endif
@@ -1182,7 +1203,7 @@ int Lemmatiser::LemmatiseFile()
     else
         {
 #if STREAM
-        clog << "-i\tInput text: Using standard input.";
+        clog << "-i\tInput text: Using standard input." << endl;
 #else
         info("-i\tInput text: Not sepcified.");
 #endif
@@ -1218,7 +1239,7 @@ int Lemmatiser::LemmatiseFile()
         fclose(fpout);
 #endif
 #if STREAM
-    clog << "\nall words      " 
+    clog << "\nall words      "
         << tally.totcnt 
         << "\nunknown words  " 
         << tally.newcnt 
@@ -1228,7 +1249,7 @@ int Lemmatiser::LemmatiseFile()
         << tally.newhom 
         << " (" 
         << (tally.totcnt ? (tally.newhom*200+1)/(2*tally.totcnt) : 100) 
-        << "%%)\n";
+        << "%%)\n" << endl;
 #else
     info("\nall words      %10.lu\n"
              "unknown words  %10.lu (%lu%%)\n"
@@ -1250,7 +1271,7 @@ int Lemmatiser::LemmatiseFile()
         << tally.newhomTypes 
         << " (" 
         << (tally.totcntTypes ? (tally.newhomTypes*200+1)/(2*tally.totcntTypes) : 100UL) 
-        << "%%)";
+        << "%%)" << endl;
 #else
         info("\nall types      %10.lu\n"
                  "unknown types  %10.lu (%lu%%)\n"

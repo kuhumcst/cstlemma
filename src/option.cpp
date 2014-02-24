@@ -111,7 +111,8 @@ optionStruct::optionStruct()
     SortOutput = 0;
     RulesUnique = true;
     DictUnique = true;
-    Iformat = NULL;
+    //Iformat = dupl("$w/$t");
+    Iformat = 0;
     UseLemmaFreqForDisambiguation = 0;
     baseformsAreLowercase = //false;/*20090731*///
         true;
@@ -294,7 +295,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             LOG1LINE("        followed by tags, separated by '/'. To use standard input, recompile\n"
                    "        with #define STREAM 1 in defines.h.\n");
 #endif
-            LOG1LINE("    -I<format>\tInput format (if not word/tag (-t) or word (-t-)).\n" 
+            LOG1LINE("    -I<format>\tInput format (if not word/tag (-t) or word (-t-) or option -p).\n" 
                    "        $w word to be lemmatised\n" 
                    "        $t tag\n" 
                    "        $d dummy\n" 
@@ -400,8 +401,8 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "    -l  force lemma to all-lowercase (default)\n"
                    "    -l- make case of lemma similar to full form's case\n"
                    "    -p  keep punctuation (default)\n"
-                   "    -p- ignore punctuation (only together with -t- and no -W format)\n"
-                   "    -p+ treat punctuation as tokens (only together with -t- and no -W format)\n"
+                   "    -p- ignore punctuation (only together with -t- and no -W or -I)\n"
+                   "    -p+ treat punctuation as tokens (only together with -t- and no -W or -I)\n"
                    "    -q  sort output\n"
                    "    -q- do not sort output (default)\n"
                    "    -q# (equivalents:-qn -qN -qf -qF)sort output by frequency\n"
@@ -481,6 +482,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             break;
 #if defined PROGLEMMATISE
         case 'I':
+            delete [] Iformat;
             Iformat = dupl(locoptarg); 
             break;
         case 'l':

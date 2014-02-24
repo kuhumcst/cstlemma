@@ -39,6 +39,7 @@ Words can also be found in elements.
 #include "basefrm.h"
 #include "option.h"
 #include <string.h>
+#include <ctype.h>
 #include <assert.h>
 #include <stdlib.h>
 
@@ -640,6 +641,11 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
                 if(*ch)
                     {
                     // TEXT START
+                    while(*ch && isspace(*ch))
+                        {
+                        ++ch;
+                        }
+                    WordReader.initWord();
                     while(  *ch 
                         && (Seq = (html_tag.*tagState)(*ch)) == notag
                         )

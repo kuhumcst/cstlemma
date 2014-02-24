@@ -423,7 +423,7 @@ void wordReader::initWord()
 
 wordReader::wordReader(field * format,field * wordfield,field * tagfield,bool treatSlashAsAlternativesSeparator,XMLtext * Text)
     :format(format)
-    ,nextfield(format)
+    ,nextfield(0/*format*/)
     ,wordfield(wordfield)
     ,tagfield(tagfield)
     ,newlines(0)
