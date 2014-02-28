@@ -42,18 +42,14 @@ class wordReader
         XMLtext * Text;
         char kars[2];
     public:
-        int Put(CHAR * (wordReader::*)(int kar),int kar);
-        int (wordReader::*xput)(CHAR * (wordReader::*)(int kar),int kar);
-        int rawput(CHAR * (wordReader::*)(int kar),int kar);
-        int nrawput(CHAR * (wordReader::*)(int kar),char * c);
-        int charref(CHAR * (wordReader::*)(int kar),int kar);
+        int Put(bool (wordReader::*)(int kar),int kar);
+        int (wordReader::*xput)(bool (wordReader::*)(int kar),int kar);
+        int rawput(bool (wordReader::*)(int kar),int kar);
+        int nrawput(bool (wordReader::*)(int kar),char * c);
+        int charref(bool (wordReader::*)(int kar),int kar);
         unsigned long getNewlines()
             {
             return newlines;
-            }
-        const char * getTag()
-            {
-            return tag;
             }
         unsigned long getLineno()
             {
@@ -63,7 +59,7 @@ class wordReader
         wordReader(field * format,field * wordfield,field * tagfield,bool treatSlashAsAlternativesSeparator,XMLtext * Text);
         ~wordReader();
         CHAR * readChar(int kar);
-        CHAR * count(int kar);
-        CHAR * read(int kar);
+        bool countToken(int kar);
+        bool readToken(int kar);
     };
 #endif

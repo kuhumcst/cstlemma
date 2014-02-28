@@ -56,10 +56,11 @@ class substring
 class token
     {
     public:
-        substring Word;
-        substring POS;
-        substring Lemma;
-        substring LemmaClass;
+        substring tokenWord;
+        substring tokenPOS;
+        substring tokenLemma;
+        substring tokenLemmaClass;
+        substring tokenToken;
     };
 
 class crumb;
@@ -97,7 +98,9 @@ class XMLtext : public text
         const char * wordAttribute; // if null, word is PCDATA
     public:
         bool analyseThis();
-        token * getCurrentToken();
+        token * getCurrentToken();  // pristine
+        token * getJustMadeToken(); // the previous one, that is. May be partly filled in.
+        void reachedTokenEnd(char * ch);
         void CallBackStartElementName();
         void CallBackEndElementName();
         void CallBackStartAttributeName();

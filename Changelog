@@ -1,4 +1,10 @@
 -------------------------------
+Version 5.05 (28 February 2014)
+-------------------------------
+XML input with tagged text in content came out with POS-tags still there,
+even if the output format did not specify that.
+
+-------------------------------
 Version 5.04 (24 February 2014)
 -------------------------------
 Introduced default -I format for XML input.
@@ -12,7 +18,8 @@ Null terminated strings read with fread.
 Version 5.02 (24 February 2014)
 -------------------------------
 The -X option, without further option arguments, was not working. Now it does.
-If the -I option was used, the program could hang if the input didn't conform to the -I format.
+If the -I option was used, the program could hang if the input didn't conform
+to the -I format.
 
 ------------------------------
 Version 5.01 (6 January 2014)
@@ -22,7 +29,8 @@ commented-out code. Made sure that setting PROGMAKEDICT, PROGMAKESUFFIXFLEX or
 PROGLEMMATISE has the effect of neutralizing irrelevant code. Only if all three
 are defined, all code is compiled, creating a Swiss Army Knive that can 
 (1) Create a built-in dictionary
-(2) Create an old-style flex rule list (Use the program affixtrain for new style!)
+(2) Create an old-style flex rule list 
+    (Use the program affixtrain for new style!)
 (3) Lemmatise a text.
 
 ------------------------------

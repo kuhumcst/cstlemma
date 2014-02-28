@@ -303,19 +303,19 @@ void XMLtext::CallBackEndValue()
         endValue = ch;            
         if(WordPosComing)
             {
-            this->Token[total].Word.set(startValue,endValue);
+            this->Token[total].tokenWord.set(startValue,endValue);
             }
         else if(POSPosComing)
             {
-            this->Token[total].POS.set(startValue,endValue);
+            this->Token[total].tokenPOS.set(startValue,endValue);
             }
         else if(LemmaPosComing)
             {
-            this->Token[total].Lemma.set(startValue,endValue);
+            this->Token[total].tokenLemma.set(startValue,endValue);
             }
         else if(LemmaClassPosComing)
             {
-            this->Token[total].LemmaClass.set(startValue,endValue);
+            this->Token[total].tokenLemmaClass.set(startValue,endValue);
             }
         }
     }
@@ -325,22 +325,22 @@ void XMLtext::CallBackNoMoreAttributes()
     if(analyseThis())
         {
         token * Tok = Token + total;
-        if(Tok->Word.getStart() != NULL && Tok->Word.getEnd() != Tok->Word.getStart())
+        if(Tok->tokenWord.getStart() != NULL && Tok->tokenWord.getEnd() != Tok->tokenWord.getStart())
             { // Word as attribute
-            char * EW = Tok->Word.getEnd();
+            char * EW = Tok->tokenWord.getEnd();
             char savW = *EW;
             *EW = '\0';
-            if(Tok->POS.getStart() != NULL)
+            if(Tok->tokenPOS.getStart() != NULL)
                 {
-                char * EP = Tok->POS.getEnd();
+                char * EP = Tok->tokenPOS.getEnd();
                 char savP = *EP;
                 *EP = '\0';
-                insert(Tok->Word.getStart(),Tok->POS.getStart());
+                insert(Tok->tokenWord.getStart(),Tok->tokenPOS.getStart());
                 *EP = savP;
                 }
             else
                 {
-                insert(Tok->Word.getStart());
+                insert(Tok->tokenWord.getStart());
                 }
             *EW = savW;
             }
@@ -376,12 +376,14 @@ void XMLtext::printUnsorted(
             {
             if(tunsorted[k])
                 {
-                const char * start = Token[k].Word.getStart();
-                const char * end = Token[k].Word.getEnd();
-                const char * lemmastart = Token[k].Lemma.getStart();
-                const char * lemmaend = Token[k].Lemma.getEnd();
-                const char * lemmaclassstart = Token[k].LemmaClass.getStart();
-                const char * lemmaclassend = Token[k].LemmaClass.getEnd();
+                const char * start = Token[k].tokenWord.getStart();
+                const char * end = Token[k].tokenWord.getEnd();
+                const char * startToken = Token[k].tokenToken.getStart();
+                const char * endToken = Token[k].tokenToken.getEnd();
+                const char * lemmastart = Token[k].tokenLemma.getStart();
+                const char * lemmaend = Token[k].tokenLemma.getEnd();
+                const char * lemmaclassstart = Token[k].tokenLemmaClass.getStart();
+                const char * lemmaclassend = Token[k].tokenLemmaClass.getEnd();
                 if(lemmastart == NULL)
                     { // replace word with lemma or write lemma together with word
                     if(lemmaclassstart)
@@ -392,8 +394,8 @@ void XMLtext::printUnsorted(
                         }
                     if(start)
                         {
-                        copy(fpo,o,start);
-                        o = end;
+                        copy(fpo,o,startToken);
+                        o = endToken;
                         }
                     tunsorted[k]->print();
                     }
@@ -431,6 +433,11 @@ void XMLtext::printUnsorted(
 token * XMLtext::getCurrentToken()
     {
     return Token ? Token + total : NULL;
+    }
+
+token * XMLtext::getJustMadeToken()
+    {
+    return Token ? total > 0 ? Token + total -1 : NULL : NULL;
     }
 
 void CallBackStartElementName(void *arg)
@@ -478,6 +485,18 @@ void CallBackEndTag(void * arg)
 void CallBackEmptyTag(void * arg)
     {
     ((XMLtext *)arg)->CallBackEmptyTag();
+    }
+
+void XMLtext::reachedTokenEnd(char * ch)
+    {
+    token * Tok = getJustMadeToken();
+    if(Tok)
+        {
+        char * start = Tok->tokenToken.getStart();
+        char * end = Tok->tokenToken.getEnd();
+        if(start == end)
+            Tok->tokenToken.set(start,ch);
+        }
     }
 
 #if STREAM
@@ -590,9 +609,9 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
         char * curr_pos = alltext;
         char * endpos = alltext;
         estate Seq = notag;
-        CHAR * (wordReader::*fnc)(int kar);
+        bool (wordReader::*fnc)(int kar);
         int loop;
-        fnc = &wordReader::count;
+        fnc = &wordReader::countToken;
         if(Option.Iformat)
             {
             wordfield = 0;
@@ -650,11 +669,17 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
                         && (Seq = (html_tag.*tagState)(*ch)) == notag
                         )
                         {
-                        (WordReader.*(WordReader.xput))(fnc,*ch);
+                        if((WordReader.*(WordReader.xput))(fnc,*ch))
+                            {
+                            // complete token seen. ch points at next token
+                            reachedTokenEnd(ch);
+                            }
                         // TEXT
                         ++ch;
                         }
                     WordReader.rawput(fnc,'\0');
+                    // complete token seen. ch points at some tag or EOF
+                    reachedTokenEnd(ch);
                     if(Seq == tag)
                         {
                         WordReader.rawput(fnc,'\0');
@@ -703,7 +728,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
                 lineno = 0;
                 ch = alltext;
                 curr_pos = alltext; // 20091106
-                fnc = &wordReader::read;
+                fnc = &wordReader::readToken;
                 CallBackEndAttributeNames = &XMLtext::CallBackEndAttributeNameInserting;
                 if(wordAttribute||POSAttribute||lemmaAttribute||lemmaClassAttribute)
                     {

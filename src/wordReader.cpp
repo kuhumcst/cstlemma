@@ -415,9 +415,15 @@ void wordReader::initWord()
     if(Tok)
         {
         if(kars[0])
-            Tok->Word.set(Text->ch-1,Text->ch-1);
+            {
+            Tok->tokenWord.set(Text->ch-1,Text->ch-1);
+            Tok->tokenToken.set(Text->ch-1,Text->ch-1);
+            }
         else
-            Tok->Word.set(Text->ch,Text->ch);
+            {
+            Tok->tokenWord.set(Text->ch,Text->ch);
+            Tok->tokenToken.set(Text->ch,Text->ch);
+            }
         }
     }
 
@@ -482,7 +488,7 @@ CHAR * wordReader::readChar(int kar)
     }
 
 
-CHAR * wordReader::count(int kar)
+bool wordReader::countToken(int kar)
     {
     CHAR * w = readChar(kar);
     if(Text->analyseThis())
@@ -494,12 +500,13 @@ CHAR * wordReader::count(int kar)
                 {
                 Text->incTotal(findSlashes(w));
                 }
+            return true;
             }
         }
-    return w;
+    return false;
     }
 
-CHAR * wordReader::read(int kar)
+bool wordReader::readToken(int kar)
     {
     CHAR * w = readChar(kar);
     if(Text->analyseThis())
@@ -507,12 +514,12 @@ CHAR * wordReader::read(int kar)
         if(!Text->wordAttribute && w && *w)
             {
             token * Tok = Text->getCurrentToken();
-            char * start = Tok->Word.getStart();
-            Tok->Word.set(start,start+strlen(w));
-            char * POS = Tok->POS.getStart();
+            char * start = Tok->tokenWord.getStart();
+            Tok->tokenWord.set(start,start+strlen(w));
+            char * POS = Tok->tokenPOS.getStart();
             if(POS != NULL)
                 {
-                char * EP = Tok->POS.getEnd();
+                char * EP = Tok->tokenPOS.getEnd();
                 char savP = *EP;
                 *EP = '\0';
                 if(treatSlashAsAlternativesSeparator && findSlashes(w))
@@ -535,18 +542,18 @@ CHAR * wordReader::read(int kar)
                 else
                     Text->createUnTagged(w);
                 }
+            return true;
             }
         }
-    return w;
+    return false;
     }
 
-int wordReader::rawput(CHAR * (wordReader::*fnc)(int kar),int kar)
+int wordReader::rawput(bool (wordReader::*fnc)(int kar),int kar)
     {
-    (this->*fnc)(kar);
-    return true;
+    return (this->*fnc)(kar);
     }
 
-int wordReader::nrawput(CHAR * (wordReader::*fnc)(int kar),char * c)
+int wordReader::nrawput(bool (wordReader::*fnc)(int kar),char * c)
     {
     while(*c)
         if(!rawput(fnc,*c++))
@@ -554,7 +561,7 @@ int wordReader::nrawput(CHAR * (wordReader::*fnc)(int kar),char * c)
     return true;
     }
 
-int wordReader::charref(CHAR * (wordReader::*fnc)(int kar),int kar)
+int wordReader::charref(bool (wordReader::*fnc)(int kar),int kar)
     {
     if(kar == ';')
         {
@@ -640,7 +647,7 @@ int wordReader::charref(CHAR * (wordReader::*fnc)(int kar),int kar)
     return true;
     }
 
-int wordReader::Put(CHAR * (wordReader::*fnc)(int kar),int kar)
+int wordReader::Put(bool (wordReader::*fnc)(int kar),int kar)
     {
     if(kar == '&')
         {

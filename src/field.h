@@ -58,7 +58,7 @@ class field
 #ifndef CONSTSTRCHR
             const 
 #endif
-            char * getString();
+            char * getString(); // returns a copy! (allocated with new)
         virtual void reset(){if(next)next->reset();}
     };
 
