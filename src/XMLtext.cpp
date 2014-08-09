@@ -574,6 +574,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
         }
     if(alltext)
         {
+        parseAsXml();
         html_tag_class html_tag(this);
         CallBackEndAttributeNames = &XMLtext::CallBackEndAttributeNameCounting;
         if(element||ancestor)
