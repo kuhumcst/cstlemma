@@ -1,4 +1,9 @@
 -------------------------------
+Version 5.06 (9 August 2014)
+-------------------------------
+Added call to parseAsXml to parse procesor instructions correctly.
+
+-------------------------------
 Version 5.05 (28 February 2014)
 -------------------------------
 XML input with tagged text in content came out with POS-tags still there,
