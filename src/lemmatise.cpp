@@ -354,7 +354,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow)
             }
         else
             {
-            setNewStyleRules(false);
+            setNewStyleRules(0);
             return readFromFile(fpflex);
             }
         return true;

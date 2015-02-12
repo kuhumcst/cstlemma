@@ -55,11 +55,20 @@ static char * result = 0;
 #if TESTING
 static char * replacement = 0; // FOR TEST PURPOSE
 #endif
-static bool NewStyle = true;
+static int NewStyle = 2; 
 
-void setNewStyleRules(bool val)
+bool setNewStyleRules(int val)
     {
-    NewStyle = val;
+	switch(val)
+		{
+		case 0:// first version, suffix only
+		case 2:// second version (about 2009), affix. File starts with four 0 bytes.
+		case 3:// third version (2015), affix, handles triple (and more) ambiguity. File starts with "\rV3\r".
+		    NewStyle = val;
+			return true;
+		default:
+			return false;
+		}
     }
 
 static char * readRules(FILE * flexrulefile,long & end)
@@ -69,24 +78,68 @@ static char * readRules(FILE * flexrulefile,long & end)
         int start;
         if(fread(&start,sizeof(int),1,flexrulefile) != 1)
             return 0;
-        if(start != 0)
+        if(start == 0)
             {
+			if(!setNewStyleRules(2))
+				return 0;
+			}
+		else if(!strcmp((char*)&start,"\rV3\r"))
+			{
+			if(!setNewStyleRules(3))
+				return 0;
+			}
+		else
+			{
             return 0; // not the new format
             }
         fseek(flexrulefile,0,SEEK_END);
         end = ftell(flexrulefile);
+		if(newStyleRules() == 3)
+			{
+			fseek(flexrulefile,sizeof(int),SEEK_SET);
+			end -= sizeof(int);
+			}
+		else
+			rewind(flexrulefile);
         char * buf = new char[end+1]; // 20140224 +1
         if(buf && end > 0)
             {
-            rewind(flexrulefile);
             if(fread(buf,1,end,flexrulefile) != (size_t)end)
                 return 0; // 20120710
-            NewStyle = true;
             buf[end] = '\0';// 20140224 new
             }
         return buf;
         }
     return 0;
+    }
+
+bool readRules(FILE * flexrulefile,const char * flexFileName)
+    {
+    if(flexFileName)
+        {
+        ::flexFileName = flexFileName;
+        }
+	long end;
+    if(flexrulefile)
+		return 0 != readRules(flexrulefile,end);
+	/*
+    if(flexrulefile)
+        {
+        fseek(flexrulefile,0,SEEK_END);
+        end = ftell(flexrulefile);
+        buf = new char[end+1];// 20140224 +1
+        if(buf && end > 0)
+            {
+            rewind(flexrulefile);
+            if(fread(buf,1,end,flexrulefile) != (size_t)end)
+                return 0;// 20120710
+			if(!setNewStyleRules(2))
+				return 0;
+            buf[end] = '\0';// 20140224 new
+            }
+        return buf != 0;
+        }*/
+    return flexFileName != 0;
     }
 
 class rules
@@ -122,8 +175,20 @@ class rules
 
 static hash<rules> * Hash = NULL;
 
+bool readRules(const char * flexFileName) // Does not read at all.
+    { // Rules are read on a as-needed basis.
+    if(flexFileName)
+        {
+        ::flexFileName = flexFileName;
+        }
+    if(Hash == NULL)
+        Hash = new hash<rules>(&rules::tagName,10); // Memoizes the rule files that have been read.
+    return flexFileName != 0;
+    }
 
-bool newStyleRules()
+
+
+int newStyleRules()
     {
     return NewStyle;
     }
@@ -583,42 +648,6 @@ static int lemmatiseer(const char * word,const char * wordend,const char * buf,c
     }
 
 
-bool readRules(FILE * flexrulefile,const char * flexFileName)
-    {
-    if(flexFileName)
-        {
-        ::flexFileName = flexFileName;
-        }
-    if(flexrulefile)
-        {
-        fseek(flexrulefile,0,SEEK_END);
-        end = ftell(flexrulefile);
-        buf = new char[end+1];// 20140224 +1
-        if(buf && end > 0)
-            {
-            rewind(flexrulefile);
-            if(fread(buf,1,end,flexrulefile) != (size_t)end)
-                return 0;// 20120710
-            NewStyle = true;
-            buf[end] = '\0';// 20140224 new
-            }
-        return buf != 0;
-        }
-    return flexFileName != 0;
-    }
-
-
-bool readRules(const char * flexFileName)
-    {
-    if(flexFileName)
-        {
-        ::flexFileName = flexFileName;
-        }
-    if(Hash == NULL)
-        Hash = new hash<rules>(&rules::tagName,10);
-    return flexFileName != 0;
-    }
-
 void deleteRules()
     {
     delete [] buf;
@@ -629,7 +658,7 @@ void deleteRules()
     delete [] replacement;
     replacement = 0;
 #endif
-    NewStyle = false;
+	setNewStyleRules(0);
     }
 
 
