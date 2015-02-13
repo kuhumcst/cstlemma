@@ -347,7 +347,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow)
         if(fread(&start,sizeof(int),1,fpflex) != 1)
             return false;
         rewind(fpflex);
-        if(start == 0)
+        if(start == 0 || start == *(int*)"\rV3\r")
             { // new style flexrules 20080218
             if(!readRules(fpflex,flexFileName))
                 return false;
