@@ -49,7 +49,7 @@ struct var
 static const char * flexFileName;
 static char bufbuf[] = "\0\0\0\0\t\t\t\n"; //20090811: corrected wrong value // "lemma == word" default rule set
 static char * buf = bufbuf; // Setting buf directly to a constant string generates a warning in newer gcc
-static long end = 8;
+static long buflen = 8;
 static char * result = 0;
 #define TESTING 0
 #if TESTING
@@ -173,7 +173,7 @@ class rules
         void print(){}
     };
 
-static hash<rules> * Hash = NULL;
+static hashmap::hash<rules> * Hash = NULL;
 
 bool readRules(const char * flexFileName) // Does not read at all.
     { // Rules are read on a as-needed basis.
@@ -182,7 +182,7 @@ bool readRules(const char * flexFileName) // Does not read at all.
         ::flexFileName = flexFileName;
         }
     if(Hash == NULL)
-        Hash = new hash<rules>(&rules::tagName,10); // Memoizes the rule files that have been read.
+        Hash = new hashmap::hash<rules>(&rules::tagName, 10); // Memoizes the rule files that have been read.
     return flexFileName != 0;
     }
 
@@ -692,7 +692,7 @@ const char * applyRules(const char * word)
 #endif
         lemmatiseer(word,word+len
             ,buf
-            ,buf+end
+            ,buf+buflen
 #if TESTING
             ,Start,Middle,End
 #endif
@@ -748,7 +748,7 @@ const char * applyRules(const char * word,const char * tag)
             void * v;
             rules * Rules;
             if(!Hash)
-                Hash = new hash<rules>(&rules::tagName,10);
+                Hash = new hashmap::hash<rules>(&rules::tagName, 10);
             Rules = Hash->find(tag,v);
             if(!Rules)
                 {
@@ -765,10 +765,10 @@ const char * applyRules(const char * word,const char * tag)
             if(Rules->buf())
                 lemmatiseer(word,word+len,Rules->buf(),Rules->buf()+Rules->end());
             else
-                lemmatiseer(word,word+len,buf,buf+end);
+                lemmatiseer(word,word+len,buf,buf+buflen);
             }
         else
-            lemmatiseer(word,word+len,buf,buf+end);
+            lemmatiseer(word,word+len,buf,buf+buflen);
         //delete [] loword;
         return result;
         }
