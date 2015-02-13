@@ -120,7 +120,7 @@ class rules
         void print(){}
     };
 
-static hash<rules> * Hash = NULL;
+static hashmap::hash<rules> * Hash = NULL;
 
 
 bool newStyleRules()
@@ -615,7 +615,7 @@ bool readRules(const char * flexFileName)
         ::flexFileName = flexFileName;
         }
     if(Hash == NULL)
-        Hash = new hash<rules>(&rules::tagName,10);
+        Hash = new hashmap::hash<rules>(&rules::tagName,10);
     return flexFileName != 0;
     }
 
@@ -719,7 +719,7 @@ const char * applyRules(const char * word,const char * tag)
             void * v;
             rules * Rules;
             if(!Hash)
-                Hash = new hash<rules>(&rules::tagName,10);
+                Hash = new hashmap::hash<rules>(&rules::tagName,10);
             Rules = Hash->find(tag,v);
             if(!Rules)
                 {

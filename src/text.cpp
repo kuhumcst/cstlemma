@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <assert.h>
 #include "hashmap.h"
 
-static hash<Word> * Hash = 0;
+static hashmap::hash<Word> * Hash = 0;
 
 #ifdef COUNTOBJECTS
 int text::COUNT = 0;
@@ -690,7 +690,7 @@ void text::insert(const char * w)
     {
     if(!Hash)
         {
-        Hash = new hash<Word>(&Word::itsWord,1000);
+        Hash = new hashmap::hash<Word>(&Word::itsWord,1000);
         }
     void * v;
     Word * wrd = Hash->find(w,v);
@@ -714,7 +714,7 @@ void text::insert(const char * w, const char * tag)
     tag = convert(tag);
     if(!Hash)
         {
-        Hash = (hash<Word> *)new hash<taggedWord>(&Word::itsWord,1000);
+        Hash = (hashmap::hash<Word> *)new hashmap::hash<taggedWord>(&Word::itsWord,1000);
         }
     void * v;
     taggedWord * wrd;
