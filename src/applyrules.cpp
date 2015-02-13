@@ -49,7 +49,7 @@ struct var
 static const char * flexFileName;
 static char bufbuf[] = "\0\0\0\0\t\t\t\n"; //20090811: corrected wrong value // "lemma == word" default rule set
 static char * buf = bufbuf; // Setting buf directly to a constant string generates a warning in newer gcc
-static long end = 8;
+static long buflen = 8;
 static char * result = 0;
 #define TESTING 0
 #if TESTING
@@ -592,15 +592,15 @@ bool readRules(FILE * flexrulefile,const char * flexFileName)
     if(flexrulefile)
         {
         fseek(flexrulefile,0,SEEK_END);
-        end = ftell(flexrulefile);
-        buf = new char[end+1];// 20140224 +1
-        if(buf && end > 0)
+        buflen = ftell(flexrulefile);
+        buf = new char[buflen + 1];// 20140224 +1
+        if (buf && buflen > 0)
             {
             rewind(flexrulefile);
-            if(fread(buf,1,end,flexrulefile) != (size_t)end)
+            if (fread(buf, 1, buflen, flexrulefile) != (size_t)buflen)
                 return 0;// 20120710
             NewStyle = true;
-            buf[end] = '\0';// 20140224 new
+            buf[buflen] = '\0';// 20140224 new
             }
         return buf != 0;
         }
@@ -663,7 +663,7 @@ const char * applyRules(const char * word)
 #endif
         lemmatiseer(word,word+len
             ,buf
-            ,buf+end
+            , buf + buflen
 #if TESTING
             ,Start,Middle,End
 #endif
@@ -736,10 +736,10 @@ const char * applyRules(const char * word,const char * tag)
             if(Rules->buf())
                 lemmatiseer(word,word+len,Rules->buf(),Rules->buf()+Rules->end());
             else
-                lemmatiseer(word,word+len,buf,buf+end);
+                lemmatiseer(word, word + len, buf, buf + buflen);
             }
         else
-            lemmatiseer(word,word+len,buf,buf+end);
+            lemmatiseer(word, word + len, buf, buf + buflen);
         //delete [] loword;
         return result;
         }
