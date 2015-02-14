@@ -582,6 +582,7 @@ static int lemmatiseer(const char * word, const char * wordend, const char * buf
         return 0;
     }
 
+/*
 static void Strrev(char * s)
     {
     char * e = s + strlen(s);
@@ -593,7 +594,6 @@ static void Strrev(char * s)
         }
     }
 
-/*
 static void printpat(const char ** fields, int findex)
     {
     char start[100] = { 0 };
