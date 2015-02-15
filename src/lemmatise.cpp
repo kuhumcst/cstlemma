@@ -347,13 +347,15 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow)
         if(fread(&start,sizeof(int),1,fpflex) != 1)
             return false;
         rewind(fpflex);
-        if(start == 0 || start == *(int*)"\rV3\r")
+        if(start == 0 || !strncmp((char*)&start,"\rV3\r",4))
             { // new style flexrules 20080218
-            if(!readRules(fpflex,flexFileName))
+            printf("New style rules. First four bytes, as int: %x. As char*:\n%.4s\n", start, (char*)&start);
+            if (!readRules(fpflex, flexFileName))
                 return false;
             }
         else
             {
+            printf("Old style rules. First four bytes, as int: %x. As char*:\n%.4s\n", start,(char*)&start);
             setNewStyleRules(0);
             return readFromFile(fpflex);
             }
