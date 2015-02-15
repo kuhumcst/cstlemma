@@ -152,6 +152,7 @@ class rules
                 {
                 Buf = 0;
                 End = 0;
+                fprintf(stderr, "CSTlemma-applyrules.cpp: Cannot open rules [%s]",filename);
                 }
             }
         const char * tagName() const { return TagName; }
