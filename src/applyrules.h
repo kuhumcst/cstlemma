@@ -26,14 +26,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if defined PROGLEMMATISE
 #include <stdio.h>
 
-bool newStyleRules();
+int newStyleRules();
 bool readRules(FILE * flexrulefile,const char * flexFileName);
 bool readRules(const char * flexFileName);
 const char * applyRules(const char * word);
 const char * applyRules(const char * word,const char * tag);
 void deleteRules();
 extern bool oneAnswer;
-void setNewStyleRules(bool val);
+bool setNewStyleRules(int val);
 
 #endif
 #endif

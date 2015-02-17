@@ -109,5 +109,5 @@ int main(int argc, char * argv[])
 #if defined PROGLEMMATISE
     Word::deleteStaticMembers();
 #endif
-    return ret;
+     return ret;
     }

@@ -714,7 +714,7 @@ void text::insert(const char * w, const char * tag)
     tag = convert(tag);
     if(!Hash)
         {
-        Hash = (hashmap::hash<Word> *)new hashmap::hash<taggedWord>(&Word::itsWord,1000);
+        Hash = (hashmap::hash<Word> *)new hashmap::hash<taggedWord>(&Word::itsWord, 1000);
         }
     void * v;
     taggedWord * wrd;
