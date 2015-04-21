@@ -1,4 +1,10 @@
 -------------------------------
+Version 5.07 (21 April 2015)
+-------------------------------
+Removed unused or unnecessary code. There was a 255 word size limit
+that is gone now.
+
+-------------------------------
 Version 5.06 (9 August 2014)
 -------------------------------
 Added call to parseAsXml to parse procesor instructions correctly.
