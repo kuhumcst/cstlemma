@@ -669,7 +669,6 @@ static char * rewrite(const char *& word, const char *& wordend, const char * p)
         vars[0].e = wend;
         char * destination = NULL;
         int printed = 0;
-        int subres = 0;
         if (findex > 2) // there is more than just a prefix
             {
             const char * newend = sameend(fields, vars[0].s, wend);
