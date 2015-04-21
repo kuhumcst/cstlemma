@@ -1,8 +1,15 @@
 -------------------------------
-Version 5.07 (21 April 2015)
+Version 6.02 (21 April 2015)
 -------------------------------
 Removed unused or unnecessary code. There was a 255 word size limit
 that is gone now.
+
+-------------------------------
+Version 6.01 (17 February 2015)
+-------------------------------
+New rules format, V3, which is Recognised by inspecting the start of the file.
+The new format allows a greater amount of ambiguity, for instance for  words
+with ten different lemmas. Previously the maximum supported ambiguoity was two.
 
 -------------------------------
 Version 5.06 (9 August 2014)
