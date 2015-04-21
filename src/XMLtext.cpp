@@ -377,7 +377,6 @@ void XMLtext::printUnsorted(
             if(tunsorted[k])
                 {
                 const char * start = Token[k].tokenWord.getStart();
-                const char * end = Token[k].tokenWord.getEnd();
                 const char * startToken = Token[k].tokenToken.getStart();
                 const char * endToken = Token[k].tokenToken.getEnd();
                 const char * lemmastart = Token[k].tokenLemma.getStart();
@@ -550,7 +549,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
             {
             alltext = new char[filesize+1];
             char * p = alltext;
-            while((kar = fpi->get()) && !fpi->eof())
+            while(((kar = fpi->get()) != 0) && !fpi->eof())
                 *p++ = (char)kar;
             *p = '\0';
             fpi->clear();

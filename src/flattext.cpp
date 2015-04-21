@@ -35,15 +35,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 using namespace std;
 #endif
 
-static void printerr(const char * a, const char * b, const char *c, const char * d)
-    {
-#if STREAM
-    cout << "Unable to apply input format specification to this text.\nInput format:'" << a << "'\nText:'" << b << "...'\nField:" << c << "\nLast:[" << d << "]" << endl;
-#else
-    printf("Unable to apply input format specification to this text.\nInput format:'%s'\nText:'%s...'\nField:%s\nLast:[%s]\n",a,b,c,d);
-#endif
-    }
-
 static int sanityCheck(int slashFound,const char * buf)
     {
     if(!slashFound)
@@ -259,9 +250,7 @@ char * getwordI(FILE * fpin,const char *& tag,field * format,field * wordfield,f
     int kar = EOF;
     char kars[2];
     kars[1] = '\0';
-    char line[256];
     static int lastkar = '\0';
-    size_t i = 0;
     field * nextfield = format;
     newlines = 0;
     if(lastkar)
@@ -276,13 +265,6 @@ char * getwordI(FILE * fpin,const char *& tag,field * format,field * wordfield,f
         if(lastkar == '\n')
             ++newlines;
         kars[0] = (char)lastkar;
-        if(i >= sizeof(line) - 1)
-            {
-            printerr(globIformat,line,nextfield->isA(),line);
-            exit(0);
-            }
-        line[i++] = (char)lastkar;
-        line[i] = '\0';
         lastkar = 0;
         nextfield->read(kars,nextfield);
         }
@@ -298,17 +280,6 @@ char * getwordI(FILE * fpin,const char *& tag,field * format,field * wordfield,f
         if(kar == '\n')
             ++newlines;
         kars[0] = kar == EOF ? '\0' : (char)kar;
-        if(i >= sizeof(line) - 1)
-            {
-            printerr(globIformat,line,nextfield->isA(),line);
-            exit(0);
-            }
-        line[i] = kars[0];
-        if(line[i])
-            {
-            line[++i] = '\0';
-            assert(i < sizeof(line)/sizeof(line[0]));
-            }
         char * plastkar = nextfield->read(kars,nextfield);
         if(kar == EOF)
             {
