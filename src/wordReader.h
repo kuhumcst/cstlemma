@@ -36,7 +36,6 @@ class wordReader
         unsigned long newlines;
         unsigned long lineno;
         const char * tag;
-        int kar;
         int lastkar;
         bool treatSlashAsAlternativesSeparator;
         XMLtext * Text;

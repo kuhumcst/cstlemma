@@ -435,7 +435,6 @@ wordReader::wordReader(field * format,field * wordfield,field * tagfield,bool tr
     ,newlines(0)
     ,lineno(0)
     ,tag(NULL)
-    ,kar(EOF)
     ,lastkar(0)
     ,treatSlashAsAlternativesSeparator(treatSlashAsAlternativesSeparator)
     ,Text(Text)

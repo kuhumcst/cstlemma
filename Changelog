@@ -1,4 +1,12 @@
 -------------------------------
+Version 6.03 (3 July 2015)
+-------------------------------
+Renamed 'function'. (This name is already taken.)
+Replaced string hashing function in hashmap.cpp. (Please pull new version of https://github.com/kuhumcst/hashmap)
+Appended newlines to cpp and h files where desirable.
+Deleted unused member variable 'kar' in wordReader class.
+
+-------------------------------
 Version 6.02 (21 April 2015)
 -------------------------------
 Removed unused or unnecessary code. There was a 255 word size limit
