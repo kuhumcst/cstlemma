@@ -100,8 +100,8 @@ class basefrm : public OutputClass
         static bool hasW;
         static const char * sep;
         static bool setFormat(const char * Wformat,const char * bformat,const char * Bformat,bool InputHasTags); // used with -W option
-        static function * getBasefrmFunction(int character,bool & DummySortInput,int & testType);
-        static function * getBasefrmFunctionNoW(int character,bool & DummySortInput,int & testType);
+        static formattingFunction * getBasefrmFunction(int character,bool & DummySortInput,int & testType);
+        static formattingFunction * getBasefrmFunctionNoW(int character,bool & DummySortInput,int & testType);
 #if STREAM
         static void setFile(ostream * a_fp);
 #else

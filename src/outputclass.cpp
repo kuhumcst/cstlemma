@@ -84,7 +84,7 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
     else if(*f == '$')
         {
         ++f;
-        function * tmp = gfnc(*f,SortInput,loctestType);
+        formattingFunction * tmp = gfnc(*f,SortInput,loctestType);
         if(!tmp)
             {
 #if STREAM

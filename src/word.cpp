@@ -114,7 +114,7 @@ void Word::deleteStaticMembers()
     }
 
 
-function * Word::getUnTaggedWordFunction(int character,bool & SortInput,int & testType)
+formattingFunction * Word::getUnTaggedWordFunction(int character,bool & SortInput,int & testType)
     {
     switch(character)
         {
@@ -140,7 +140,7 @@ function * Word::getUnTaggedWordFunction(int character,bool & SortInput,int & te
         }
     }
 
-function * Word::getUnTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType)
+formattingFunction * Word::getUnTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType)
     {
     REFER(testType)
     switch(character)
@@ -517,7 +517,7 @@ char * Word::commonType(lext * Plext,int nmbr,unsigned int freq)
     return ret;
     }
 
-function * taggedWord::getTaggedWordFunction(int character,bool & SortInput,int & testType)
+formattingFunction * taggedWord::getTaggedWordFunction(int character,bool & SortInput,int & testType)
     {
     switch(character)
         {
@@ -527,7 +527,7 @@ function * taggedWord::getTaggedWordFunction(int character,bool & SortInput,int 
     return Word::getUnTaggedWordFunction(character,SortInput,testType);
     }
 
-function * taggedWord::getTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType)
+formattingFunction * taggedWord::getTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType)
     {
     switch(character)
         {

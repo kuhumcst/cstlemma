@@ -55,7 +55,7 @@ void basefrm::setFile(FILE * a_fp)
     index = 0;
     }
 
-function * basefrm::getBasefrmFunction(int character,bool & DummySortInput,int & testType)
+formattingFunction * basefrm::getBasefrmFunction(int character,bool & DummySortInput,int & testType)
     {
     REFER(DummySortInput)
     switch(character)
@@ -81,7 +81,7 @@ function * basefrm::getBasefrmFunction(int character,bool & DummySortInput,int &
     return 0;
     }
 
-function * basefrm::getBasefrmFunctionNoW(int character,bool & DummySortInput,int & testType)
+formattingFunction * basefrm::getBasefrmFunctionNoW(int character,bool & DummySortInput,int & testType)
     {
     REFER(DummySortInput)
     REFER(testType)

@@ -45,7 +45,7 @@ typedef void (taggedWord::*fptrt)() const;
 typedef int (Word::*fptcount)() const;
 typedef int (basefrm::*fptcountbf)() const;
 
-class function
+class formattingFunction
     {
 #ifdef COUNTOBJECTS
     public:
@@ -56,12 +56,12 @@ class function
         virtual void doIt(const OutputClass * outputObj)const = 0;
         virtual int count(const OutputClass * outputObj)const{REFER(outputObj) return -1;}
 #ifdef COUNTOBJECTS
-        function()
+        formattingFunction()
             {
             ++COUNT;
             }
 #endif
-        virtual ~function()
+        virtual ~formattingFunction()
             {
 #ifdef COUNTOBJECTS
             --COUNT;
@@ -71,7 +71,7 @@ class function
     };
 
 
-class functionNoArgB : public function
+class functionNoArgB : public formattingFunction
     {
     private:
         fptrbf m_fn;
@@ -88,7 +88,7 @@ class functionNoArgB : public function
             }
     };
 
-class functionString : public function
+class functionString : public formattingFunction
     {
     private:
         char * arg;
@@ -120,7 +120,7 @@ class functionString : public function
             }
     };
 
-class functionNoArg : public function
+class functionNoArg : public formattingFunction
     {
     private:
         fptr m_fn;
@@ -145,11 +145,11 @@ class functionNoArg : public function
                 return (tmp->*m_fncount)();
                 }
             else
-                return function::count(u);
+                return formattingFunction::count(u);
             }
     };
 
-class functionNoArgW : public function
+class functionNoArgW : public formattingFunction
     {
     private:
         fptrbf m_fn;
@@ -174,12 +174,12 @@ class functionNoArgW : public function
                 return (tmp->*m_fncount)();
                 }
             else
-                return function::count(u);
+                return formattingFunction::count(u);
             }
     };
 
 
-class functionNoArgT : public function
+class functionNoArgT : public formattingFunction
     {
     private:
         fptrt m_fn;

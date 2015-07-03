@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string.h>
 
 #ifdef COUNTOBJECTS
-int function::COUNT = 0;
+int formattingFunction::COUNT = 0;
 #endif
 
 #if STREAM

@@ -448,7 +448,7 @@ flex::~flex()
         << type::COUNT << "type\n " 
         << flex::COUNT << "flex\n " 
         << FreqFile::COUNT << "FreqFile\n " 
-        << function::COUNT << "function\n " 
+        << formattingFunction::COUNT << "formattingFunction\n " 
         << functionTree::COUNT << "functionTree\n " 
         << Lemmatiser::COUNT << "cstlemman " 
         << lext::COUNT << "lext\n " 
@@ -469,7 +469,7 @@ flex::~flex()
         "type\n%d "
         "flex\n%d "
         "FreqFile\n%d "
-        "function\n%d "
+        "formattingFunction\n%d "
         "functionTree\n%d "
         "cstlemman%d "
         "lext\n%d "
@@ -490,7 +490,7 @@ flex::~flex()
         type::COUNT,
         flex::COUNT,
         FreqFile::COUNT,
-        function::COUNT,
+        formattingFunction::COUNT,
         functionTree::COUNT,
         Lemmatiser::COUNT,
         lext::COUNT,

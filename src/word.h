@@ -179,8 +179,8 @@ class Word : public OutputClass
         static functionTree * bfuncs;
         static functionTree * Bfuncs;
         static void deleteStaticMembers();
-        static function * getUnTaggedWordFunction(int character,bool & SortInput,int & testType);
-        static function * getUnTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType);
+        static formattingFunction * getUnTaggedWordFunction(int character,bool & SortInput,int & testType);
+        static formattingFunction * getUnTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType);
 #if STREAM
         static void setFile(ostream * a_fp);
 #else
@@ -361,8 +361,8 @@ class taggedWord : public Word
             }
     protected:
     public:
-        static function * getTaggedWordFunction(int character,bool & SortInput,int & testType);
-        static function * getTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType);
+        static formattingFunction * getTaggedWordFunction(int character,bool & SortInput,int & testType);
+        static formattingFunction * getTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType);
         static cmp_ft comp;
         int cmptaggedword(const taggedWord * other)const
             {

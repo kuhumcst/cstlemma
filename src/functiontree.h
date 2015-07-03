@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "comparison.h"
 
-class function;
+class formattingFunction;
 class OutputClass;
 //typedef enum comparison;
 
@@ -38,7 +38,7 @@ class functionTree
         static int COUNT;
 #endif
     private:
-        function * m_fnc;
+        formattingFunction * m_fnc;
         functionTree * next;
         functionTree * child;
         comparison m_comp;
@@ -77,7 +77,7 @@ class functionTree
         void printIt(const OutputClass * outputObj)const;
         int count(const OutputClass * outputObj)const;
         int count2(const OutputClass * outputObj)const;
-        void setFunction(function * fnc)
+        void setFunction(formattingFunction * fnc)
             {
             this->m_fnc = fnc;
             }

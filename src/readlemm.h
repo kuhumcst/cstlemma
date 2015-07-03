@@ -20,7 +20,7 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #ifndef READLEMM_H
-#define REDALEMM_H
+#define READLEMM_H
 
 #include "defines.h"
 #if (defined PROGMAKEDICT) || (defined PROGMAKESUFFIXFLEX)

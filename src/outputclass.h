@@ -29,10 +29,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define STRINGTEST 2
 
 #if defined PROGLEMMATISE
-class function;
+class formattingFunction;
 class functionTree;
 
-typedef function * (*getFunction)(int kar,bool & SortInput,int & testType);
+typedef formattingFunction * (*getFunction)(int kar,bool & SortInput,int & testType);
 #endif
 
 class OutputClass
