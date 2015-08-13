@@ -853,7 +853,8 @@ static char ** lemmatiseerV3(const char * word, const char * wordend, const char
     const char * p = buf + sizeof(int);
     type = *(typetype*)p;
     /*
-    buf+4   first bit  0: Fail branch is unambiguous, buf points to tree. (A)
+    buf+4
+    first bit  0: Fail branch is unambiguous, buf points to tree. (A)
     first bit  1: Fail branch is ambiguous, buf points to chain. (B)
     second bit 0: Success branch is unambiguous, buf+8 points to tree (C)
     second bit 1: Success branch is ambiguous, buf+8 points to chain (D)
@@ -875,6 +876,11 @@ static char ** lemmatiseerV3(const char * word, const char * wordend, const char
     p = buf + off;
     if (candidate)
         {
+        const char * defaultCandidate = candidate[0] ? candidate : parentcandidate;
+        /* 20150806 A match resulting in a zero-length candidate is valid for
+        descending, but if all descendants fail, the candidate is overruled by
+        an ancestor that is not zero-length. (The top rule just copies the
+        input, so there is a always a non-zero length ancestor.) */
         switch (type)
             {
             case 0:
@@ -882,11 +888,10 @@ static char ** lemmatiseerV3(const char * word, const char * wordend, const char
                 {
                 /* Unambiguous children. If no child succeeds, take the
                 candidate, otherwise take the succeeding child's result. */
-                char ** childcandidates = lemmatiseerV3(cword, cwordend, p, until, candidate, lemmas);
-                result = childcandidates ? childcandidates : addLemma(lemmas, candidate);
-                //--news;
+                char ** childcandidates = lemmatiseerV3(cword, cwordend, p, until, defaultCandidate, lemmas);
+                result = childcandidates ? childcandidates : addLemma(lemmas, defaultCandidate);
                 delete[] candidate;
-                return result;
+                break;
                 }
             case 2:
             case 3:
@@ -896,12 +901,13 @@ static char ** lemmatiseerV3(const char * word, const char * wordend, const char
                 Some child may in fact refer to its parent, which is our
                 current candidate. We pass the candidate so it can be put
                 in the right position in the sequence of answers. */
-                char ** childcandidates = chainV3(cword, cwordend, p, until, candidate, lemmas);
-                result = childcandidates ? childcandidates : addLemma(lemmas, candidate);
-                //--news;
+                char ** childcandidates = chainV3(cword, cwordend, p, until, defaultCandidate, lemmas);
+                result = childcandidates ? childcandidates : addLemma(lemmas, defaultCandidate);
                 delete[] candidate;
-                return result;
+                break;
                 }
+            default:
+                result = lemmas;
             }
         }
     else
@@ -915,7 +921,7 @@ static char ** lemmatiseerV3(const char * word, const char * wordend, const char
                 parent's candidate. */
                 char ** childcandidates = lemmatiseerV3(word, wordend, until, maxpos, parentcandidate, lemmas);
                 result = childcandidates ? childcandidates : addLemma(lemmas, parentcandidate);
-                return result;
+                break;
                 }
             case 1:
             case 3:
@@ -924,12 +930,13 @@ static char ** lemmatiseerV3(const char * word, const char * wordend, const char
                 candidate is taken. */
                 char ** childcandidates = chainV3(word, wordend, until, maxpos, parentcandidate, lemmas);
                 result = childcandidates ? childcandidates : addLemma(lemmas, parentcandidate);
-                return result;
+                break;
                 }
+            default:
+                result = lemmas;
             }
         }
-
-    return lemmas;
+    return result;
     }
 
 

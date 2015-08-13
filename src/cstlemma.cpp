@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#define CSTLEMMAVERSION "6.03"
-#define CSTLEMMADATE "2015.07.03"
+#define CSTLEMMAVERSION "7.0"
+#define CSTLEMMADATE "2015.08.13"
 #define CSTLEMMACOPYRIGHT "2002-2015 Center for Sprogteknologi"
 
 #include "lemmatiser.h"

@@ -1,4 +1,21 @@
 -------------------------------
+Version 7.0 (13 August 2015)
+-------------------------------
+Debugged lemmatisation of ambiguous words. (Previously, not all possible lemmas
+were always returned.)
+Changed default values for 't', 'u', 'U', 'H' and 'l' options. Without these
+options on the command line, the following is assumed: -t- -u- -U- -H2 -l-
+That means that it is assumed that the input has no tags, that the output
+should not be disambiguated (all candidate lemma's should be produced) and
+that the casing of the output should be similar to the input's casing.
+(The idea is that you have to turn on options that require extra processing.)
+The old algorithm for creating suffix based flexrules is deprecated. Users
+who still want to use this algorithm must add an extra 'F': -FF
+The prefered way to generate flexrules for cstlemma is the program
+'affixtrain'. (https://github.com/kuhumcst/affixtrain)
+
+
+-------------------------------
 Version 6.03 (3 July 2015)
 -------------------------------
 Renamed 'function'. (This name is already taken.)

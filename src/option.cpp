@@ -56,7 +56,7 @@ const char optionStruct::Default_b_format[] = "$w";
 const char * optionStruct::Default_B_format = optionStruct::Default_b_format;
 #endif
 
-static char opts[] = "?@:A:b:B:c:C:d:De:f:FH:hi:I:k:l:Lm:n:N:o:p:q:R:s:t:u:U:v:W:x:X:y:z:" /* GNU: */ "wr";
+static char opts[] = "?@:A:b:B:c:C:d:De:f:F:H:hi:I:k:l:Lm:n:N:o:p:q:R:s:t:u:U:v:W:x:X:y:z:" /* GNU: */ "wr";
 static char *** Ppoptions = NULL;
 static char ** Poptions = NULL;
 static int optionSets = 0;
@@ -90,7 +90,7 @@ optionStruct::optionStruct()
     flx = NULL;
 #endif
 #if defined PROGLEMMATISE
-    InputHasTags = true;
+    InputHasTags = false;//true;
     keepPunctuation = 1;
     Sep = dupl(DefaultSep);
 #endif
@@ -109,13 +109,12 @@ optionStruct::optionStruct()
     bformat = NULL;//dupl(Default_b_format);
     Bformat = NULL;//dupl(Default_B_format);
     SortOutput = 0;
-    RulesUnique = true;
-    DictUnique = true;
+    RulesUnique = false;//true;
+    DictUnique = false;//true;
     //Iformat = dupl("$w/$t");
     Iformat = 0;
-    UseLemmaFreqForDisambiguation = 0;
-    baseformsAreLowercase = //false;/*20090731*///
-        true;
+    UseLemmaFreqForDisambiguation = 2;
+    baseformsAreLowercase = false;
     size = ULONG_MAX;
     treatSlashAsAlternativesSeparator = false;
 #endif
@@ -231,6 +230,20 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             break;
 #endif
         case 'F':
+            if(*locoptarg != 'F')
+                {
+                fprintf(stderr,
+                        "CSTlemma uses an old algorithm to create flexrules that only look at a word's\n"
+                        "last characters. Use https://github.com/kuhumcst/affixtrain to generate\n"
+                        "flexrules that can take any affix into account when computing lemmas.\n"
+                        "See Bart Jongejan and Hercules Dalianis (2009),\n"
+                        "\"Automatic training of lemmatization rules that handle morphological\n"
+                        "changes in pre-, in- and suffixes alike\"\n"
+                        "(http://www.aclweb.org/anthology/P/P09/P09-1017.pdf)\n\n"
+                        "If you want to use the deprecated algorithm instead, add an extra 'F': -FF\n"
+                        );
+                exit(-1);
+                }
             whattodo = MAKEFLEXPATTERNS;
             break;
         case 'h':
@@ -258,6 +271,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 #endif
 #if defined PROGMAKESUFFIXFLEX
             LOG1LINE("    Create or add flex patterns");
+            LOG1LINE("    (Deprecated. Use the 'affixtrain' program instead. See https://github.com/kuhumcst/affixtrain)");
 #if STREAM
             cout << progname << " -F \\" << endl;
 #else
@@ -398,8 +412,8 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "                 -b" commandlineQuote "$w\t/$t" commandlineQuote "\n"
                    "                (Output +lemma if the word is found in the dictionary,\n"
                    "                 otherwise -lemma)\n"
-                   "    -l  force lemma to all-lowercase (default)\n"
-                   "    -l- make case of lemma similar to full form's case\n"
+                   "    -l  force lemma to all-lowercase (default in versions < 7.0 of cstlemma)\n"
+                   "    -l- make case of lemma similar to full form's case (default)\n"
                    "    -p  keep punctuation (default)\n"
                    "    -p- ignore punctuation (only together with -t- and no -W or -I)\n"
                    "    -p+ treat punctuation as tokens (only together with -t- and no -W or -I)\n"
@@ -415,15 +429,15 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 #else
             printf("    -s  multiple base forms (-b -B) are " commandlineQuote "%s" commandlineQuote "-separated (default)\n",DefaultSep);
 #endif
-            LOG1LINE("    -t  input text is tagged (default)\n    -t- input text is not tagged\n"
-                   "    -U  enforce unique flex rules (default)\n"
-                   "    -U- allow ambiguous flex rules\n"
-                   "    -u  enforce unique dictionary look-up (default)\n"
-                   "    -u- allow ambiguous dictionary look-up\n"
-                   "    -Hn n = 0: use lemma frequencies for disambiguation (default)\n"
+            LOG1LINE("    -t  input text is tagged (default in versions < 7.0 of cstlemma)\n    -t- input text is not tagged (default)\n"
+                   "    -U  enforce unique flex rules (default in versions < 7.0 of cstlemma)\n"
+                   "    -U- allow ambiguous flex rules (default)\n"
+                   "    -u  enforce unique dictionary look-up (default in versions < 7.0 of cstlemma)\n"
+                   "    -u- allow ambiguous dictionary look-up (default)\n"
+                   "    -Hn n = 0: use lemma frequencies for disambiguation (default in versions < 7.0 of cstlemma)\n"
                    "        n = 1: use lemma frequencies for disambiguation,\n"
                    "               show candidates for pruning between << and >>\n"
-                   "        n = 2: do not use lemma frequencies for disambiguation.\n"
+                   "        n = 2: do not use lemma frequencies for disambiguation. (default)\n"
                    "    -v<tag friends file>: Use this to coerce the nearest fit between input\n"
                    "        tag and the dictionary's lexical types if the dictionary has more than\n"
                    "        one readings of the input word and none of these has a lexical type\n"
