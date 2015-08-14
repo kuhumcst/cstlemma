@@ -33,7 +33,7 @@ Both 32 and 64 bit versions can be made.
 **Installation**
 
 * Linux:
-    1. Download (e.g. git pull) cstlemma, parsesgml, letterfunc and hashmap. If you are going to use the Makefile that comes with cstlemma, locate each of these packages in separate subdirectories under the same directory, and call these subdirectories cstlemma, parsesgml, letterfunc and hashmap, respectively. You can use https://github.com/kuhumcst/cstlemma/blob/master/doc/makecstlemma.bash to do all of this automatically.
+    1. Download (e.g. git clone) cstlemma, parsesgml, letterfunc and hashmap. If you are going to use the Makefile that comes with cstlemma, locate each of these packages in separate subdirectories under the same directory, and call these subdirectories cstlemma, parsesgml, letterfunc and hashmap, respectively. You can use https://github.com/kuhumcst/cstlemma/blob/master/doc/makecstlemma.bash to do all of this automatically.
     2. Change directory to the 'cstlemma/src' directory.
     3. Run 'make' or 'make cstlemma'. To get rid of object files, run 
     4. 'make clean'.
@@ -48,24 +48,32 @@ lemmatised already.
 Thus, for checking that the lemmatiser runs OK, you could do the following:
 
         touch my_empty_rule_file
-        cstlemma -L -t- -f my_empty_rule_file -i my_text_file.txt
+        cstlemma -L -f my_empty_rule_file -i my_text_file.txt
 
 This would create a file my_text_file.txt.lemma that has two tab-separated
 columns: the left column contains a word from your text and the right column
 contains the same word, converted to lower-case. The -L option tells the
 program lemmatise (as opposed to generating flex rules or creating a binary
-dictionary). The -t- option tells the program not to expect tagged input. The
--f and -i options tells the program which rules and which input text to read.
+dictionary). The -f and -i options tell the program which rules and which input
+text to read.
 
-You can hand-craft the rules or let the lemmatiser generate flex rules from
-a full-form dictionary. The full-form dictionary can also be used to generate
+The lemmatiser "cstlemma" can generate flex rules from a full-form dictionary,
+but a better way to obtain flex rules for use by cstlemma is to use the program
+called "affixtrain" (https://github.com/kuhumcst/affixtrain). The flex rules
+that cstlemma can produce only look at words from the end ("suffix"-oriented).
+Affixtrain, on the other hand, can look at the beginning, the end and in several
+places inside a word, all at once. For languages like German and Dutch, were
+morphological changes deep inside words often follow strict rules, affixtrain
+has a clear advantage over the old suffix based algorithm implemented in
+cstlemma, but also languages that only have suffix morphology can have words
+that carry important information in other places than near the end about word
+class and therefore morphology. A disadavantage of training flex rules with
+affixtrain is that it can take a long time, perhaps days if the training data
+consists of millions of unique full form - lemma pairs.
+
+The full-form dictionary used to train flex rules can also be used to generate
 a binary dictionary, which the program can use to even better lemmatise your
-input text.
-
-If you want to lemmatise a Danish text, please contact us. We have a full form
-dictionary with 70000 head words that we have used to train the lemmatiser for
-the Danish language.
-
+input text. For this task you can use cstlemma (with the -D option).
 
 **Contact info**
 
