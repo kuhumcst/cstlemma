@@ -37,13 +37,8 @@ static bool s_CollapseHomographs;
 
 bool removeCardinal(char * baseform,int bm)
     {
-//    bool nmbr = false;
-//    while(bm > 0 && isdigit(baseform[bm])) isdigit('å') sometimes true (at least in VC6)!
     while(bm > 0 && '0' <= baseform[bm] && baseform[bm] <= '9')
         {
-//        done = true;
-//        nmbr = true;
-//        baseform[bm--] = '\0';
         --bm;
         }
     if(/*nmbr && */bm > 0 && baseform[bm] == ',')
@@ -57,16 +52,16 @@ bool removeCardinal(char * baseform,int bm)
 
 static bool readBaseform(FILE * fpin,bool last)
     {
-	if(kar == '\n' || kar == EOF)
-		{
-		if(last)
-			{
-			kar = 0;
-			}
+    if(kar == '\n' || kar == EOF)
+        {
+        if(last)
+            {
+            kar = 0;
+            }
         s_baseform[s_bm] = '\0';
         return kar == EOF;
-		}
-		
+        }
+
     for(;;)
         {
         kar = fgetc(fpin);
@@ -80,7 +75,6 @@ static bool readBaseform(FILE * fpin,bool last)
             s_baseform[s_bm] = '\0';
             if(s_CollapseHomographs)
                 removeCardinal(s_baseform,s_bm - 1);
-//Cardinal must stay in dictionary!            removeCardinal(s_baseform,s_bm - 1);
             break;
             }
         if(kar != '\r')
@@ -91,17 +85,17 @@ static bool readBaseform(FILE * fpin,bool last)
 
 static bool readFullform(FILE * fpin,bool last)
     {
-	if(kar == '\n' || kar == EOF)
-		{
-		if(last)
-			{
-			kar = 0;
-			}
+    if(kar == '\n' || kar == EOF)
+        {
+        if(last)
+            {
+            kar = 0;
+            }
         flexform[la] = '\0';
         return kar == EOF;
-		}
+        }
 
-	for(;;)
+    for(;;)
         {
         kar = fgetc(fpin);
         if(kar == EOF)
@@ -121,15 +115,15 @@ static bool readFullform(FILE * fpin,bool last)
 
 static bool readType(FILE * fpin,bool last)
     {
-	if(kar == '\n' || kar == EOF)
-		{
-		if(last)
-			{
-			kar = 0;
-			}
+    if(kar == '\n' || kar == EOF)
+        {
+        if(last)
+            {
+            kar = 0;
+            }
         lextype[le] = '\0';
         return kar == EOF;
-		}
+        }
 
     for(;;)
         {
@@ -151,14 +145,14 @@ static bool readType(FILE * fpin,bool last)
 
 static bool readDummyType(FILE * fpin,bool last)
     {
-	if(kar == '\n' || kar == EOF)
-		{
-		if(last)
-			{
-			kar = 0;
-			}
+    if(kar == '\n' || kar == EOF)
+        {
+        if(last)
+            {
+            kar = 0;
+            }
         return kar == EOF;
-		}
+        }
 
     le = 1;
     for(;;)
@@ -251,19 +245,19 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
     while(!eof)
         {
         unsigned int ind = 0;
-		kar = 0;
+        kar = 0;
         while(!eof && ind < sizeof(FIELDS)/sizeof(FIELDS[0]) && FIELDS[ind])
             {
             if(FIELDS[ind]( fpin
-                          ,   (ind+1 < sizeof(FIELDS)/sizeof(FIELDS[0])) 
-                            ? (FIELDS[ind+1] == NULL) 
-                            : true
-                          )
-              )
+                ,   (ind+1 < sizeof(FIELDS)/sizeof(FIELDS[0])) 
+                ? (FIELDS[ind+1] == NULL) 
+                : true
+                )
+                )
                 eof = true;
-			if(kar == 0)
-				break;
-			++ind;
+            if(kar == 0)
+                break;
+            ++ind;
             }
         if(s_bm > 0 && la > 0 && (!T || le > 0))
             {
@@ -277,13 +271,13 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
                 }
             }
         s_bm = la = le = 0;
-		if(kar != 0)
-			while(!eof && kar != '\n')
-				{
-				kar = fgetc(fpin);
-				if(kar == EOF)
-					eof = true;
-				}
+        if(kar != 0)
+            while(!eof && kar != '\n')
+                {
+                kar = fgetc(fpin);
+                if(kar == EOF)
+                    eof = true;
+                }
         }
     s_bm = la = le = 0;
     if(err)

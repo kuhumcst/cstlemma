@@ -1106,9 +1106,9 @@ int makedict(FILE * fpin,FILE * fpout,bool nice,const char * format,const FreqFi
     bool T;
     int cnt = readLemmas(fpin,format,add,CollapseHomographs,failed,T);
 #if STREAM
-    cout << cnt << " lemmas read, " << failed << " discarded" << endl;
+    cout << cnt << " word/lemma pairs included, " << failed << " not included (may be duplicates or words/lemma pairs only differing by word type)" << endl;
 #else
-    printf("%d lemmas read, %d discarded\n",cnt,failed);
+    printf("%d word/lemma pairs included, %d not included (may be duplicates or words/lemma pairs only differing by word type)\n",cnt,failed);
 #endif
     if(failed)
         LOG1LINE("(see file \"discarded\")");

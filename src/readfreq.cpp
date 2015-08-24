@@ -37,15 +37,15 @@ static int line = 0;
 
 static bool readBaseform(FILE * fpin,bool last)
     {
-	if(kar == '\n' || kar == EOF)
-		{
-		if(last)
-			{
-			kar = 0;
-			}
+    if(kar == '\n' || kar == EOF)
+        {
+        if(last)
+            {
+            kar = 0;
+            }
         baseform[baseformindex] = '\0';
         return kar == EOF;
-		}
+        }
 		
     for(;;)
         {
@@ -70,15 +70,15 @@ static bool readBaseform(FILE * fpin,bool last)
 
 static bool readFullform(FILE * fpin,bool last)
     {
-	if(kar == '\n' || kar == EOF)
-		{
-		if(last)
-			{
-			kar = 0;
-			}
+    if(kar == '\n' || kar == EOF)
+        {
+        if(last)
+            {
+            kar = 0;
+            }
         flexform[flexformindex] = '\0';
         return kar == EOF;
-		}
+        }
 		
     for(;;)
         {
@@ -103,16 +103,16 @@ static bool readFullform(FILE * fpin,bool last)
 
 static bool readType(FILE * fpin,bool last)
     {
-	if(kar == '\n' || kar == EOF)
-		{
-		if(last)
-			{
-			kar = 0;
-			}
+    if(kar == '\n' || kar == EOF)
+        {
+        if(last)
+            {
+            kar = 0;
+            }
         lextype[lextypeindex] = '\0';
         return kar == EOF;
-		}
-		
+        }
+
     for(;;)
         {
         kar = fgetc(fpin);
@@ -136,16 +136,16 @@ static bool readType(FILE * fpin,bool last)
 
 static bool readNothing(FILE * fpin,bool last)
     {
-	if(kar == '\n' || kar == EOF)
-		{
-		if(last)
-			{
-			kar = 0;
-			}
+    if(kar == '\n' || kar == EOF)
+        {
+        if(last)
+            {
+            kar = 0;
+            }
         return kar == EOF;
-		}
+        }
 
-	for(;;)
+    for(;;)
         {
         kar = fgetc(fpin);
         if(kar == EOF)
@@ -165,14 +165,14 @@ static bool readNothing(FILE * fpin,bool last)
 
 static bool readFreq(FILE * fpin,bool last)
     {
-	if(kar == '\n' || kar == EOF)
-		{
-		if(last)
-			{
-			kar = 0;
-			}
+    if(kar == '\n' || kar == EOF)
+        {
+        if(last)
+            {
+            kar = 0;
+            }
         return kar == EOF;
-		}
+        }
 		
     for(;;)
         {
@@ -294,10 +294,9 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
                 return;
                 }
     
-//    while(true)
     for(;;)
         {
-		kar = 0;
+        kar = 0;
         for(size_t i = 0;i < nflds;++i)
             {
             if(fieldFncs[i](fpin,fieldFncs[i+1] == NULL))
@@ -313,9 +312,15 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
                 delete [] fieldFncs;
                 return;
                 }
-			if(kar == 0)
-				break;
+            if(kar == 0)
+                break;
             }
+        if(  (flexformindex == 0) 
+          && (lextypeindex  == 0) 
+          && (baseformindex == 0)
+          )
+            continue; // empty line
+
         if(  (!hasFullform || flexformindex > 0) 
           || (!hasType     || lextypeindex  > 0) 
           || (!hasBaseform || baseformindex > 0)
@@ -326,7 +331,7 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
               || (hasBaseform && baseformindex == 0)
               )
                 {
-                printf("A required field according to the format %s is missing:\n",format);
+                printf("A required field according to the format %s is missing in line %d:\n",format,line);
                 if(hasFullform)
                     {
                     if(flexformindex > 0)
@@ -360,29 +365,22 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
                         printf("T:(null)\n");
                         }
                     }
-                //return;
                 }
             else
                 func(lexfreq,flexform,lextype,basef);
             }
-        /*
-        if(flexformindex > 0 && lextypeindex > 0)
-            {
-            func(lexfreq,flexform,lextype,basef);
-            }
-        */
         flexformindex = lextypeindex = baseformindex = 0;
         lexfreq = 0;
-		if(kar != 0)
-			while(kar != '\n')
-				{ // read to end of line
-				kar = fgetc(fpin);
-				if(kar == EOF)
-					{
-					delete [] fieldFncs;
-					return;
-					}
-				}
+        if(kar != 0)
+            while(kar != '\n')
+                { // read to end of line
+                kar = fgetc(fpin);
+                if(kar == EOF)
+                    {
+                    delete [] fieldFncs;
+                    return;
+                    }
+                }
         }
     }
 
