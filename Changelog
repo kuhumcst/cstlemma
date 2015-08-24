@@ -1,4 +1,9 @@
 -------------------------------
+Version 7.01 (24 August 2015)
+-------------------------------
+Cosmetic changes, allow empty lines in input when making dictionary.
+
+-------------------------------
 Version 7.0 (13 August 2015)
 -------------------------------
 Debugged lemmatisation of ambiguous words. (Previously, not all possible lemmas
