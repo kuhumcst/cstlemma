@@ -264,7 +264,6 @@ public:
                     {
                     S.frequency += n;
                     added = true;
-                    //return true;
                     }
                 }
             else
@@ -273,7 +272,6 @@ public:
                     {
                     S.frequency += n;
                     added = true;
-                    //return true;
                     }
                 }
             }
@@ -282,18 +280,7 @@ public:
         if(next)
             return next->addFreq(lextype,n,bf,relaxed,offset) || added;
         else
-            {
-            if(added)
-                {
-                return true;
-                }
-            else
-                {
-                notypematch++;
-                notypematchcnt += n;
-                return false;
-                }
-            }
+            return added;
         }
     tcount printLemmas(tcount pos,DictNode * parent,FILE * fp);
     int print(FILE * fp)
@@ -728,6 +715,11 @@ bool DictNode::addFreq(char * flexform,char * lextype,int n,char * bf,ptrdiff_t 
                 {
                 if(u.type->addFreq(lextype,n,bf,false,offset))
                     return true;
+                else
+                    {
+                    notypematch++;
+                    notypematchcnt += n;
+                    }
                 if(bf == NULL)
                     return false;
                 return u.type->addFreq(lextype,n,bf,true,offset);
