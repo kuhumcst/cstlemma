@@ -82,6 +82,18 @@ CSTLEMMA is demonstrated at CST's website
 and an integrated webservice in the CLARIN-DK infrastructure
 (https://clarin.dk/).
 
+**References**
+
+Bart Jongejan and Hercules Dalianis. 2009. Automatic
+training of lemmatization rules that handle morphological
+changes in pre-, in- and suffixes alike. In
+*Proceedings of the Joint Conference of the 47th
+Annual Meeting of the ACL and the 4th International
+Joint Conference on Natural Language Processing
+of the AFNLP*, pages 145–153. Association
+for Computational Linguistics.
+http://aclweb.org/anthology/P/P09/P09-1017.pdf
+
 **Contact info**
 
 For questions and remarks about the program, please feel free to contact us.
