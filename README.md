@@ -75,6 +75,13 @@ The full-form dictionary used to train flex rules can also be used to generate
 a binary dictionary, which the program can use to even better lemmatise your
 input text. For this task you can use cstlemma (with the -D option).
 
+**Online availability**
+
+CSTLEMMA is demonstrated at CST's website
+(http://ada.sc.ku.dk/tools/index.php?lang=en)
+and an integrated webservice in the CLARIN-DK infrastructure
+(https://clarin.dk/).
+
 **Contact info**
 
 For questions and remarks about the program, please feel free to contact us.
