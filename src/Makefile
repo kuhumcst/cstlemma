@@ -1,10 +1,9 @@
-VERSION=5
-MINOR_NUMBER=05
+VERSION=7
+MINOR_NUMBER=10
 
 BIN=~/bin/
 BIN=
 
-#LIB=/usr/lib/cst/
 LIB=~/bin/
 LIB=
 
