@@ -75,6 +75,25 @@ The full-form dictionary used to train flex rules can also be used to generate
 a binary dictionary, which the program can use to even better lemmatise your
 input text. For this task you can use cstlemma (with the -D option).
 
+**Online availability**
+
+CSTLEMMA is demonstrated at CST's website
+(http://ada.sc.ku.dk/tools/index.php?lang=en)
+and an integrated webservice in the CLARIN-DK infrastructure
+(https://clarin.dk/).
+
+**References**
+
+Bart Jongejan and Hercules Dalianis. 2009. Automatic
+training of lemmatization rules that handle morphological
+changes in pre-, in- and suffixes alike. In
+*Proceedings of the Joint Conference of the 47th
+Annual Meeting of the ACL and the 4th International
+Joint Conference on Natural Language Processing
+of the AFNLP*, pages 145–153. Association
+for Computational Linguistics.
+http://aclweb.org/anthology/P/P09/P09-1017.pdf
+
 **Contact info**
 
 For questions and remarks about the program, please feel free to contact us.
