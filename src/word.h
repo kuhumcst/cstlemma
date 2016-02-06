@@ -70,6 +70,10 @@ class Word : public OutputClass
         bool hasAddedItselfToBaseForm:1;
         bool FoundInDict:1;
         bool owns:1;
+        bool SegmentInitial:1; /* 20160205. If true and word starts with uppercase, 
+        then lowercasing is likely default. 
+              Keep uppercase if also found in non-segment initial position
+              */
     protected:
 #if STREAM
         static ostream * fp;
@@ -243,7 +247,7 @@ class Word : public OutputClass
             }
         Word(const char * word)
             : 
-                hasAddedItselfToBaseForm(false),FoundInDict(false),owns(true)
+                hasAddedItselfToBaseForm(false),FoundInDict(false),owns(true),SegmentInitial(true)
                 ,pbfD(NULL),pbfL(NULL),cnt(1)
             {
             this->m_word = new char[strlen(word) + 1];
@@ -258,6 +262,7 @@ class Word : public OutputClass
                 hasAddedItselfToBaseForm(w.hasAddedItselfToBaseForm),
                 FoundInDict(w.FoundInDict),
                 owns(false),
+                SegmentInitial(w.SegmentInitial),
                 m_word(w.m_word),
                 pbfD(w.pbfD),
                 pbfL(w.pbfL),
@@ -345,6 +350,9 @@ class Word : public OutputClass
                 }
             }
         void lookup(text * txt);
+        void setSegmentInitial(){SegmentInitial = true;}
+        void unsetSegmentInitial(){SegmentInitial = false;}
+        bool segmentInitial() const{return SegmentInitial;}
     };
 
 class taggedWord : public Word

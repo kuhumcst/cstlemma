@@ -201,6 +201,19 @@ bool XMLtext::analyseThis()
         }
     }
 
+bool XMLtext::segmentBreak()
+    {
+    if(segment)
+        {
+        if(Crumbs && Crumbs->is(segment))
+            {
+            StartOfLine = true;
+            return true;
+            }
+        }
+    return false;
+    }
+
 void XMLtext::CallBackStartElementName()
     {
     startElement = ch;
@@ -223,7 +236,10 @@ void XMLtext::CallBackEndElementName()
              && !strncmp(startElement,this->ancestor,endElement - startElement)
              )
           )
+            {
             Crumbs = new crumb(startElement,endElement - startElement,Crumbs);
+            segmentBreak();
+            }
         }
     }
 
@@ -507,6 +523,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
            ,Token(NULL)
            ,ancestor(Option.ancestor)
            ,element(Option.element)
+           ,segment(Option.segment)
            ,POSAttribute(Option.POSAttribute)
            ,lemmaAttribute(Option.lemmaAttribute)
            ,lemmaClassAttribute(Option.lemmaClassAttribute)
@@ -519,6 +536,8 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
            ,alltext(NULL)
            ,wordAttribute(Option.wordAttribute)
     {
+    StartOfLine = true;
+
     wordAttributeLen = wordAttribute ? strlen(wordAttribute) : 0;
     POSAttributeLen = POSAttribute ? strlen(POSAttribute) : 0;
     lemmaAttributeLen = lemmaAttribute ? strlen(lemmaAttribute) : 0;
@@ -745,5 +764,11 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
     if(Option.nice)
         LOG1LINE("...read words from XML file");
     }
+
+void XMLtext::wordDone()
+    {
+    if(segment)
+        StartOfLine = false;
+    };
 
 #endif

@@ -69,12 +69,12 @@ most probable, given the word's ending (then we would need to have a most
 probable type for the case that NO rule aplies, 
 i.e. the unkown word is in base form already.)
 */
-const char * baseform(char * word,const char ** tag /*return value!*/)
+const char * baseform(char * word,const char ** tag /*return value!*/, bool SegmentInitial)
     { // construct baseform by applying general rules (e.g. removing endings)
     const char * wrd;
     size_t borrow;
     assert(tag);
-    *tag = Flex.Baseform(word,wrd,borrow);
+    *tag = Flex.Baseform(word,wrd,borrow,SegmentInitial);
     if(*tag)
         return wrd;
     else
@@ -175,7 +175,7 @@ void Word::printLemmaClass()const
 int Word::addBaseFormsL()
     {
     const char * tag = 0;
-    const char * wrd = baseform(m_word,&tag);
+    const char * wrd = baseform(m_word,&tag,SegmentInitial);
     if(!tag)
         tag = NOT_KNOWN;// TODO do something better (NUM, XX, TEGN, etc)
     if(!*wrd)

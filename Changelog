@@ -1,4 +1,25 @@
 -------------------------------
+Version 7.10 (6 February 2016)
+-------------------------------
+Improved rule based lemmatisation of capitalised words that are at the
+beginning of a line.
+1) If the same capitalised word occurs elsewhere in the input text in a
+non-sentence initial position, then the word is not converted to lowercase
+before being lemmatised.
+2) Otherwise, the lemma(s) is/are formed in two steps:
+a) The word is lemmatised as it is, but any lemmas formed by rules
+without a prefix part are discarded. So acceptable rules in this step must be
+case sensitive.
+b) Finally, the word is lowercased and lemmatised. The lemmas formed in the
+second step are appended to those formed in the first step.
+
+Tomake this work, if the input is flat text, each segment should be on a
+separate line. A newline character indicates a segment separator. If the input
+is an XML-formatted file, use elements like <p> ... </p> or <br /> to indicate
+segment breaks. Declare the segment breaking element with the new Xs<element>
+option, e.g., -Xsp
+
+-------------------------------
 Version 7.01 (24 August 2015)
 -------------------------------
 Cosmetic changes, allow empty lines in input when making dictionary.

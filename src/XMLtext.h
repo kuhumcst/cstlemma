@@ -78,6 +78,7 @@ class XMLtext : public text
         char * endValue;
         const char * ancestor; // if not null, restrict lemmatisation to elements that are offspring of ancestor
         const char * element; // if not null, analyse only element's attributes and/or PCDATA
+        const char * segment; // if not null, begin new segment after this tag
         const char * POSAttribute; // if null, POS is PCDATA
         const char * lemmaAttribute; // if null, Lemma is PCDATA
         const char * lemmaClassAttribute; // if null, lemma class is PCDATA
@@ -97,7 +98,9 @@ class XMLtext : public text
         char * ch;
         const char * wordAttribute; // if null, word is PCDATA
     public:
+        void wordDone();
         bool analyseThis();
+        bool segmentBreak();
         token * getCurrentToken();  // pristine
         token * getJustMadeToken(); // the previous one, that is. May be partly filled in.
         void reachedTokenEnd(char * ch);

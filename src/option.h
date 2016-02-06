@@ -89,6 +89,7 @@ struct optionStruct
 
     char * ancestor;            // -Xaxyz if not null, restrict lemmatisation to elements that are offspring of ancestor
     char * element;             // -Xexyz if null, analyse all PCDATA that is text
+    char * segment;             // -Xsbr if null, analyse all words as if starting segment
     char * wordAttribute;       // -Xwxyz if null, word is PCDATA
     char * POSAttribute;        // -Xpxyz if null, POS is PCDATA
     char * lemmaAttribute;      // -Xlxyz if null, Lemma is PCDATA

@@ -41,10 +41,16 @@ typedef unsigned char typetype;
 
 bool oneAnswer = false;
 
-struct var
+struct startEnd
     {
     const char * s;
     const char * e;
+    };
+
+struct lemmaCandidate
+    {
+    const char * L;
+    bool ruleHasPrefix;
     };
 
 //static int news = 0;
@@ -59,6 +65,7 @@ static char * result = 0;
 static char * replacement = 0; // FOR TEST PURPOSE
 #endif
 static int NewStyle = 2;
+static bool donotAddLemmaUnlessRuleHasPrefix = false;
 
 bool setNewStyleRules(int val)
     {
@@ -212,7 +219,7 @@ static const char * sameend(const char ** fields, const char * s, const char * w
     return f == e ? s : 0;
     }
 
-static bool substr(const char ** fields, int k, const char * w, const char * wend, var * vars, int vindex)
+static bool substr(const char ** fields, int k, const char * w, const char * wend, startEnd * vars, int vindex)
     {
     if (w == wend)
         return false;
@@ -386,12 +393,12 @@ static int lemmatiseer(const char * word, const char * wordend, const char * buf
                 }
             default:
                 {
-                var vars[20];
+                startEnd vars[20];
                 const char * fields[44]; // 44 = (2*20 + 3) + 1
                 // The even numbered fields contain patterns
                 // The odd numbered fields contain replacements
                 // The first two fields (0,1) refer to the prefix
-                // The third and fourth (2,3) fields refer to the affix
+                // The third and fourth (2,3) fields refer to the suffix
                 // The remaining fields (4,5,..,..) refer to infixes, from left to right
                 // output=fields[1]+vars[0]+fields[5]+vars[1]+fields[7]+vars[2]+...+fields[2*n+3]+vars[n]+...+fields[3]
                 const char * wend = wordend;
@@ -637,12 +644,12 @@ static void printpat(const char ** fields, int findex)
 
 static char * rewrite(const char *& word, const char *& wordend, const char * p)
     {
-    var vars[20];
+    startEnd vars[20];
     const char * fields[44]; // 44 = (2*20 + 3) + 1
     // The even numbered fields contain patterns
     // The odd numbered fields contain replacements
     // The first two fields (0,1) refer to the prefix
-    // The third and fourth (2,3) fields refer to the affix
+    // The third and fourth (2,3) fields refer to the suffix
     // The remaining fields (4,5,..,..) refer to infixes, from left to right
     // output=fields[1]+vars[0]+fields[5]+vars[1]+fields[7]+vars[2]+...+fields[2*n+3]+vars[n]+...+fields[3]
     const char * wend = wordend;
@@ -730,16 +737,24 @@ static char * rewrite(const char *& word, const char *& wordend, const char * p)
         }
     }
 
-static char ** addLemma(char ** lemmas, const char * lemma)
+static char ** addLemma(char ** lemmas, const lemmaCandidate * lemma)
     {
-    if (lemma)
+    if(donotAddLemmaUnlessRuleHasPrefix)
+        {
+        if(!lemma->ruleHasPrefix)
+            {
+            return lemmas;
+            }
+        }
+
+    if (lemma->L)
         {
         if (lemmas)
             {
             int i;
             for (i = 0; lemmas[i]; ++i)
                 {
-                if (!strcmp(lemmas[i], lemma))
+                if (!strcmp(lemmas[i], lemma->L))
                     {
                     return lemmas;
                     }
@@ -754,8 +769,8 @@ static char ** addLemma(char ** lemmas, const char * lemma)
             delete[] lemmas;
             lemmas = nlemmas;
             //++news;
-            lemmas[i] = new char[strlen(lemma) + 1];
-            strcpy(lemmas[i], lemma);
+            lemmas[i] = new char[strlen(lemma->L) + 1];
+            strcpy(lemmas[i], lemma->L);
             lemmas[++i] = 0;
             }
         else
@@ -764,8 +779,8 @@ static char ** addLemma(char ** lemmas, const char * lemma)
             lemmas = new char *[2];
             lemmas[1] = 0;
             //++news;
-            lemmas[0] = new char[strlen(lemma) + 1];
-            strcpy(lemmas[0], lemma);
+            lemmas[0] = new char[strlen(lemma->L) + 1];
+            strcpy(lemmas[0], lemma->L);
             }
         }
     return lemmas;
@@ -799,9 +814,23 @@ static char * concat(char ** L)
         return 0;
     }
 
-static char ** lemmatiseerV3(const char * word, const char * wordend, const char * buf, const char * maxpos, const char * parentcandidate, char ** lemmas);
+static char ** lemmatiseerV3
+    ( const char * word
+    , const char * wordend
+    , const char * buf
+    , const char * maxpos
+    , const lemmaCandidate * parentcandidate
+    , char ** lemmas
+    );
 
-static char ** chainV3(const char * word, const char * wordend, const char * buf, const char * maxpos, const char * parentcandidate, char ** lemmas)
+static char ** chainV3
+    ( const char * word
+    , const char * wordend
+    , const char * buf
+    , const char * maxpos
+    , const lemmaCandidate * parentcandidate
+    , char ** lemmas
+    )
     {
     for (int next = *(int*)buf
          ;
@@ -833,7 +862,14 @@ static char ** chainV3(const char * word, const char * wordend, const char * buf
     return lemmas;
     }
 
-static char ** lemmatiseerV3(const char * word, const char * wordend, const char * buf, const char * maxpos, const char * parentcandidate, char ** lemmas)
+static char ** lemmatiseerV3
+    ( const char * word
+    , const char * wordend
+    , const char * buf
+    , const char * maxpos
+    , const lemmaCandidate * parentcandidate
+    , char ** lemmas
+    )
     {
     if (maxpos <= buf)
         return 0;
@@ -867,16 +903,23 @@ static char ** lemmatiseerV3(const char * word, const char * wordend, const char
         {
         type = 0; // no ambiguity
         }
-    char * candidate = rewrite(cword, cwordend, p);
+    lemmaCandidate candidate;
+    if(*p && *p != '\t')
+        {
+        candidate.ruleHasPrefix = true;
+        }
+    else
+        candidate.ruleHasPrefix = parentcandidate ? parentcandidate->ruleHasPrefix : false;
+    candidate.L = rewrite(cword, cwordend, p);
     p = strchr(p, '\n');
     ptrdiff_t off = p - buf;
     off += sizeof(int);
     off /= sizeof(int);
     off *= sizeof(int);
     p = buf + off;
-    if (candidate)
+    if (candidate.L)
         {
-        const char * defaultCandidate = candidate[0] ? candidate : parentcandidate;
+        const lemmaCandidate * defaultCandidate = candidate.L[0] ? &candidate : parentcandidate;
         /* 20150806 A match resulting in a zero-length candidate is valid for
         descending, but if all descendants fail, the candidate is overruled by
         an ancestor that is not zero-length. (The top rule just copies the
@@ -890,7 +933,7 @@ static char ** lemmatiseerV3(const char * word, const char * wordend, const char
                 candidate, otherwise take the succeeding child's result. */
                 char ** childcandidates = lemmatiseerV3(cword, cwordend, p, until, defaultCandidate, lemmas);
                 result = childcandidates ? childcandidates : addLemma(lemmas, defaultCandidate);
-                delete[] candidate;
+                delete[] candidate.L;
                 break;
                 }
             case 2:
@@ -903,7 +946,7 @@ static char ** lemmatiseerV3(const char * word, const char * wordend, const char
                 in the right position in the sequence of answers. */
                 char ** childcandidates = chainV3(cword, cwordend, p, until, defaultCandidate, lemmas);
                 result = childcandidates ? childcandidates : addLemma(lemmas, defaultCandidate);
-                delete[] candidate;
+                delete[] candidate.L;
                 break;
                 }
             default:
@@ -955,9 +998,8 @@ void deleteRules()
     }
 
 
-const char * applyRules(const char * word)
+const char * applyRules(const char * word,bool SegmentInitial)
     {
-    //news = 0;
     if (buf)
         {
         size_t len = strlen(word);
@@ -975,6 +1017,7 @@ const char * applyRules(const char * word)
             }
 
         //--news;
+        donotAddLemmaUnlessRuleHasPrefix = false;
         delete[] result;
         result = 0;
 #if TESTING
@@ -988,7 +1031,21 @@ const char * applyRules(const char * word)
         if (newStyleRules() == 3)
             {
             char ** lemmas = 0;
-            result = concat(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas));
+            if(SegmentInitial && !flex::baseformsAreLowercase && isUpper(word[0]))
+                {
+                donotAddLemmaUnlessRuleHasPrefix = true;
+                lemmas = lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas);
+                size_t length = 0;
+                word = changeCase(word, true, length);
+                donotAddLemmaUnlessRuleHasPrefix = false;
+                result = concat(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas));
+                }
+            else
+                {
+                result = concat(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas));
+                }
+
+
             }
         else
             {
@@ -1000,7 +1057,6 @@ const char * applyRules(const char * word)
 #endif
                         );
             }
-        //printf("%.*s -> %s ",len,word,result);
 
 #if TESTING
         char temp[1000];
@@ -1010,25 +1066,19 @@ const char * applyRules(const char * word)
         result = new char[newresult];
         strcpy(result,temp);
 #endif
-        //        delete [] loword;
-//        if (news)
-//            printf("news %d\n", news);
         return result;
         }
-//    if (news)
-//        printf("news %d\n", news);
     return 0;
     }
 
 
-const char * applyRules(const char * word, const char * tag)
+const char * applyRules(const char * word, const char * tag,bool SegmentInitial)
     {
-    //news = 0;
     if (buf)
         {
         size_t len = strlen(word);
         //char * loword = 0;
-        if (flex::baseformsAreLowercase)
+        if (flex::baseformsAreLowercase || SegmentInitial)
             {
             size_t length = 0;
             if (strchr(word, '/') > 0)

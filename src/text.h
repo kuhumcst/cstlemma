@@ -89,6 +89,8 @@ class text
         basefrm ** basefrmarrL;
     protected:
         bool InputHasTags;
+        bool StartOfLine;
+        bool atStartOfLine() const { return StartOfLine; } 
     private:
     protected:
         void insert(const char * w);

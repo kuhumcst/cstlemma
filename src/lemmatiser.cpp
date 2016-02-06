@@ -451,6 +451,7 @@ int Lemmatiser::setFormats()
         {
         if(  Option.ancestor 
           || Option.element 
+          || Option.segment
           || Option.wordAttribute 
           || Option.POSAttribute 
           || Option.lemmaAttribute 
@@ -473,6 +474,12 @@ int Lemmatiser::setFormats()
                 clog << "-Xe" << Option.element << "\tOnly analyse elements " << Option.element << endl;
 #else
                 info("-Xe%s\tOnly analyse elements %s",Option.element,Option.element);
+#endif
+            if(Option.segment)
+#if STREAM
+                clog << "-Xs" << Option.segment << "\tBegin new segment after the tag " << Option.segment << endl;
+#else
+                info("-Xe%s\tBegin new segment after the tag %s",Option.segment,Option.segment);
 #endif
             if(Option.wordAttribute)
                 {

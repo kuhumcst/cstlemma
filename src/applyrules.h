@@ -29,8 +29,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 int newStyleRules();
 bool readRules(FILE * flexrulefile,const char * flexFileName);
 bool readRules(const char * flexFileName);
-const char * applyRules(const char * word);
-const char * applyRules(const char * word,const char * tag);
+const char * applyRules(const char * word,bool SegmentInitial);
+const char * applyRules(const char * word,const char * tag,bool SegmentInitial);
 void deleteRules();
 extern bool oneAnswer;
 bool setNewStyleRules(int val);

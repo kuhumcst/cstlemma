@@ -344,6 +344,7 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
 #ifdef COUNTOBJECTS
     ++COUNT;
 #endif
+    StartOfLine = true;
     fields = 0;
     const char * Tag;
     field * wordfield = 0;
@@ -442,6 +443,7 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
                 else if(*w)
                     createTagged(w,Tag);
                 lineno += newlines;
+                StartOfLine = newlines != 0;
                 }
             }
         else
@@ -469,6 +471,7 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
                         createTaggedAlternatives(w,Tag);
                     else 
                         createTagged(w,Tag);
+                    StartOfLine = newlines != 0;
                     }
                 lineno += newlines;
                 }
@@ -486,6 +489,7 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
                 else
                     createUnTagged(w);
                 lineno += newlines;
+                StartOfLine = newlines != 0;
                 }
             }
         else
@@ -497,6 +501,7 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
                 else 
                     createUnTagged(w);
                 lineno += newlines;
+                StartOfLine = newlines != 0;
                 }
             }
         }

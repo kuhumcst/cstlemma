@@ -260,11 +260,11 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
         return false;
     }
 
-char * flex::Baseform(const char * word,const char *& bf,size_t & borrow)
+char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool SegmentInitial)
     {
     if(newStyleRules())
         {
-        bf = applyRules(word);
+        bf = applyRules(word,SegmentInitial);
         static char hyphen[] = "-";
         return hyphen; // 20120710 Returning "-" directly generates warning in newer gcc
         }

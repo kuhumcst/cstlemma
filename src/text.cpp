@@ -702,7 +702,17 @@ void text::insert(const char * w)
         {
         wrd = new Word(w);
         Hash->insert(wrd,v);
+        if(StartOfLine)
+            wrd->setSegmentInitial();
         }
+    if(!StartOfLine)
+        wrd->unsetSegmentInitial(); /* Signals that the casing of the word has
+                                    to be taken into account when lemmatizing.
+                                    Segment initial words are almost always
+                                    uppercase, and so lowercasing the word
+                                    is the right thing, unless the same word
+                                    is found with uppercasing in a non-sentence
+                                    initial position.*/
     tunsorted[total] = wrd;
     Lines[lineno] = total;
     ++total;
@@ -732,7 +742,17 @@ void text::insert(const char * w, const char * tag)
         {
         wrd = new taggedWord(w,tag);
         Hash->insert((Word *)wrd,v);
+        if(StartOfLine)
+            wrd->setSegmentInitial();
         }
+    if(!StartOfLine)
+        wrd->unsetSegmentInitial(); /* Signals that the casing of the word has
+                                    to be taken into account when lemmatizing.
+                                    Segment initial words are almost always
+                                    uppercase, and so lowercasing the word
+                                    is the right thing, unless the same word
+                                    is found with uppercasing in a non-sentence
+                                    initial position.*/
     tunsorted[total] = wrd;
     Lines[lineno] = total;
     ++total;

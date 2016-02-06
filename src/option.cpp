@@ -80,6 +80,7 @@ optionStruct::optionStruct()
     XML = false;
     ancestor = NULL; // if not null, restrict lemmatisation to elements that are offspring of ancestor
     element = NULL; // if null, analyse all PCDATA that is text
+    segment = NULL;
     wordAttribute = NULL; // if null, word is PCDATA
     POSAttribute = NULL; // if null, POS is PCDATA
     lemmaAttribute = NULL; // if null, Lemma is PCDATA
@@ -145,6 +146,7 @@ optionStruct::~optionStruct()
     delete [] Sep;
     delete [] ancestor;
     delete [] element;
+    delete [] segment;
     delete [] wordAttribute;
     delete [] POSAttribute;
     delete [] lemmaAttribute;
@@ -463,6 +465,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "    The next options do not allow space between option letters and argument!\n"
                    "    -Xa<ancestor>  Only analyse elements with specified ancestor. e.g -Xabody\n"
                    "    -Xe<element>  Only analyse specified element. e.g -Xew\n"
+                   "    -Xs<segment>  Segment separating element. e.g -Xsbr or Xss (resp. <br /> and <s>...</s>)\n"
                    "    -Xw<word>  Words are to be found in attribute. e.g -Xwword\n"
                    "    -Xp<pos>  Words' POS-tags are to be found in attribute. e.g -Xppos\n"
                    "    -Xl<lemma>  Destination of lemma is the specified attribute. e.g -Xllemma\n"
@@ -733,6 +736,9 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                             break;
                         case 'e':
                             element = dupl(locoptarg+1);
+                            break;
+                        case 's':
+                            segment = dupl(locoptarg+1);
                             break;
                         case 'w':
                             wordAttribute = dupl(locoptarg+1);

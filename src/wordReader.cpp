@@ -490,16 +490,19 @@ CHAR * wordReader::readChar(int kar)
 bool wordReader::countToken(int kar)
     {
     CHAR * w = readChar(kar);
-    if(Text->analyseThis())
+//    if(!Text->segmentBreak())
         {
-        if(!Text->wordAttribute && w && *w)
+        if(Text->analyseThis())
             {
-            Text->incTotal();
-            if(treatSlashAsAlternativesSeparator)
+            if(!Text->wordAttribute && w && *w)
                 {
-                Text->incTotal(findSlashes(w));
+                Text->incTotal();
+                if(treatSlashAsAlternativesSeparator)
+                    {
+                    Text->incTotal(findSlashes(w));
+                    }
+                return true;
                 }
-            return true;
             }
         }
     return false;
@@ -508,40 +511,44 @@ bool wordReader::countToken(int kar)
 bool wordReader::readToken(int kar)
     {
     CHAR * w = readChar(kar);
-    if(Text->analyseThis())
+//    if(!Text->segmentBreak())
         {
-        if(!Text->wordAttribute && w && *w)
+        if(Text->analyseThis())
             {
-            token * Tok = Text->getCurrentToken();
-            char * start = Tok->tokenWord.getStart();
-            Tok->tokenWord.set(start,start+strlen(w));
-            char * POS = Tok->tokenPOS.getStart();
-            if(POS != NULL)
+            if(!Text->wordAttribute && w && *w)
                 {
-                char * EP = Tok->tokenPOS.getEnd();
-                char savP = *EP;
-                *EP = '\0';
-                if(treatSlashAsAlternativesSeparator && findSlashes(w))
-                    Text->createTaggedAlternatives(w,POS);
+                token * Tok = Text->getCurrentToken();
+                char * start = Tok->tokenWord.getStart();
+                Tok->tokenWord.set(start,start+strlen(w));
+                char * POS = Tok->tokenPOS.getStart();
+                if(POS != NULL)
+                    {
+                    char * EP = Tok->tokenPOS.getEnd();
+                    char savP = *EP;
+                    *EP = '\0';
+                    if(treatSlashAsAlternativesSeparator && findSlashes(w))
+                        Text->createTaggedAlternatives(w,POS);
+                    else
+                        Text->createTagged(w,POS);
+                    *EP = savP;
+                    }
+                else if(tag)
+                    {
+                    if(treatSlashAsAlternativesSeparator && findSlashes(w))
+                        Text->createTaggedAlternatives(w,tag);
+                    else
+                        Text->createTagged(w,tag);
+                    }
                 else
-                    Text->createTagged(w,POS);
-                *EP = savP;
+                    {
+                    if(treatSlashAsAlternativesSeparator && findSlashes(w))
+                        Text->createUnTaggedAlternatives(w);
+                    else
+                        Text->createUnTagged(w);
+                    }
+                Text->wordDone();
+                return true;
                 }
-            else if(tag)
-                {
-                if(treatSlashAsAlternativesSeparator && findSlashes(w))
-                    Text->createTaggedAlternatives(w,tag);
-                else
-                    Text->createTagged(w,tag);
-                }
-            else
-                {
-                if(treatSlashAsAlternativesSeparator && findSlashes(w))
-                    Text->createUnTaggedAlternatives(w);
-                else
-                    Text->createUnTagged(w);
-                }
-            return true;
             }
         }
     return false;

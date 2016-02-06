@@ -257,7 +257,7 @@ class flex
     public:
         static bool baseformsAreLowercase;
         bool Baseform(const char * word,const char * tag,const char *& bf,size_t & borrow);
-        char * Baseform(const char * word,const char *& bf,size_t & borrow); // returns tag
+        char * Baseform(const char * word,const char *& bf,size_t & borrow,bool SegmentInitial); // returns tag
         void print();
         void removeAmbiguous();
         bool readFromFile(FILE * fpflex,const char * flexFileName);
