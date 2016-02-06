@@ -769,6 +769,6 @@ void XMLtext::wordDone()
     {
     if(segment)
         StartOfLine = false;
-    };
+    }
 
 #endif
