@@ -82,11 +82,11 @@ const char * baseform(char * word,const char ** tag /*return value!*/, bool Segm
     }
 
 
-const char * baseform(char * word,const char * tag)
+const char * baseform(char * word,const char * tag,bool SegmentInitial)
     { // construct baseform by applying general rules (e.g. removing endings)
     const char * wrd;
     size_t borrow;
-    if(Flex.Baseform(word,tag,wrd,borrow))
+    if(Flex.Baseform(word,tag,wrd,borrow,SegmentInitial))
         return wrd;
     else if(flex::baseformsAreLowercase)
         return allToLower(word); 
@@ -540,7 +540,7 @@ formattingFunction * taggedWord::getTaggedWordFunctionNoBb(int character,bool & 
 int taggedWord::addBaseFormsL()
     {
     const char *ttag = Lemmatiser::translate(m_tag); 
-    const char * wrd = baseform(m_word,ttag);
+    const char * wrd = baseform(m_word,ttag,SegmentInitial);
     return addBaseFormL(wrd,LemmaTag(ttag));
     }
 

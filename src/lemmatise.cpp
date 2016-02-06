@@ -175,11 +175,11 @@ void flex::print()
         types->print();
     }
 
-bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t & borrow)
+bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t & borrow,bool SegmentInitial)
     {
     if(newStyleRules())
         {
-        bf = applyRules(word,tag);
+        bf = applyRules(word,tag,SegmentInitial);
         return true;
         }
 
