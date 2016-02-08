@@ -790,7 +790,7 @@ static char * concat(char ** L)
     {
     if (L)
         {
-        int lngth = 0;
+        size_t lngth = 0;
         int i;
         for (i = 0; L[i]; ++i)
             lngth += strlen(L[i]) + 1;
