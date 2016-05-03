@@ -679,7 +679,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
                 if(*ch)
                     {
                     // TEXT START
-                    while(*ch && isspace(*ch))
+                    while(*ch && isspace((unsigned char)*ch))
                         {
                         ++ch;
                         }

@@ -109,7 +109,7 @@ char * readWhiteSpace::read(char * kar,field *& nextfield)
 
 char * readAllButWhiteSpace::read(char * kar,field *& nextfield)
     {
-    int k = *kar;
+    int k = (unsigned char)*kar;
     if(isspace(k))
         {
         if(found)

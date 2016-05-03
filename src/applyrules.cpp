@@ -1031,7 +1031,7 @@ const char * applyRules(const char * word,bool SegmentInitial)
         if (newStyleRules() == 3)
             {
             char ** lemmas = 0;
-            if(SegmentInitial && !flex::baseformsAreLowercase && isUpper(word[0]))
+            if(SegmentInitial && !flex::baseformsAreLowercase && isUpper((const unsigned char)word[0]))
                 {
                 donotAddLemmaUnlessRuleHasPrefix = true;
                 lemmas = lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas);

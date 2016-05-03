@@ -809,7 +809,7 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                         {
                         for(p = optarg2 + strlen(optarg2) - 1;p >= optarg2;--p)
                             {
-                            if(!isspace(*p))
+                            if(!isspace((unsigned char)*p))
                                 break;
                             *p = '\0';
                             }
@@ -830,7 +830,7 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                                         {
                                         if(*q == ';')
                                             break;
-                                        if(!isspace(*q))
+                                        if(!isspace((unsigned char)*q))
                                             {
                                             string = false;
                                             }
@@ -923,7 +923,7 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                         {
                         for(p = optarg2 + strlen(optarg2) - 1;p >= optarg2;--p)
                             {
-                            if(!isspace(*p))
+                            if(!isspace((unsigned char)*p))
                                 break;
                             *p = '\0';
                             }
@@ -944,7 +944,7 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                                         {
                                         if(*q == ';')
                                             break;
-                                        if(!isspace(*q))
+                                        if(!isspace((unsigned char)*q))
                                             {
                                             string = false;
                                             }
