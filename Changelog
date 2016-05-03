@@ -1,4 +1,9 @@
 -------------------------------
+Version 7.11 (3 May 2016)
+-------------------------------
+Typecast char to unsigned char when calling isspace and isUpper.
+
+-------------------------------
 Version 7.10 (6 February 2016)
 -------------------------------
 Improved rule based lemmatisation of capitalised words that are at the
