@@ -566,7 +566,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
         fpi->seekg(0, ios::beg);
         if(filesize > 0)
             {
-            alltext = new char[filesize+1];
+            alltext = new char[(size_t)(filesize+1)];
             char * p = alltext;
             while(((kar = fpi->get()) != 0) && !fpi->eof())
                 *p++ = (char)kar;
