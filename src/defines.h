@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define STREAM 1 // 0: use stdio 1: use iostream
+#define STREAM 0 // 0: use stdio 1: use iostream
 
 #if STREAM
 //#define fprintf xxx

@@ -1,4 +1,15 @@
 -------------------------------
+Version 7.13 (19 July 2016)
+-------------------------------
+Debugged getwordI so it does not have incorrect complains about missing 
+input according to the input specification format (-I option).
+
+-------------------------------
+Version 7.12 (18 July 2016)
+-------------------------------
+Typecast streamoff to size-t in XMLtext.cpp
+
+-------------------------------
 Version 7.11 (3 May 2016)
 -------------------------------
 Typecast char to unsigned char when calling isspace and isUpper.
