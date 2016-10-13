@@ -46,6 +46,7 @@ const char * lext::constructBaseform(const char * fullform) const
         else
             {
             strncpy(buf,fullform,off);
+            buf[off] = '\0';
             }
         pbuf = buf + strlen(buf);
         }
