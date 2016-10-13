@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 int lext::COUNT = 0;
 #endif
 
+bool lext::baseformsAreLowercase = true;
 
 const char * lext::constructBaseform(const char * fullform) const
     {
@@ -38,7 +39,14 @@ const char * lext::constructBaseform(const char * fullform) const
     char * pbuf = buf;
     if(off > 0)
         {
-        strcpy(buf,changeCase(fullform,true,off));
+        if(lext::baseformsAreLowercase)
+            {
+            strcpy(buf,changeCase(fullform,true,off));
+            }
+        else
+            {
+            strncpy(buf,fullform,off);
+            }
         pbuf = buf + strlen(buf);
         }
     for(w = BaseFormSuffix;*w;)

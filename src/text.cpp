@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "word.h"
 #include "basefrm.h"
 #include "flex.h"
+#include "lext.h"
 #include <stdlib.h>
 #include <assert.h>
 #include "hashmap.h"
@@ -389,6 +390,7 @@ void text::Lemmatise(FILE * fpo
 #endif
     {
     flex::baseformsAreLowercase = baseformsAreLowercase;
+    lext::baseformsAreLowercase = baseformsAreLowercase;
     Word::DictUnique = DictUnique;
     baseformpointer::UseLemmaFreqForDisambiguation = UseLemmaFreqForDisambiguation;
     taggedWord::sep = Sep;

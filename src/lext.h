@@ -36,6 +36,7 @@ are traversed to reach the lext-object, starting at the top Nodes-object.
 */
 struct lext
     {
+    static bool baseformsAreLowercase;
 #ifdef COUNTOBJECTS
     public:
     static int COUNT;

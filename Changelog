@@ -1,4 +1,11 @@
 -------------------------------
+Version 7.14 (13 October 2016)
+-------------------------------
+Fixed error in dictionary look-up. Previously, if a word was found in the
+dictionary, the lemma form was forced to lower case, even if option -l- was
+set. Now lowercasing only happens if -l is set.
+
+-------------------------------
 Version 7.13 (19 July 2016)
 -------------------------------
 Debugged getwordI so it does not have incorrect complains about missing 
