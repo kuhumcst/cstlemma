@@ -562,9 +562,17 @@ int wordReader::rawput(bool (wordReader::*fnc)(int kar),int kar)
 int wordReader::nrawput(bool (wordReader::*fnc)(int kar),char * c)
     {
     while(*c)
-        if(!rawput(fnc,*c++))
-            return false;
+        //if(!rawput(fnc,*c++))
+        rawput(fnc,*c++);
     return true;
+    }
+
+int myUnicodeToUtf8(int w,char * s,size_t len)
+    {
+    int writtenlength = UnicodeToUtf8(w,s,len);
+    if(writtenlength >= 0)
+        s[writtenlength] = '\0';
+    return writtenlength;
     }
 
 int wordReader::charref(bool (wordReader::*fnc)(int kar),int kar)
@@ -594,7 +602,7 @@ int wordReader::charref(bool (wordReader::*fnc)(int kar),int kar)
             N = (buf[1] == 'x') ? strtoul(buf+2,NULL,16) : strtoul(buf+1,NULL,10);
             p = buf;
             xput = &wordReader::Put;
-            if(UnicodeToUtf8(N,tmp,sizeof(tmp)))
+            if(myUnicodeToUtf8(N,tmp,sizeof(tmp)))
                 {
                 return nrawput(fnc,tmp);
                 }
@@ -619,7 +627,7 @@ int wordReader::charref(bool (wordReader::*fnc)(int kar),int kar)
                     char tmp[22];
                     p = buf;
                     xput = &wordReader::Put;
-                    if(UnicodeToUtf8(pItem->code,tmp,sizeof(tmp)))
+                    if(myUnicodeToUtf8(pItem->code,tmp,sizeof(tmp)))
                         {
                         return nrawput(fnc,tmp);
                         }

@@ -1,4 +1,10 @@
 -------------------------------
+Version 7.15 (19 October 2016)
+-------------------------------
+Fixed error in the decoding of XML-entities if the decoded string comprised
+more than one byte.
+
+-------------------------------
 Version 7.14 (13 October 2016)
 -------------------------------
 Fixed error in dictionary look-up. Previously, if a word was found in the
