@@ -68,34 +68,9 @@ class text
     public:
         static int COUNT;
 #endif
-    private:
-        virtual const char * convert(const char * s)
-            {
-            return s;
-            }
-    protected:
-        size_t N;
-        Word ** Root;
-        const Word ** tunsorted;
-        unsigned long int * Lines;
-        unsigned long int lineno;
-        unsigned long int total;
-        unsigned long int reducedtotal;
-        field * fields;
-        void AddField(field * fld);
-        field * translateFormat(char * Iformat,field *& wordfield,field *& tagfield);
-    private:
-        basefrm ** basefrmarrD;
-        basefrm ** basefrmarrL;
-    protected:
-        bool InputHasTags;
-        bool StartOfLine;
-        bool atStartOfLine() const { return StartOfLine; } 
-    private:
-    protected:
-        void insert(const char * w);
-        void insert(const char * w, const char * tag);
-    private:
+	private:
+		basefrm ** basefrmarrD;
+		basefrm ** basefrmarrL;
     public:
         basefrm ** ppD;
         basefrm ** ppL;
@@ -105,7 +80,30 @@ class text
         int newcntTypes;
         int aConflict;
         int aConflictTypes;
-        void incTotal()
+	protected:
+		Word ** Root;
+		const Word ** tunsorted;
+		unsigned long int * Lines;
+		field * fields;
+		size_t N;
+		unsigned long int lineno;
+		unsigned long int total;
+		unsigned long int reducedtotal;
+		bool InputHasTags;
+		bool StartOfLine;
+	private:
+		virtual const char * convert(const char * s)
+			{
+			return s;
+			}
+	protected:
+		bool atStartOfLine() const { return StartOfLine; }
+		void insert(const char * w);
+		void insert(const char * w, const char * tag);
+		void AddField(field * fld);
+		field * translateFormat(char * Iformat, field *& wordfield, field *& tagfield);
+	public:
+		void incTotal()
             {
             ++total;
             }
@@ -164,7 +162,7 @@ class text
 #endif
             ) = 0;
         void makeList();
-    };
+	};
 
 extern char * globIformat;
 extern int findSlashes(const char * buf);

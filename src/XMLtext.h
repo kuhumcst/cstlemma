@@ -68,7 +68,10 @@ struct optionStruct;
 
 class XMLtext : public text
     {
-    private:
+	public:
+		char * ch;
+		const char * wordAttribute; // if null, word is PCDATA
+	private:
         token * Token;
         char * startElement;
         char * endElement;
@@ -82,21 +85,17 @@ class XMLtext : public text
         const char * POSAttribute; // if null, POS is PCDATA
         const char * lemmaAttribute; // if null, Lemma is PCDATA
         const char * lemmaClassAttribute; // if null, lemma class is PCDATA
-        ptrdiff_t wordAttributeLen;/*20120709 int -> ptrdiff_t*/
-        ptrdiff_t POSAttributeLen;/*20120709 int -> ptrdiff_t*/
-        ptrdiff_t lemmaAttributeLen;/*20120709 int -> ptrdiff_t*/
-        ptrdiff_t lemmaClassAttributeLen;/*20120709 int -> ptrdiff_t*/
-        crumb * Crumbs;
-        bool ClosingTag;
+		crumb * Crumbs;
+		char * alltext;
+		size_t wordAttributeLen;/*20120709 int -> ptrdiff_t*/
+        size_t POSAttributeLen;/*20120709 int -> ptrdiff_t*/
+        size_t lemmaAttributeLen;/*20120709 int -> ptrdiff_t*/
+        size_t lemmaClassAttributeLen;/*20120709 int -> ptrdiff_t*/
+		bool ClosingTag;
         bool WordPosComing;
         bool POSPosComing;
         bool LemmaPosComing;
         bool LemmaClassPosComing;
-        char * alltext;
-        //virtual const char * convert(const char * s);
-    public:
-        char * ch;
-        const char * wordAttribute; // if null, word is PCDATA
     public:
         void wordDone();
         bool analyseThis();

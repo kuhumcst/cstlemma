@@ -52,17 +52,16 @@ class Lemmatiser
         static int COUNT;
 #endif
     private:
-        int listLemmas;
-        bool SortInput; // derived from other options
-
         static int instance;
 #if (defined PROGLEMMATISE)
         dictionary dict;
         static tagpairs * TextToDictTags;
 #endif
         optionStruct & Option;
-        int status;
-        bool changed;
+		int listLemmas;
+		int status;
+		bool SortInput; // derived from other options
+		bool changed;
     public:
         int getStatus()
             {

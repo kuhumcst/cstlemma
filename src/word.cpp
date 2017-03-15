@@ -685,5 +685,5 @@ void Word::lookup(text * txt)
     }
 
 
-int Word::reducedtotal = 0;
+unsigned long int Word::reducedtotal = 0;
 #endif

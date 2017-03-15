@@ -56,14 +56,14 @@ class baseformpointer
         static int COUNT;
 #endif
     private:
-        bool owning;
         basefrm * bf;
         baseformpointer * next;
-        bool hidden;
 #if PFRQ
         unsigned int pfrq;
 #endif
-    public:
+		bool owning;
+		bool hidden;
+	public:
         static int UseLemmaFreqForDisambiguation;
         int count()
             {

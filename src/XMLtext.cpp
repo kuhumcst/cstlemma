@@ -152,7 +152,7 @@ class crumb
             {
             return e;
             }
-        crumb * pop(const char * until,size_t len)
+        crumb * Pop(const char * until,size_t len)
             {
             crumb * nxt = next;
             if(L == len && !strncmp(e,until,len))
@@ -163,7 +163,7 @@ class crumb
             else
                 {
                 delete this;
-                return nxt ? nxt->pop(until,len) : NULL;
+                return nxt ? nxt->Pop(until,len) : NULL;
                 }
             }
         void print()
@@ -225,7 +225,7 @@ void XMLtext::CallBackEndElementName()
     if(ClosingTag)
         {
         if(Crumbs)
-            Crumbs = Crumbs->pop(startElement,endElement - startElement);
+            Crumbs = Crumbs->Pop(startElement,size_t(endElement - startElement));
         ClosingTag = false;
         }
     else
@@ -233,11 +233,11 @@ void XMLtext::CallBackEndElementName()
         if(  Crumbs
           || !this->ancestor
           || (  startElement + strlen(this->ancestor) == endElement 
-             && !strncmp(startElement,this->ancestor,endElement - startElement)
+		     && !strncmp(startElement, this->ancestor, size_t(endElement - startElement))
              )
           )
             {
-            Crumbs = new crumb(startElement,endElement - startElement,Crumbs);
+			Crumbs = new crumb(startElement, size_t(endElement - startElement), Crumbs);
             segmentBreak();
             }
         }
@@ -257,9 +257,9 @@ void XMLtext::CallBackEndAttributeNameCounting()
     if(analyseThis())
         {
         endAttributeName = ch;
-        if(  this->wordAttributeLen == endAttributeName - startAttributeName 
-            && !strncmp(startAttributeName,this->wordAttribute,wordAttributeLen )
-            )
+        if(  this->wordAttributeLen == size_t(endAttributeName - startAttributeName)
+          && !strncmp(startAttributeName,this->wordAttribute,size_t(wordAttributeLen))
+          )
             {
             ++total;
             }
@@ -277,27 +277,27 @@ void XMLtext::CallBackEndAttributeNameInserting()
         LemmaPosComing = false;
         LemmaClassPosComing = false;
 
-        if(  this->wordAttributeLen == endAttributeName - startAttributeName 
-            && !strncmp(startAttributeName,this->wordAttribute,wordAttributeLen )
-            )
+        if(  this->wordAttributeLen == size_t(endAttributeName - startAttributeName)
+          && !strncmp(startAttributeName,this->wordAttribute,wordAttributeLen )
+          )
             {
             WordPosComing = true;
             }
-        else if(  this->POSAttributeLen == endAttributeName - startAttributeName 
-            && !strncmp(startAttributeName,this->POSAttribute,POSAttributeLen )
-            )
+		else if (this->POSAttributeLen == size_t(endAttributeName - startAttributeName)
+                && !strncmp(startAttributeName, this->POSAttribute, size_t(POSAttributeLen))
+                )
             {
             POSPosComing = true;
             }
-        else if(  this->lemmaAttributeLen == endAttributeName - startAttributeName 
-            && !strncmp(startAttributeName,this->lemmaAttribute,lemmaAttributeLen)
-            )
+        else if(  this->lemmaAttributeLen == size_t(endAttributeName - startAttributeName)
+               && !strncmp(startAttributeName, this->lemmaAttribute, size_t(lemmaAttributeLen))
+               )
             {
             LemmaPosComing = true;
             }
-        else if(  this->lemmaClassAttributeLen == endAttributeName - startAttributeName 
-            && !strncmp(startAttributeName,this->lemmaClassAttribute,lemmaClassAttributeLen)
-            )
+        else if(  this->lemmaClassAttributeLen == size_t(endAttributeName - startAttributeName)
+               && !strncmp(startAttributeName, this->lemmaClassAttribute, size_t(lemmaClassAttributeLen))
+               )
             {
             LemmaClassPosComing = true;
             }
@@ -371,7 +371,7 @@ void XMLtext::CallBackEndTag()
 void XMLtext::CallBackEmptyTag()
     {
     if(Crumbs)
-        Crumbs = Crumbs->pop(startElement,endElement - startElement);
+        Crumbs = Crumbs->Pop(startElement,size_t(endElement - startElement));
     }
 
 
@@ -581,7 +581,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
         rewind(fpi);
         if(filesize > 0)
             {
-            alltext = new char[filesize+1];
+            alltext = new char[(unsigned int)filesize+1];
             char * p = alltext;
             while((kar = getc(fpi)) != EOF)
                 *p++ = (char)kar;
@@ -652,7 +652,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
             while(*ch)
                 {
                 while(  *ch 
-                     && (( Seq = (html_tag.*tagState)(*ch)) == tag 
+					  && ((Seq = (html_tag.*tagState)((unsigned char)*ch)) == tag
                         || Seq == endoftag_startoftag
                         )
                      )
@@ -685,7 +685,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
                         }
                     WordReader.initWord();
                     while(  *ch 
-                        && (Seq = (html_tag.*tagState)(*ch)) == notag
+						  && (Seq = (html_tag.*tagState)((unsigned char)*ch)) == notag
                         )
                         {
                         if((WordReader.*(WordReader.xput))(fnc,*ch))
@@ -736,8 +736,12 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
                 if(Option.nice)
                     LOG1LINE("allocating array of line offsets");
                 Lines =  new unsigned long int [lineno+1];
-                for(int L = lineno+1;--L >= 0;)
-                    Lines[L] = 0;
+                unsigned long int L = lineno+1;
+				do
+					{
+					--L;
+					Lines[L] = 0;
+					} while (L != 0);
                 if(Option.nice)
                     LOG1LINE("...allocated array");
 

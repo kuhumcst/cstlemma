@@ -63,24 +63,7 @@ class Word : public OutputClass
         static int LineNumber; // The number of the line where the previous word was found. For line-wise output. 0 is initial value
         static bool DictUnique;
         static int NewLinesAfterWord;
-//  protected:
-    public:
-        static int reducedtotal;
-    protected:
-        bool hasAddedItselfToBaseForm:1;
-        bool FoundInDict:1;
-        bool owns:1;
-        bool SegmentInitial:1; /* 20160205. If true and word starts with uppercase, 
-        then lowercasing is likely default. 
-              Keep uppercase if also found in non-segment initial position
-              */
-    protected:
-#if STREAM
-        static ostream * fp;
-#else
-        static FILE * fp;
-#endif
-    public:
+		static unsigned long int reducedtotal;
         char * m_word;
         char * m_tag;
     protected:
@@ -89,7 +72,19 @@ class Word : public OutputClass
         // If there is a constructed base form (lemma), then do not do 
         // statistics on the dictionary's lemmas.
         int cnt;
-        void i() const
+#if STREAM
+		static ostream * fp;
+#else
+		static FILE * fp;
+#endif
+		bool hasAddedItselfToBaseForm : 1;
+		bool FoundInDict : 1;
+		bool owns : 1;
+		bool SegmentInitial:1; /* 20160205. If true and word starts with uppercase, 
+							   then lowercasing is likely default. 
+							   Keep uppercase if also found in non-segment initial position
+							   */
+		void i() const
             {
 #if STREAM
             if(pbfL)

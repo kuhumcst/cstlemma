@@ -423,9 +423,13 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
     if(nice)
         LOG1LINE("allocating array of line offsets");
     Lines =  new unsigned long int [lineno+1];
-    for(int L = lineno+1;--L >= 0;)
-        Lines[L] = 0;
-    if(nice)
+	unsigned long L = lineno + 1;
+	do
+		{
+		--L;
+		Lines[L] = 0;
+		} while (L != 0);
+	if (nice)
         LOG1LINE("...allocated array");
 
     total = 0;

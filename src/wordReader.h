@@ -37,10 +37,10 @@ class wordReader
         unsigned long lineno;
         const char * tag;
         int lastkar;
-        bool treatSlashAsAlternativesSeparator;
         XMLtext * Text;
         char kars[2];
-    public:
+		bool treatSlashAsAlternativesSeparator;
+	public:
         int Put(bool (wordReader::*)(int kar),int kar);
         int (wordReader::*xput)(bool (wordReader::*)(int kar),int kar);
         int rawput(bool (wordReader::*)(int kar),int kar);
