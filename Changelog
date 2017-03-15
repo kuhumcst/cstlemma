@@ -1,4 +1,11 @@
 -------------------------------
+Version 7.16 (15 March 2017)
+-------------------------------
+Fixed error in decoding -x option.
+Made several explicit type casts.
+Moved data members (esp. bit fields) around to minimize padding.
+
+-------------------------------
 Version 7.15 (19 October 2016)
 -------------------------------
 Fixed error in the decoding of XML-entities if the decoded string comprised
