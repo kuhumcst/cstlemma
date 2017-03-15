@@ -689,9 +689,9 @@ int Lemmatiser::openFiles()
                 }
             else
 #if STREAM
-            clog << "-v\tTag friends file: File not specified." << endl;
+				clog << "-x\t" << std::setw(20) << Option.x << "\tLexical type translation table" << endl;
 #else
-            info("-v\tTag friends file: File not specified.");
+				info("-x\t%-20s\tLexical type translation table", Option.x);
 #endif
             }
         else
