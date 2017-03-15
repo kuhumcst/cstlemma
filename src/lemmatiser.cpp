@@ -129,8 +129,8 @@ Lemmatiser::Lemmatiser(optionStruct & a_Option) : listLemmas(0),SortInput(false)
     if(instance == 1)
         {
 #if defined PROGLEMMATISE
-        if(!Option.argo /*&& !Option.argi*/)
-            DoInfo = false; // suppress messages when using stdin and stdout
+        if(!Option.argo)
+            DoInfo = false; // suppress messages when using stdout
 #endif
         switch(Option.whattodo)
             {
@@ -407,7 +407,6 @@ int Lemmatiser::setFormats()
             LOG1LINE("You must specify at least one of -b and -B if you do not specify -c.");
             return -1;
             }
-//                format = Wformat;
         if(Option.Wformat)
 #if STREAM
             clog << "-W\t" << Option.Wformat << "\tOutput format for data pertaining to full forms." << endl;
@@ -652,7 +651,6 @@ int Lemmatiser::openFiles()
 #else
         info("-d\tDictionary: File not specified.");
 #endif
-//                return -1;
         }
 
     if(Option.InputHasTags)
@@ -758,7 +756,7 @@ int Lemmatiser::openFiles()
     else if(!readRules(Option.flx))
         {
         if(Option.InputHasTags)
-            ;//NewStyle = true; // Rules will be read as necessary, depending on which tags occur in the text.
+            ;// Rules will be read as necessary, depending on which tags occur in the text.
         else
             return -1;
         }
@@ -808,8 +806,6 @@ int Lemmatiser::openFiles()
     dict.initdict(fpdict);
     if(fpdict)
         fclose(fpdict);
-//            dict.printall(fpout);
-//            dict.printall2(fpout);
     return 0;
     }
 
@@ -1079,7 +1075,7 @@ void Lemmatiser::LemmatiseText(FILE * fpin,FILE * fpout,tallyStruct * tally)
                    ,Option.DictUnique
                    ,Option.baseformsAreLowercase
                    ,listLemmas
-                   ,   Option.Wformat != NULL // list lemma's with all word forms
+                   ,   Option.Wformat != NULL // list lemmas with all word forms
                     && ((listLemmas & 3) == 3) // both of -b and -B are specified
                     && !strcmp(Option.Bformat,Option.bformat) // -b and -B options are the same format
                        // true: outputs must be merged
@@ -1230,7 +1226,7 @@ int Lemmatiser::LemmatiseFile()
 #if STREAM
         clog << "-i\tInput text: Using standard input." << endl;
 #else
-        info("-i\tInput text: Not sepcified.");
+        info("-i\tInput text: Not specified.");
 #endif
 #if STREAM
         while(!cin.eof())
@@ -1312,7 +1308,6 @@ int Lemmatiser::LemmatiseFile()
 
 void Lemmatiser::LemmatiseEnd()
     {
-
 //    Flex.write(fpflex);
 //            fclose(fpflex);
 //            fclose(fpnew);
