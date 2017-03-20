@@ -1,4 +1,10 @@
 -------------------------------
+Version 7.17 (20 March 2017)
+-------------------------------
+If the same lemma is generated several times (by alternative decision trees),
+then only the first instance is kept.
+
+-------------------------------
 Version 7.16 (15 March 2017)
 -------------------------------
 Fixed error in decoding -x option.

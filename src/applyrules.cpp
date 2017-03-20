@@ -814,6 +814,28 @@ static char * concat(char ** L)
         return 0;
     }
 
+static char ** pruneEquals(char ** L)
+	{
+	if (L)
+		{
+		for (int i = 0; L[i]; ++i)
+			{
+			for (int j = i + 1; L[j]; ++j)
+				{
+				if (!strcmp(L[i], L[j]))
+					{
+					delete[] L[j];
+					for (int k = j; L[k]; ++k)
+						{
+						L[k] = L[k + 1];
+						}
+					}
+				}
+			}
+		}
+	return L;
+	}
+
 static char ** lemmatiseerV3
     ( const char * word
     , const char * wordend
@@ -1038,11 +1060,11 @@ const char * applyRules(const char * word,bool SegmentInitial)
                 size_t length = 0;
                 word = changeCase(word, true, length);
                 donotAddLemmaUnlessRuleHasPrefix = false;
-                result = concat(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas));
+				result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas)));
                 }
             else
                 {
-                result = concat(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas));
+				result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas)));
                 }
 
 
@@ -1118,7 +1140,7 @@ const char * applyRules(const char * word, const char * tag,bool SegmentInitial)
                 if (newStyleRules() == 3)
                     {
                     char ** lemmas = 0;
-                    result = concat(lemmatiseerV3(word, word + len, Rules->buf(), Rules->buf() + Rules->end(), 0, lemmas));
+					result = concat(pruneEquals(lemmatiseerV3(word, word + len, Rules->buf(), Rules->buf() + Rules->end(), 0, lemmas)));
                     }
                 else
                     {
@@ -1129,7 +1151,7 @@ const char * applyRules(const char * word, const char * tag,bool SegmentInitial)
                 if (newStyleRules() == 3)
                     {
                     char ** lemmas = 0;
-                    result = concat(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas));
+					result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas)));
                     }
                 else
                     {
@@ -1142,7 +1164,7 @@ const char * applyRules(const char * word, const char * tag,bool SegmentInitial)
             if (newStyleRules() == 3)
                 {
                 char ** lemmas = 0;
-                result = concat(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas));
+				result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas)));
                 }
             else
                 {
