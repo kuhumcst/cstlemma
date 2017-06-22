@@ -19,9 +19,9 @@ You should have received a copy of the GNU General Public License
 along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#define CSTLEMMAVERSION "7.17"
-#define CSTLEMMADATE "2017.03.20"
-#define CSTLEMMACOPYRIGHT "2002-2016 Center for Sprogteknologi"
+#define CSTLEMMAVERSION "7.18"
+#define CSTLEMMADATE "2017.06.22"
+#define CSTLEMMACOPYRIGHT "2002-2017 Center for Sprogteknologi"
 
 #include "lemmatiser.h"
 #include "option.h"
@@ -109,5 +109,5 @@ int main(int argc, char * argv[])
 #if defined PROGLEMMATISE
     Word::deleteStaticMembers();
 #endif
-     return ret;
+    return ret;
     }

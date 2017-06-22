@@ -548,9 +548,9 @@ int Lemmatiser::openFiles()
         if(fpflex)
             {
 #if STREAM
-            clog << "-f" << Option.flx << "\t File with flex patterns." << endl;
+            clog << "-f\t" << Option.flx << "\t File with flex patterns." << endl;
 #else
-            info("-f%s\tFile with flex patterns.",Option.flx);
+            info("-f\t%s\tFile with flex patterns.",Option.flx);
 #endif
             }
         else if(Option.InputHasTags)

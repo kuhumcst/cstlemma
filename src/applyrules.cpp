@@ -57,74 +57,109 @@ struct lemmaCandidate
 
 static const char * flexFileName;
 static char bufbuf[] = "\0\0\0\0\t\t\t\n"; //20090811: corrected wrong value // "lemma == word" default rule set
-static char * buf = bufbuf; // Setting buf directly to a constant string generates a warning in newer gcc
-static long buflen = 8;
+//static char * buf = bufbuf; // Setting buf directly to a constant string generates a warning in newer gcc
+//static long buflen = 8;
 static char * result = 0;
 #define TESTING 0
 #if TESTING
 static char * replacement = 0; // FOR TEST PURPOSE
 #endif
-static int NewStyle = 2;
+//static int NewStyle = 2;
 static bool donotAddLemmaUnlessRuleHasPrefix = false;
+
+class rules;
+
+
+
+static rules * taglessrules = 0;
+
+class rules
+    {
+    private:
+        char * TagName;
+        char * buf;
+        long buflen;
+        long End;
+        int NewStyle;
+    public:
+        rules() : buf(bufbuf), buflen(8), NewStyle(2)
+            {
+            }
+        rules(const char * TagName) : buflen(8), NewStyle(2)
+            {
+            this->TagName = new char[strlen(TagName) + 1];
+            strcpy(this->TagName, TagName);
+            char * filename = new char[strlen(TagName) + strlen(flexFileName) + 2];
+            sprintf(filename, "%s.%s", flexFileName, TagName);
+            FILE * f = fopen(filename, "rb");
+            if (f)
+                {
+                buf = readRules(f, End);
+                fclose(f);
+                }
+            else
+                {
+                buf = 0;
+                End = 0;
+                fprintf(stderr, "CSTlemma-applyrules.cpp: Cannot open rules [%s]",filename);
+                }
+            }
+        const char * tagName() const { return TagName; }
+        const char * Buf(){ return buf; }
+        long end(){ return End; }
+        void print(){}
+        int newStyleRules(){ return NewStyle; }
+        char * readRules(FILE * flexrulefile, long & end);
+        bool readRules(FILE * flexrulefile, const char * flexFileName);
+        const char * applyRules(const char * word, bool SegmentInitial);
+        const char * applyRules(const char * word, const char * tag, bool SegmentInitial);
+        bool setNewStyleRules(int val);
+//        int newStyleRules();
+    };
+
+//rules * taglessrules = 0;
+bool rules::setNewStyleRules(int val)
+    {
+    assert(val == 2 || val == 3);
+    switch (val)
+        {
+            case 0:// first version, suffix only
+            case 2:// second version (about 2009), affix. File starts with four 0 bytes.
+            case 3:// third version (2015), affix, handles triple (and more) ambiguity. File starts with "\rV3\r".
+                NewStyle = val;
+                return true;
+            default:
+                return false;
+        }
+    }
 
 bool setNewStyleRules(int val)
     {
-    switch (val)
-        {
-        case 0:// first version, suffix only
-        case 2:// second version (about 2009), affix. File starts with four 0 bytes.
-        case 3:// third version (2015), affix, handles triple (and more) ambiguity. File starts with "\rV3\r".
-        NewStyle = val;
-        return true;
-        default:
-        return false;
-        }
-    }
-
-static char * readRules(FILE * flexrulefile, long & end)
-    {
-    if (flexrulefile)
-        {
-        int start;
-        if (fread(&start, sizeof(int), 1, flexrulefile) != 1)
-            return 0;
-        if (start == 0)
-            {
-            if (!setNewStyleRules(2))
-                return 0;
-            }
-        else if (start == *(int*)"\rV3\r")
-            {
-            if (!setNewStyleRules(3))
-                return 0;
-            }
-        else
-            {
-            return 0; // not the new format
-            }
-        fseek(flexrulefile, 0, SEEK_END);
-        end = ftell(flexrulefile);
-        if (newStyleRules() == 3)
-            {
-            fseek(flexrulefile, sizeof(int), SEEK_SET);
-            end -= sizeof(int);
-            }
-        else
-            rewind(flexrulefile);
-        buf = new char[end + 1]; // 20140224 +1
-        buflen = end;
-        if (buf && end > 0)
-            {
-            if (fread(buf, 1, end, flexrulefile) != (size_t)end)
-                return 0; // 20120710
-            buf[end] = '\0';// 20140224 new
-            }
-        return buf;
-        }
-    return 0;
+    assert(val == 0);
+    assert(taglessrules == 0);
+    return true;
     }
 
 bool readRules(FILE * flexrulefile, const char * flexFileName)
+    {
+    if (taglessrules == 0)
+        taglessrules = new rules();
+    return taglessrules->readRules(flexrulefile, flexFileName);
+    }
+
+const char * applyRules(const char * word, bool SegmentInitial)
+    {
+    assert(taglessrules);
+    return taglessrules->applyRules(word, SegmentInitial);
+    }
+
+const char * applyRules(const char * word, const char * tag, bool SegmentInitial)
+    {
+    assert(taglessrules);
+    return taglessrules->applyRules(word, tag, SegmentInitial);
+    }
+
+bool rules::readRules(FILE * flexrulefile, const char * flexFileName)
     {
     if (flexFileName)
         {
@@ -136,37 +171,49 @@ bool readRules(FILE * flexrulefile, const char * flexFileName)
     return flexFileName != 0;
     }
 
-class rules
+/*static*/ char * rules::readRules(FILE * flexrulefile, long & end)
     {
-    private:
-        char * TagName;
-        char * Buf;
-        long End;
-    public:
-        rules(const char * TagName)
+    if (flexrulefile)
+        {
+        int start;
+        if (fread(&start, sizeof(int), 1, flexrulefile) != 1)
+            return bufbuf;
+        if (start == 0)
             {
-            this->TagName = new char[strlen(TagName) + 1];
-            strcpy(this->TagName, TagName);
-            char * filename = new char[strlen(TagName) + strlen(flexFileName) + 2];
-            sprintf(filename, "%s.%s", flexFileName, TagName);
-            FILE * f = fopen(filename, "rb");
-            if (f)
-                {
-                Buf = readRules(f, End);
-                fclose(f);
-                }
-            else
-                {
-                Buf = 0;
-                End = 0;
-                fprintf(stderr, "CSTlemma-applyrules.cpp: Cannot open rules [%s]",filename);
-                }
+            if (!setNewStyleRules(2))
+                return bufbuf;
             }
-        const char * tagName() const { return TagName; }
-        const char * buf(){ return Buf; }
-        long end(){ return End; }
-        void print(){}
-    };
+        else if (start == *(int*)"\rV3\r")
+            {
+            if (!setNewStyleRules(3))
+                return bufbuf;
+            }
+        else
+            {
+            return bufbuf; // not the new format
+            }
+        fseek(flexrulefile, 0, SEEK_END);
+        end = ftell(flexrulefile);
+        if (newStyleRules() == 3)
+            {
+            fseek(flexrulefile, sizeof(int), SEEK_SET);
+            end -= sizeof(int);
+            }
+        else
+            rewind(flexrulefile);
+        char * buf = new char[end + 1]; // 20140224 +1
+        buflen = end;
+        if (buf && end > 0)
+            {
+            if (fread(buf, 1, end, flexrulefile) != (size_t)end)
+                return 0; // 20120710
+            buf[end] = '\0';// 20140224 new
+            }
+        return buf;
+        }
+    return bufbuf;
+    }
+
 
 static hashmap::hash<rules> * Hash = NULL;
 
@@ -183,7 +230,10 @@ bool readRules(const char * flexFileName) // Does not read at all.
 
 int newStyleRules()
     {
-    return NewStyle;
+    if (taglessrules)
+        return taglessrules->newStyleRules();
+    return 0;
+//    return NewStyle;
     }
 
 static const char * samestart(const char ** fields, const char * s, const char * we)
@@ -1007,8 +1057,8 @@ static char ** lemmatiseerV3
 
 void deleteRules()
     {
-    delete[] buf;
-    buf = 0;
+//    delete[] buf;
+//    buf = 0;
     //--news;
     delete[] result;
     result = 0;
@@ -1016,11 +1066,11 @@ void deleteRules()
     delete [] replacement;
     replacement = 0;
 #endif
-    setNewStyleRules(0);
+//    setNewStyleRules(0);
     }
 
 
-const char * applyRules(const char * word,bool SegmentInitial)
+const char * rules::applyRules(const char * word,bool SegmentInitial)
     {
     if (buf)
         {
@@ -1094,7 +1144,7 @@ const char * applyRules(const char * word,bool SegmentInitial)
     }
 
 
-const char * applyRules(const char * word, const char * tag,bool SegmentInitial)
+const char * rules::applyRules(const char * word, const char * tag,bool SegmentInitial)
     {
     if (buf)
         {
@@ -1136,15 +1186,15 @@ const char * applyRules(const char * word, const char * tag,bool SegmentInitial)
                 Rules = new rules(tag);
                 Hash->insert(Rules, v);
                 }
-            if (Rules->buf())
+            if (Rules->Buf())
                 if (newStyleRules() == 3)
                     {
                     char ** lemmas = 0;
-					result = concat(pruneEquals(lemmatiseerV3(word, word + len, Rules->buf(), Rules->buf() + Rules->end(), 0, lemmas)));
+					result = concat(pruneEquals(lemmatiseerV3(word, word + len, Rules->Buf(), Rules->Buf() + Rules->end(), 0, lemmas)));
                     }
                 else
                     {
-                    lemmatiseer(word, word + len, Rules->buf(), Rules->buf() + Rules->end());
+                    lemmatiseer(word, word + len, Rules->Buf(), Rules->Buf() + Rules->end());
                     }
             else
                 {
@@ -1171,13 +1221,8 @@ const char * applyRules(const char * word, const char * tag,bool SegmentInitial)
                 lemmatiseer(word, word + len, buf, buf + buflen);
                 }
             }
-        //delete [] loword;
-//        if (news)
-//            printf("news %d\n", news);
         return result;
         }
-//    if (news)
-//         printf("news %d\n", news);
     return 0;
     }
 

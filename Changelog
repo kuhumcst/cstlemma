@@ -1,4 +1,11 @@
 -------------------------------
+Version 7.18 (22 June 2017)
+-------------------------------
+Added tab character in screen display of -f option.
+When lemmatising tagged input, program can now handle flexrule files of
+different generations. 
+
+-------------------------------
 Version 7.17 (20 March 2017)
 -------------------------------
 If the same lemma is generated several times (by alternative decision trees),
