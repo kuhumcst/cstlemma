@@ -151,6 +151,15 @@ optionStruct::~optionStruct()
     delete [] POSAttribute;
     delete [] lemmaAttribute;
     delete [] lemmaClassAttribute;
+
+    delete[] arge;
+    delete[] argi;
+    delete[] argo;
+    delete[] dictfile;
+    delete[] flx;
+    delete[] v;
+    delete[] x;
+    delete[] z;
 #endif
 #ifdef COUNTOBJECTS
     --COUNT;
@@ -203,14 +212,14 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 #endif
 #if defined PROGLEMMATISE
         case 'd':
-            dictfile = locoptarg;
+            dictfile = dupl(locoptarg);
             break;
 #endif
         case 'D':
             whattodo = MAKEDICT;
             break;
         case 'e':
-            arge = locoptarg;
+            arge = dupl(locoptarg);
             switch(*arge)
                 {
                 case '0':
@@ -228,7 +237,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             break;
 #if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
         case 'f':
-            flx = locoptarg;
+            flx = dupl(locoptarg);
             break;
 #endif
         case 'F':
@@ -495,7 +504,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             break;
 #endif
         case 'i':
-            argi = locoptarg;
+            argi = dupl(locoptarg);
             break;
 #if defined PROGLEMMATISE
         case 'I':
@@ -557,7 +566,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             break;
 #endif
         case 'o':
-            argo = locoptarg;
+            argo = dupl(locoptarg);
             break;
 #if defined PROGLEMMATISE
         case 'p':
@@ -696,7 +705,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             RulesUnique = locoptarg == NULL  || *locoptarg != '-';
             break;
         case 'v':
-            v = locoptarg;
+            v = dupl(locoptarg);
             break;
 #endif
 // GNU >>
@@ -717,7 +726,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             Wformat = dupl(locoptarg);
             break;
         case 'x':
-            x = locoptarg;
+            x = dupl(locoptarg);
             break;
         case 'X':
             if(locoptarg)
@@ -764,7 +773,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                 XML = true;
             break;
         case 'z':
-            z = locoptarg;
+            z = dupl(locoptarg);
             break;
 #endif
         case 'y':

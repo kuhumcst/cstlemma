@@ -1,4 +1,9 @@
 -------------------------------
+Version 7.19 (26 June 2017)
+-------------------------------
+Fixed bug that made use of long command lines unreliable.
+
+-------------------------------
 Version 7.18 (22 June 2017)
 -------------------------------
 Added tab character in screen display of -f option.
