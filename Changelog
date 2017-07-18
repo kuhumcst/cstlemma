@@ -1,4 +1,10 @@
 -------------------------------
+Version 7.20 (18 July 2017)
+-------------------------------
+Fixed recently (June 2017) introduced error that turned off lemmatisation by
+rule application. 
+
+-------------------------------
 Version 7.19 (26 June 2017)
 -------------------------------
 Fixed bug that made use of long command lines unreliable.

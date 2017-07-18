@@ -104,6 +104,11 @@ class rules
                 fprintf(stderr, "CSTlemma-applyrules.cpp: Cannot open rules [%s]",filename);
                 }
             }
+        ~rules()
+            {
+            if (buf != bufbuf)
+                delete buf;
+            }
         const char * tagName() const { return TagName; }
         const char * Buf(){ return buf; }
         long end(){ return End; }
@@ -201,13 +206,13 @@ bool rules::readRules(FILE * flexrulefile, const char * flexFileName)
             }
         else
             rewind(flexrulefile);
-        char * buf = new char[end + 1]; // 20140224 +1
+        buf = new char[end + 1];
         buflen = end;
         if (buf && end > 0)
             {
             if (fread(buf, 1, end, flexrulefile) != (size_t)end)
-                return 0; // 20120710
-            buf[end] = '\0';// 20140224 new
+                return 0;
+            buf[end] = '\0';
             }
         return buf;
         }
