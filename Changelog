@@ -1,4 +1,9 @@
 -------------------------------
+Version 7.21 (31 July 2017)
+-------------------------------
+Updated list of HTML entities. Fixed memory deallocation error in option.cpp.
+
+-------------------------------
 Version 7.20 (18 July 2017)
 -------------------------------
 Fixed recently (June 2017) introduced error that turned off lemmatisation by
