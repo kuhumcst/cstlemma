@@ -860,6 +860,10 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                         {
                         bufsize += strlen(optarg2) + 1;
                         }
+                    else
+                        {
+                        ++bufsize;
+                        }
                     char * optpos = strchr(opts,line[off]);
                     if(optpos)
                         {
