@@ -90,7 +90,7 @@ LEMMATISEROBJS=\
 	basefrmpntr.o\
 	caseconv.o\
 	dictionary.o\
-        $(LETTERFUNCDIR)/entities.o \
+	entities.o \
 	field.o\
 	flattext.o\
 	flex.o\
