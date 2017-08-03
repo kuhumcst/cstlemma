@@ -1,4 +1,11 @@
 -------------------------------
+Version 7.22 (3 August 2017)
+-------------------------------
+Delegated recognition of HTML entities to new file entities.cpp in the
+letterfunc directory, for sharing code with other programs.
+Fixed bug that made transformation of HTML entities a mess. 
+
+-------------------------------
 Version 7.21 (31 July 2017)
 -------------------------------
 Updated list of HTML entities. Fixed memory deallocation error in option.cpp.

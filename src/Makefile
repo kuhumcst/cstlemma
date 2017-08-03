@@ -55,6 +55,7 @@ LEMMATISERSRC=\
 	basefrmpntr.cpp\
 	caseconv.cpp\
 	dictionary.cpp\
+        $(LETTERFUNCDIR)/entities.cpp \
 	field.cpp\
 	flattext.cpp\
 	flex.cpp\
@@ -89,6 +90,7 @@ LEMMATISEROBJS=\
 	basefrmpntr.o\
 	caseconv.o\
 	dictionary.o\
+        $(LETTERFUNCDIR)/entities.o \
 	field.o\
 	flattext.o\
 	flex.o\
