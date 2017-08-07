@@ -1,4 +1,10 @@
 -------------------------------
+Version 7.23 (7 August 2017)
+-------------------------------
+Delegated recognition of character references (&#nnn; or &#xhhh;) to
+entities.cpp.
+
+-------------------------------
 Version 7.22 (3 August 2017)
 -------------------------------
 Delegated recognition of HTML entities to new file entities.cpp in the

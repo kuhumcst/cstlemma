@@ -305,24 +305,7 @@ int wordReader::charref(bool (wordReader::*fnc)(int kar),int kar)
     if(kar == ';')
         {
         *p = '\0';
-        /*
-        if(  !strcmp(buf,"amp")
-          || !strcmp(buf,"#38")
-          || !strcmp(buf,"#x26")
-          )
-            rawput(fnc,'&');
-        else if(!strcmp(buf,"apos"))
-            rawput(fnc,'\'');
-        else if(!strcmp(buf,"quot"))
-            {
-            rawput(fnc,'\"');
-            }
-        else if(!strcmp(buf,"lt"))
-            rawput(fnc,'<');
-        else if(!strcmp(buf,"gt"))
-            rawput(fnc,'>');
-        else*/ 
-        if(buf[0] == '#')
+        /*if(buf[0] == '#')
             {
             unsigned long N;
             char tmp[22];
@@ -338,7 +321,7 @@ int wordReader::charref(bool (wordReader::*fnc)(int kar),int kar)
             else
                 return 0;
             }
-        else
+        else*/
             {
             char * pItem = findEntity(buf);
             if (pItem!=NULL)
