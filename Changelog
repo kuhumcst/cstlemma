@@ -1,4 +1,10 @@
 -------------------------------
+Version 7.24 (23 August 2017)
+-------------------------------
+Better explanation of the value '+' when $i is used in -c or -W format
+strings.
+
+-------------------------------
 Version 7.23 (7 August 2017)
 -------------------------------
 Delegated recognition of character references (&#nnn; or &#xhhh;) to
