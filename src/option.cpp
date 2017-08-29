@@ -451,7 +451,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "    -u- allow ambiguous dictionary look-up (default)\n"
                    "    -Hn n = 0: use lemma frequencies for disambiguation (default in versions < 7.0 of cstlemma)\n"
                    "        n = 1: use lemma frequencies for disambiguation,\n"
-                   "               show candidates for pruning between << and >>\n"
+                   "               show candidates for pruning after the winning candidate.\n"
                    "        n = 2: do not use lemma frequencies for disambiguation. (default)\n"
                    "    -v<tag friends file>: Use this to coerce the nearest fit between input\n"
                    "        tag and the dictionary's lexical types if the dictionary has more than\n"

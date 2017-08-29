@@ -97,36 +97,6 @@ void baseformpointer::printFn(FILE *fp,bfn Fn,const char * sep)
     {
     bool doSep = false;
     baseformpointer * bfp = this;
-#if 0
-    /*
-    while(bfp)
-        {
-        while(bfp && bfp->hidden)
-            {
-            if(UseLemmaFreqForDisambiguation == 1)
-                {
-                if(doSep)
-                    print(fp,sep);
-                else
-                    doSep = true;
-                print(fp,"<<");
-                (bfp->bf->*Fn)();
-                print(fp,">>");
-                }
-            bfp = bfp->next;
-            }
-        while(bfp && !bfp->hidden)
-            {
-            if(doSep)
-                print(fp,sep);
-            else
-                doSep = true;
-            (bfp->bf->*Fn)();
-            bfp = bfp->next;
-            }
-        }
-        */
-#else
     while (bfp)
         {
         if(!bfp->hidden)
@@ -150,14 +120,11 @@ void baseformpointer::printFn(FILE *fp,bfn Fn,const char * sep)
                     print(fp, sep);
                 else
                     doSep = true;
-                print(fp, "<<");
                 (bfp->bf->*Fn)();
-                print(fp, ">>");
                 }
             bfp = bfp->next;
             }
         }
-#endif
     }
 
 #if STREAM
@@ -170,36 +137,6 @@ void baseformpointer::printfbf(FILE *fp,functionTree * fns,const char * sep)
         {
         bool doSep = false;
         baseformpointer * bfp = this;
-#if 0
-        /*
-        while(bfp)
-            {
-            while(bfp && bfp->hidden)
-                {
-                if(UseLemmaFreqForDisambiguation == 1)
-                    {
-                    if(doSep)
-                        print(fp,sep);
-                    else
-                        doSep = true;
-                    print(fp,"<<");
-                    fns->printIt(bfp->bf);
-                    print(fp,">>");
-                    }
-                bfp = bfp->next;
-                }
-            while(bfp && !bfp->hidden)
-                {
-                if(doSep)
-                    print(fp,sep);
-                else
-                    doSep = true;
-                fns->printIt(bfp->bf);
-                bfp = bfp->next;
-                }
-            }
-            */
-#else
         while (bfp)
             {
             if(!bfp->hidden)
@@ -223,14 +160,11 @@ void baseformpointer::printfbf(FILE *fp,functionTree * fns,const char * sep)
                         print(fp, sep);
                     else
                         doSep = true;
-                    print(fp, "<<");
                     fns->printIt(bfp->bf);
-                    print(fp, ">>");
                     }
                 bfp = bfp->next;
                 }
             }
-#endif
         }
     }
 
