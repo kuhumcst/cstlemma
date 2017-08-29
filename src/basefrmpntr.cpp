@@ -116,11 +116,19 @@ void baseformpointer::printFn(FILE *fp,bfn Fn,const char * sep)
             {
             if(bfp->hidden)
                 {
-                if (doSep)
-                    print(fp, sep);
-                else
-                    doSep = true;
-                (bfp->bf->*Fn)();
+                baseformpointer * bfp2 = this;
+                while (bfp2 != bfp && !bfp2->bf->cmps(bfp->bf))
+                    {
+                    bfp2 = bfp2->next;
+                    }
+                if (bfp2 == bfp) /*Lemma was not shown earlier.*/
+                    {
+                    if (doSep)
+                        print(fp, sep);
+                    else
+                        doSep = true;
+                    (bfp->bf->*Fn)();
+                    }
                 }
             bfp = bfp->next;
             }
@@ -154,13 +162,21 @@ void baseformpointer::printfbf(FILE *fp,functionTree * fns,const char * sep)
             bfp = this;
             while (bfp)
                 {
-                if(bfp->hidden)
+                baseformpointer * bfp2 = this;
+                while (bfp2 != bfp && bfp2->bf->cmps(bfp->bf))
                     {
-                    if (doSep)
-                        print(fp, sep);
-                    else
-                        doSep = true;
-                    fns->printIt(bfp->bf);
+                    bfp2 = bfp2->next;
+                    }
+                if (bfp2 == bfp)/*Lemma was not shown earlier.*/
+                    {
+                    if (bfp->hidden)
+                        {
+                        if (doSep)
+                            print(fp, sep);
+                        else
+                            doSep = true;
+                        fns->printIt(bfp->bf);
+                        }
                     }
                 bfp = bfp->next;
                 }
