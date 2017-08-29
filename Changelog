@@ -1,4 +1,12 @@
 -------------------------------
+Version 7.25 (29 August 2017)
+-------------------------------
+Once more a better explanation of '+' when $i is used.
+Replaced tabs by four spaces.
+Changed the order of ambiguous lemma when option -H1 applies: The lemma
+that would survive pruning (-H0 option) is output first.
+
+-------------------------------
 Version 7.24 (23 August 2017)
 -------------------------------
 Better explanation of the value '+' when $i is used in -c or -W format

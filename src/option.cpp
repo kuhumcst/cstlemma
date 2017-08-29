@@ -182,7 +182,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             else
                 {
                 treatSlashAsAlternativesSeparator = true;
-                }	    
+                }
             break;
         case 'b':
             setbformat(locoptarg);
@@ -368,9 +368,9 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "        $t lexical type(s) according to dictionary\n"
                    "        $f full form type frequency\n"
                    "        $i info:  -    full form not in dictionary\n"
-                   "                  +    lemma constructed by flex rule, although the full form\n"
-                   "                       is in the dictionary. Possible reasons: PoS mismatch or\n"
-                   "                       a condition is not met by the number of possible lemmas.\n"
+                   "                  +    full form has more than one lemma in the dictionary.\n"
+                   "                       (If that is the case, the lemmatiser also generates lemma(s)\n"
+                   "                       using the flex pattern rules, so you can choose.)\n"
                    "               (blank) full form in dictionary\n"
                    "        \\t tab\n"
                    "        $X?, [X]? Do not output X. (X can be tested, though).\n"
@@ -405,11 +405,11 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "           word before a line break, blank otherwise\n"
                    "        $t lexical type(s) according to dictionary\n"
                    "        $f full form frequency\n"
-                   "        $i info:  -    full form not in dictionary\n"
-                   "                  +    lemma constructed by flex rule, although the full form\n"
-                   "                       is in the dictionary. Possible reasons: PoS mismatch or\n"
-                   "                       a condition is not met by the number of possible lemmas.\n"
-                   "               (blank) full form in dictionary\n"
+                   "        $i info:  -    full form not in dictionary.\n"
+                   "                  +    full form has more than one lemma in the dictionary.\n"
+                   "                       (If that is the case, the lemmatiser also generates lemma(s)\n"
+                   "                       using the flex pattern rules, so you can choose.)\n"
+                   "               (blank) full form in dictionary.\n"
                    "        \\t tab\n"
                    "        $X?, [X]? Do not output X. (X can be tested, though).\n"
                    "        $b and $B are variables: they can occur any number of times,\n"

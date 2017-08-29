@@ -46,7 +46,7 @@ static bool readBaseform(FILE * fpin,bool last)
         baseform[baseformindex] = '\0';
         return kar == EOF;
         }
-		
+        
     for(;;)
         {
         kar = fgetc(fpin);
@@ -79,7 +79,7 @@ static bool readFullform(FILE * fpin,bool last)
         flexform[flexformindex] = '\0';
         return kar == EOF;
         }
-		
+        
     for(;;)
         {
         kar = fgetc(fpin);
@@ -173,7 +173,7 @@ static bool readFreq(FILE * fpin,bool last)
             }
         return kar == EOF;
         }
-		
+        
     for(;;)
         {
         kar = fgetc(fpin);

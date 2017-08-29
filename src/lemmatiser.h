@@ -58,10 +58,10 @@ class Lemmatiser
         static tagpairs * TextToDictTags;
 #endif
         optionStruct & Option;
-		int listLemmas;
-		int status;
-		bool SortInput; // derived from other options
-		bool changed;
+        int listLemmas;
+        int status;
+        bool SortInput; // derived from other options
+        bool changed;
     public:
         int getStatus()
             {

@@ -63,7 +63,7 @@ class Word : public OutputClass
         static int LineNumber; // The number of the line where the previous word was found. For line-wise output. 0 is initial value
         static bool DictUnique;
         static int NewLinesAfterWord;
-		static unsigned long int reducedtotal;
+        static unsigned long int reducedtotal;
         char * m_word;
         char * m_tag;
     protected:
@@ -73,18 +73,18 @@ class Word : public OutputClass
         // statistics on the dictionary's lemmas.
         int cnt;
 #if STREAM
-		static ostream * fp;
+        static ostream * fp;
 #else
-		static FILE * fp;
+        static FILE * fp;
 #endif
-		bool hasAddedItselfToBaseForm : 1;
-		bool FoundInDict : 1;
-		bool owns : 1;
-		bool SegmentInitial:1; /* 20160205. If true and word starts with uppercase, 
-							   then lowercasing is likely default. 
-							   Keep uppercase if also found in non-segment initial position
-							   */
-		void i() const
+        bool hasAddedItselfToBaseForm : 1;
+        bool FoundInDict : 1;
+        bool owns : 1;
+        bool SegmentInitial:1; /* 20160205. If true and word starts with uppercase, 
+                               then lowercasing is likely default. 
+                               Keep uppercase if also found in non-segment initial position
+                               */
+        void i() const
             {
 #if STREAM
             if(pbfL)
@@ -308,7 +308,7 @@ class Word : public OutputClass
 #endif
         int addBaseFormL(const char * s,const char * t);
         virtual int addBaseFormsL();
-		virtual int addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
+        virtual int addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
                                // lexical information for this word.
            bool & conflict,int & cntD,int & cntL);//
         void addFullForm()
@@ -435,7 +435,7 @@ class taggedWord : public Word
                 delete m_tag;
             }
         virtual int addBaseFormsL();
-		virtual int addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
+        virtual int addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
                                // lexical information for this word.
            bool & conflict,int & cntD,int & cntL);//
         void DissambiguateByTagFriends()

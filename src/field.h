@@ -60,13 +60,13 @@ class field
 #endif
             char * getString(); // returns a copy! (allocated with new)
         virtual void reset(){if(next)next->reset();}
-		int noOfFields()
-			{
-			if (next)
-				return 1 + next->noOfFields();
-			else
-				return 1;
-			}
+        int noOfFields()
+            {
+            if (next)
+                return 1 + next->noOfFields();
+            else
+                return 1;
+            }
 
     };
 

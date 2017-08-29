@@ -156,8 +156,8 @@ class node
 #if defined PROGLEMMATISE
         void print(int n);
         void removeAmbiguous(node *& prev);// Remove all rules that have equally good competitors, e.g.
-                                //  ADJ		[lille]små
-                                //  ADJ		[liden]små
+                                //  ADJ        [lille]små
+                                //  ADJ        [liden]små
 #endif
     };
 

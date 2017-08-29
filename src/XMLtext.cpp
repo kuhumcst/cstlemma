@@ -233,11 +233,11 @@ void XMLtext::CallBackEndElementName()
         if(  Crumbs
           || !this->ancestor
           || (  startElement + strlen(this->ancestor) == endElement 
-		     && !strncmp(startElement, this->ancestor, size_t(endElement - startElement))
+             && !strncmp(startElement, this->ancestor, size_t(endElement - startElement))
              )
           )
             {
-			Crumbs = new crumb(startElement, size_t(endElement - startElement), Crumbs);
+            Crumbs = new crumb(startElement, size_t(endElement - startElement), Crumbs);
             segmentBreak();
             }
         }
@@ -283,7 +283,7 @@ void XMLtext::CallBackEndAttributeNameInserting()
             {
             WordPosComing = true;
             }
-		else if (this->POSAttributeLen == size_t(endAttributeName - startAttributeName)
+        else if (this->POSAttributeLen == size_t(endAttributeName - startAttributeName)
                 && !strncmp(startAttributeName, this->POSAttribute, size_t(POSAttributeLen))
                 )
             {
@@ -652,7 +652,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
             while(*ch)
                 {
                 while(  *ch 
-					  && ((Seq = (html_tag.*tagState)((unsigned char)*ch)) == tag
+                      && ((Seq = (html_tag.*tagState)((unsigned char)*ch)) == tag
                         || Seq == endoftag_startoftag
                         )
                      )
@@ -685,7 +685,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
                         }
                     WordReader.initWord();
                     while(  *ch 
-						  && (Seq = (html_tag.*tagState)((unsigned char)*ch)) == notag
+                          && (Seq = (html_tag.*tagState)((unsigned char)*ch)) == notag
                         )
                         {
                         if((WordReader.*(WordReader.xput))(fnc,*ch))
@@ -737,11 +737,11 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
                     LOG1LINE("allocating array of line offsets");
                 Lines =  new unsigned long int [lineno+1];
                 unsigned long int L = lineno+1;
-				do
-					{
-					--L;
-					Lines[L] = 0;
-					} while (L != 0);
+                do
+                    {
+                    --L;
+                    Lines[L] = 0;
+                    } while (L != 0);
                 if(Option.nice)
                     LOG1LINE("...allocated array");
 

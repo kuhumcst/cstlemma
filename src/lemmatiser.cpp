@@ -687,9 +687,9 @@ int Lemmatiser::openFiles()
                 }
             else
 #if STREAM
-				clog << "-x\t" << std::setw(20) << Option.x << "\tLexical type translation table" << endl;
+                clog << "-x\t" << std::setw(20) << Option.x << "\tLexical type translation table" << endl;
 #else
-				info("-x\t%-20s\tLexical type translation table", Option.x);
+                info("-x\t%-20s\tLexical type translation table", Option.x);
 #endif
             }
         else

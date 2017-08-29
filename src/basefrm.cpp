@@ -259,11 +259,11 @@ void basefrm::addFullForms(basefrm * other)
                     // fullforms sometimes enter the list.
                     // This happens especially when the dictionary is used and
                     // it contains homographs:
-                    // for	for	N_INDEF_PLU
-                    // for	for	N_INDEF_SING
-                    // for	for,3	PRÆP
-                    // for	for,4	ADV
-                    // for	for,5	SKONJ
+                    // for    for    N_INDEF_PLU
+                    // for    for    N_INDEF_SING
+                    // for    for,3    PRÆP
+                    // for    for,4    ADV
+                    // for    for,5    SKONJ
                     // With input without POS tags, the first two homographs
                     // merge together, but four different readings remain.
                     // This resulted in output like  

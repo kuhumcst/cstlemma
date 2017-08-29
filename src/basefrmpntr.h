@@ -61,9 +61,9 @@ class baseformpointer
 #if PFRQ
         unsigned int pfrq;
 #endif
-		bool owning;
-		bool hidden;
-	public:
+        bool owning;
+        bool hidden;
+    public:
         static int UseLemmaFreqForDisambiguation;
         int count()
             {

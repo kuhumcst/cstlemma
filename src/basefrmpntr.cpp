@@ -95,36 +95,70 @@ void baseformpointer::printFn(ostream *fp,bfn Fn,const char * sep)
 void baseformpointer::printFn(FILE *fp,bfn Fn,const char * sep)
 #endif
     {
-        bool doSep = false;
-        baseformpointer * bfp = this;
-        while(bfp)
+    bool doSep = false;
+    baseformpointer * bfp = this;
+#if 0
+    /*
+    while(bfp)
+        {
+        while(bfp && bfp->hidden)
             {
-            while(bfp && bfp->hidden)
-                {
-                if(UseLemmaFreqForDisambiguation == 1)
-                    {
-                    if(doSep)
-                        print(fp,sep);
-                    else
-                        doSep = true;
-                    print(fp,"<<");
-                    (bfp->bf->*Fn)();
-                    print(fp,">>");
-                    }
-                bfp = bfp->next;
-                }
-            while(bfp && !bfp->hidden)
+            if(UseLemmaFreqForDisambiguation == 1)
                 {
                 if(doSep)
                     print(fp,sep);
                 else
                     doSep = true;
+                print(fp,"<<");
                 (bfp->bf->*Fn)();
-                bfp = bfp->next;
+                print(fp,">>");
                 }
+            bfp = bfp->next;
             }
+        while(bfp && !bfp->hidden)
+            {
+            if(doSep)
+                print(fp,sep);
+            else
+                doSep = true;
+            (bfp->bf->*Fn)();
+            bfp = bfp->next;
+            }
+        }
+        */
+#else
+    while (bfp)
+        {
+        if(!bfp->hidden)
+            {
+            if (doSep)
+                print(fp, sep);
+            else
+                doSep = true;
+            (bfp->bf->*Fn)();
+            }
+        bfp = bfp->next;
+        }
+    if (UseLemmaFreqForDisambiguation == 1)
+        {
+        bfp = this;
+        while (bfp)
+            {
+            if(bfp->hidden)
+                {
+                if (doSep)
+                    print(fp, sep);
+                else
+                    doSep = true;
+                print(fp, "<<");
+                (bfp->bf->*Fn)();
+                print(fp, ">>");
+                }
+            bfp = bfp->next;
+            }
+        }
+#endif
     }
-
 
 #if STREAM
 void baseformpointer::printfbf(ostream *fp,functionTree * fns,const char * sep)
@@ -136,6 +170,8 @@ void baseformpointer::printfbf(FILE *fp,functionTree * fns,const char * sep)
         {
         bool doSep = false;
         baseformpointer * bfp = this;
+#if 0
+        /*
         while(bfp)
             {
             while(bfp && bfp->hidden)
@@ -162,41 +198,41 @@ void baseformpointer::printfbf(FILE *fp,functionTree * fns,const char * sep)
                 bfp = bfp->next;
                 }
             }
-        }
-    }
-
-
-/*
-    while(hidden && next)
-        next->
-    if(fns)
-        {
-        if(hidden)
+            */
+#else
+        while (bfp)
             {
-            if(UseLemmaFreqForDisambiguation == 1)
+            if(!bfp->hidden)
                 {
-                fprintf(fp,"%s","<<");
-                fns->printIt(bf);
-                fprintf(fp,"%s",">>");
+                if (doSep)
+                    print(fp, sep);
+                else
+                    doSep = true;
+                fns->printIt(bfp->bf);
+                }
+            bfp = bfp->next;
+            }
+        if (UseLemmaFreqForDisambiguation == 1)
+            {
+            bfp = this;
+            while (bfp)
+                {
+                if(bfp->hidden)
+                    {
+                    if (doSep)
+                        print(fp, sep);
+                    else
+                        doSep = true;
+                    print(fp, "<<");
+                    fns->printIt(bfp->bf);
+                    print(fp, ">>");
+                    }
+                bfp = bfp->next;
                 }
             }
-        else 
-            {
-            fns->printIt(bf);
-            }
-        }
-    baseformpointer * nxt = next;
-    while(nxt && nxt->hidden)
-        {
-        nxt = nxt->next;
-        }
-    if(nxt)
-        {
-        fprintf(fp,"%s",sep);
-        next->printfbf(fp,fns,sep);
+#endif
         }
     }
-*/
 
 void baseformpointer::reassign(basefrm * arg_bf)
     {

@@ -39,8 +39,8 @@ class wordReader
         int lastkar;
         XMLtext * Text;
         char kars[2];
-		bool treatSlashAsAlternativesSeparator;
-	public:
+        bool treatSlashAsAlternativesSeparator;
+    public:
         int Put(bool (wordReader::*)(int kar),int kar);
         int (wordReader::*xput)(bool (wordReader::*)(int kar),int kar);
         int rawput(bool (wordReader::*)(int kar),int kar);
