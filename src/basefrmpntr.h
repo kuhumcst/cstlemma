@@ -63,6 +63,7 @@ class baseformpointer
 #endif
         bool owning;
         bool hidden;
+        bool hasDuplicateLemma(baseformpointer * startOfList, baseformpointer * current);
     public:
         static int UseLemmaFreqForDisambiguation;
         int count()

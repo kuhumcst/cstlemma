@@ -89,6 +89,31 @@ baseformpointer::~baseformpointer()
 #endif
     }
 
+bool baseformpointer::hasDuplicateLemma(baseformpointer * startOfList, baseformpointer * current)
+    {
+    baseformpointer * bfp2 = startOfList;
+    while (bfp2 != current && bfp2->bf->cmps(current->bf))
+        {
+        bfp2 = bfp2->next;
+        }
+    if (bfp2 == current)
+        {
+        if (current->hidden)
+            {
+            bfp2 = bfp2->next;
+            while (bfp2 && (bfp2->hidden || bfp2->bf->cmps(current->bf)))
+                {
+                bfp2 = bfp2->next;
+                }
+            if (!bfp2) /*Lemma was not shown earlier.*/
+                return false;
+            }
+        else
+            return false;
+        }
+    return true;
+    }
+
 #if STREAM
 void baseformpointer::printFn(ostream *fp,bfn Fn,const char * sep)
 #else
@@ -101,11 +126,14 @@ void baseformpointer::printFn(FILE *fp,bfn Fn,const char * sep)
         {
         if(!bfp->hidden)
             {
-            if (doSep)
-                print(fp, sep);
-            else
-                doSep = true;
-            (bfp->bf->*Fn)();
+            if (!hasDuplicateLemma(this, bfp))
+                {
+                if (doSep)
+                    print(fp, sep);
+                else
+                    doSep = true;
+                (bfp->bf->*Fn)();
+                }
             }
         bfp = bfp->next;
         }
@@ -116,26 +144,13 @@ void baseformpointer::printFn(FILE *fp,bfn Fn,const char * sep)
             {
             if(bfp->hidden)
                 {
-                baseformpointer * bfp2 = this;
-                while (bfp2 != bfp && bfp2->bf->cmps(bfp->bf))
+                if (!hasDuplicateLemma(this, bfp))
                     {
-                    bfp2 = bfp2->next;
-                    }
-                if (bfp2 == bfp)
-                    {
-                    bfp2 = bfp2->next;
-                    while (bfp2 && (bfp2->hidden || bfp2->bf->cmps(bfp->bf)))
-                        {
-                        bfp2 = bfp2->next;
-                        }
-                    if (!bfp2) /*Lemma was not shown earlier.*/
-                        {
-                        if (doSep)
-                            print(fp, sep);
-                        else
-                            doSep = true;
-                        (bfp->bf->*Fn)();
-                        }
+                    if (doSep)
+                        print(fp, sep);
+                    else
+                        doSep = true;
+                    (bfp->bf->*Fn)();
                     }
                 }
             bfp = bfp->next;
@@ -157,11 +172,14 @@ void baseformpointer::printfbf(FILE *fp,functionTree * fns,const char * sep)
             {
             if(!bfp->hidden)
                 {
-                if (doSep)
-                    print(fp, sep);
-                else
-                    doSep = true;
-                fns->printIt(bfp->bf);
+                if (!hasDuplicateLemma(this, bfp))
+                    {
+                    if (doSep)
+                        print(fp, sep);
+                    else
+                        doSep = true;
+                    fns->printIt(bfp->bf);
+                    }
                 }
             bfp = bfp->next;
             }
@@ -172,26 +190,13 @@ void baseformpointer::printfbf(FILE *fp,functionTree * fns,const char * sep)
                 {
                 if (bfp->hidden)
                     {
-                    baseformpointer * bfp2 = this;
-                    while (bfp2 != bfp && bfp2->bf->cmps(bfp->bf))
+                    if (!hasDuplicateLemma(this, bfp))
                         {
-                        bfp2 = bfp2->next;
-                        }
-                    if (bfp2 == bfp)
-                        {
-                        bfp2 = bfp2->next;
-                        while (bfp2 && (bfp2->hidden || bfp2->bf->cmps(bfp->bf)))
-                            {
-                            bfp2 = bfp2->next;
-                            }
-                        if (!bfp2) /*Lemma was not shown earlier.*/
-                            {
-                            if (doSep)
-                                print(fp, sep);
-                            else
-                                doSep = true;
-                            fns->printIt(bfp->bf);
-                            }
+                        if (doSep)
+                            print(fp, sep);
+                        else
+                            doSep = true;
+                        fns->printIt(bfp->bf);
                         }
                     }
                 bfp = bfp->next;
