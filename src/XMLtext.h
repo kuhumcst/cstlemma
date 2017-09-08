@@ -96,6 +96,8 @@ class XMLtext : public text
         bool POSPosComing;
         bool LemmaPosComing;
         bool LemmaClassPosComing;
+    private:
+        virtual const char * convert(const char * s, char * buf, const char * lastBufByte);
     public:
         void wordDone();
         bool analyseThis();

@@ -100,7 +100,7 @@ class readValue : public field
 #ifndef CONSTSTRCHR
         const 
 #endif
-            char * getString()
+        char * getString()
             {
             if(pos == 0)
                 {

@@ -1,4 +1,13 @@
 -------------------------------
+Version 7.26 (8 September 2017)
+-------------------------------
+Completely removed resolution of character and entity references from the phase
+where XML input is parsed. Resolution now takes places just before words
+(including tags, if relevant) are inserted in the hash table that later is
+traversed to lemmatise each type in the input text. Before, reference 
+resolution only took place for words, and not for tags.
+
+-------------------------------
 Version 7.25 (29 August 2017)
 -------------------------------
 Once more a better explanation of '+' when $i is used.

@@ -374,6 +374,10 @@ void XMLtext::CallBackEmptyTag()
         Crumbs = Crumbs->Pop(startElement,size_t(endElement - startElement));
     }
 
+const char * XMLtext::convert(const char * s, char * buf, const char * lastBufByte)
+    {
+    return wordReader::convert(s,buf,lastBufByte);
+    }
 
 
 void XMLtext::printUnsorted(

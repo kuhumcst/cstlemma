@@ -92,8 +92,10 @@ class text
         bool InputHasTags;
         bool StartOfLine;
     private:
-        virtual const char * convert(const char * s)
+        virtual const char * convert(const char * s, char * buf, const char * lastBufByte)
             {
+            REFER(buf)
+            REFER(lastBufByte)
             return s;
             }
     protected:

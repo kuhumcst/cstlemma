@@ -722,8 +722,10 @@ void text::insert(const char * w)
 
 void text::insert(const char * w, const char * tag)
     {
-    w = convert(w);
-    tag = convert(tag);
+    static char wbuf[1000];
+    static char tbuf[1000];
+    w = convert(w,wbuf,wbuf+sizeof(wbuf)-1);
+    tag = convert(tag,tbuf,wbuf+sizeof(tbuf)-1);
     if(!Hash)
         {
         Hash = (hashmap::hash<Word> *)new hashmap::hash<taggedWord>(&Word::itsWord, 1000);

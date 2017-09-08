@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <assert.h>
 
 #define BUFSIZE 35000
+/*
 static int (*namechar)(int c);
 
 static bool anychar = false;
@@ -38,7 +39,7 @@ struct lowup
     {
     int  l;
     int u;
-    int s; /* NameStartChar */
+    int s; / * NameStartChar * /
     };
 
 struct lowup lu[] =
@@ -129,6 +130,7 @@ static int entity(int c)
         }
     return false;
     }
+*/
 
 void wordReader::initWord()
     {
@@ -183,7 +185,7 @@ wordReader::wordReader(field * format,field * wordfield,field * tagfield,bool tr
         lastkar = 0;
         nextfield->read(kars,nextfield);
         }
-    xput = &wordReader::Put;
+    xput = &wordReader::rawput;
     p = buf = new char[BUFSIZE];
     }
 
@@ -295,48 +297,29 @@ int wordReader::rawput(bool (wordReader::*fnc)(int kar),int kar)
 int wordReader::nrawput(bool (wordReader::*fnc)(int kar),char * c)
     {
     while(*c)
-        //if(!rawput(fnc,*c++))
         rawput(fnc,*c++);
     return true;
     }
 
+/*
 int wordReader::charref(bool (wordReader::*fnc)(int kar),int kar)
     {
     if(kar == ';')
         {
         *p = '\0';
-        /*if(buf[0] == '#')
+        char * pItem = findEntity(buf);
+        if (pItem!=NULL)
             {
-            unsigned long N;
-            char tmp[22];
-            N = (buf[1] == 'x') ? strtoul(buf+2,NULL,16) : strtoul(buf+1,NULL,10);
             p = buf;
             xput = &wordReader::Put;
-            int writtenlength = UnicodeToUtf8(N, tmp, sizeof(tmp));
-            if (writtenlength >= 0)
-                {
-                tmp[writtenlength] = '\0';
-                return nrawput(fnc,tmp);
-                }
-            else
-                return 0;
+            return nrawput(fnc, pItem);
             }
-        else*/
-            {
-            char * pItem = findEntity(buf);
-            if (pItem!=NULL)
-                {
-                p = buf;
-                xput = &wordReader::Put;
-                return nrawput(fnc, pItem);
-                }
-            rawput(fnc,'&');
-            nrawput(fnc,buf);
-            rawput(fnc,';');
-            p = buf;
-            xput = &wordReader::Put;
-            return false;
-            }
+        rawput(fnc,'&');
+        nrawput(fnc,buf);
+        rawput(fnc,';');
+        p = buf;
+        xput = &wordReader::Put;
+        return false;
         p = buf;
         xput = &wordReader::Put;
         }
@@ -367,6 +350,51 @@ int wordReader::Put(bool (wordReader::*fnc)(int kar),int kar)
         return true;
         }
     return rawput(fnc,kar);
+    }
+*/
+
+const char * wordReader::convert(const char * s,char * buf,const char * lastBufByte)
+    {
+    if(buf+strlen(s) < lastBufByte)
+        {
+        char * q = buf;
+        char entity[100]; 
+        char * p = NULL;
+        for(const char * t = s;*t;++t)
+            {
+            if(*t == '&')
+                {
+                p = entity;
+                }
+            else if(*t == ';')
+                {
+                *p = '\0';
+                char * pItem = findEntity(entity);
+                if (pItem!=NULL)
+                    {
+                    p = pItem;
+                    }
+                else
+                    {
+                    *q++ = '&';
+                    p = entity;
+                    }
+                for(;*p;++p && (q < lastBufByte),++q)
+                    *q = *p;
+                p = NULL;
+                }
+            else if(q < lastBufByte)
+                {
+                if(p)
+                    *p++ = *t;
+                else
+                    *q++ = *t;
+                }
+            }
+        *q = '\0';
+        return buf;
+        }
+    return s;
     }
 
 #endif

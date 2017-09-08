@@ -41,11 +41,16 @@ class wordReader
         char kars[2];
         bool treatSlashAsAlternativesSeparator;
     public:
-        int Put(bool (wordReader::*)(int kar),int kar);
+        //int Put(bool (wordReader::*)(int kar),int kar);
         int (wordReader::*xput)(bool (wordReader::*)(int kar),int kar);
         int rawput(bool (wordReader::*)(int kar),int kar);
         int nrawput(bool (wordReader::*)(int kar),char * c);
-        int charref(bool (wordReader::*)(int kar),int kar);
+        //int charref(bool (wordReader::*)(int kar),int kar); resolution now takes place from 
+        //    in text.cpp: void text::insert(const char * w, const char * tag)
+        //    and is done for the word as well as for the tag (if there is such).
+
+        static const char * convert(const char * s, char * buf, const char * lastBufByte);
+
         unsigned long getNewlines()
             {
             return newlines;
