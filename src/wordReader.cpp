@@ -366,30 +366,38 @@ const char * wordReader::convert(const char * s,char * buf,const char * lastBufB
                 {
                 p = entity;
                 }
-            else if(*t == ';')
-                {
-                *p = '\0';
-                char * pItem = findEntity(entity);
-                if (pItem!=NULL)
-                    {
-                    p = pItem;
-                    }
-                else
-                    {
-                    *q++ = '&';
-                    p = entity;
-                    }
-                for(;*p;++p && (q < lastBufByte),++q)
-                    *q = *p;
-                p = NULL;
-                }
+            else if(p)
+				{
+				if(*t == ';')
+					{
+					*p = '\0';
+					char * pItem = findEntity(entity);
+					if (pItem!=NULL)
+						{
+						p = pItem;
+						}
+					else
+						{
+						*q++ = '&';
+						p = entity;
+						}
+					for(;*p;++p && (q < lastBufByte),++q)
+						*q = *p;
+					p = NULL;
+					}
+	            else if(q < lastBufByte)
+					{
+                    *p++ = *t;
+					}
+				else
+					break;
+				}
             else if(q < lastBufByte)
                 {
-                if(p)
-                    *p++ = *t;
-                else
-                    *q++ = *t;
+                *q++ = *t;
                 }
+			else
+				break;
             }
         *q = '\0';
         return buf;

@@ -101,7 +101,7 @@ class rules
                 {
                 buf = 0;
                 End = 0;
-                fprintf(stderr, "CSTlemma-applyrules.cpp: Cannot open rules [%s]",filename);
+                fprintf(stderr, "CSTlemma-applyrules.cpp: Cannot open rules [%s]\n",filename);
                 }
             }
         ~rules()
