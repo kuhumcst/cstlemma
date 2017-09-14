@@ -1,4 +1,10 @@
 -------------------------------
+Version 7.27 (14 September 2017)
+-------------------------------
+Explcitly deallocated spaces used for storing file name and tag name, and
+corrected deallocation of string buffer by adding [].
+
+-------------------------------
 Version 7.26 (8 September 2017)
 -------------------------------
 Completely removed resolution of character and entity references from the phase

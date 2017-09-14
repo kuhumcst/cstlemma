@@ -82,7 +82,7 @@ class rules
         long End;
         int NewStyle;
     public:
-        rules() : buf(bufbuf), buflen(8), NewStyle(2)
+        rules() : TagName(0), buf(bufbuf), buflen(8), NewStyle(2)
             {
             }
         rules(const char * TagName) : buflen(8), NewStyle(2)
@@ -103,11 +103,13 @@ class rules
                 End = 0;
                 fprintf(stderr, "CSTlemma-applyrules.cpp: Cannot open rules [%s]\n",filename);
                 }
+			delete [] filename;
             }
         ~rules()
             {
+			delete [] TagName;
             if (buf != bufbuf)
-                delete buf;
+                delete [] buf;
             }
         const char * tagName() const { return TagName; }
         const char * Buf(){ return buf; }
