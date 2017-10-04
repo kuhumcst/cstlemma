@@ -82,10 +82,10 @@ class rules
         long End;
         int NewStyle;
     public:
-        rules() : TagName(0), buf(bufbuf), buflen(8), NewStyle(2)
+        rules() : TagName(0), buf(bufbuf), buflen(sizeof(bufbuf) - 1), NewStyle(2)
             {
             }
-        rules(const char * TagName) : buflen(8), NewStyle(2)
+        rules(const char * TagName) : buflen(sizeof(bufbuf) - 1), NewStyle(2)
             {
             this->TagName = new char[strlen(TagName) + 1];
             strcpy(this->TagName, TagName);
@@ -99,8 +99,8 @@ class rules
                 }
             else
                 {
-                buf = 0;
-                End = 0;
+                buf = bufbuf;
+                End = sizeof(bufbuf) - 1;
                 fprintf(stderr, "CSTlemma-applyrules.cpp: Cannot open rules [%s]\n",filename);
                 }
 			delete [] filename;
