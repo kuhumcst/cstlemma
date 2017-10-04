@@ -60,7 +60,7 @@ static char bufbuf[] = "\0\0\0\0\t\t\t\n"; //20090811: corrected wrong value // 
 //static char * buf = bufbuf; // Setting buf directly to a constant string generates a warning in newer gcc
 //static long buflen = 8;
 static char * result = 0;
-#define TESTING 0
+#define TESTING 1
 #if TESTING
 static char * replacement = 0; // FOR TEST PURPOSE
 #endif
@@ -99,8 +99,8 @@ class rules
                 }
             else
                 {
-                buf = bufbuf;
-                End = sizeof(bufbuf) - 1;
+                buf = 0;//bufbuf;
+                End = 0;//sizeof(bufbuf) - 1;
                 fprintf(stderr, "CSTlemma-applyrules.cpp: Cannot open rules [%s]\n",filename);
                 }
 			delete [] filename;
@@ -1194,7 +1194,7 @@ const char * rules::applyRules(const char * word, const char * tag,bool SegmentI
                 Hash->insert(Rules, v);
                 }
             if (Rules->Buf())
-                if (newStyleRules() == 3)
+                if (Rules->newStyleRules() == 3)
                     {
                     char ** lemmas = 0;
                     result = concat(pruneEquals(lemmatiseerV3(word, word + len, Rules->Buf(), Rules->Buf() + Rules->end(), 0, lemmas)));

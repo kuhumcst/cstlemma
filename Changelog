@@ -1,8 +1,8 @@
 -------------------------------
 Version 7.28 (4 October 2017)
 -------------------------------
-Set rules to default identity rule if rule file specific to a PoS-tag cannot
-be found or opened.
+Fixed bug: version of flexrule file was not properly checked when using
+PoS-tagged input.
 
 -------------------------------
 Version 7.27 (14 September 2017)
