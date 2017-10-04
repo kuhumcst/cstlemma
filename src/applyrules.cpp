@@ -60,7 +60,7 @@ static char bufbuf[] = "\0\0\0\0\t\t\t\n"; //20090811: corrected wrong value // 
 //static char * buf = bufbuf; // Setting buf directly to a constant string generates a warning in newer gcc
 //static long buflen = 8;
 static char * result = 0;
-#define TESTING 1
+#define TESTING 0
 #if TESTING
 static char * replacement = 0; // FOR TEST PURPOSE
 #endif
@@ -1180,6 +1180,10 @@ const char * rules::applyRules(const char * word, const char * tag,bool SegmentI
 #if TESTING
         delete [] replacement;
         replacement = 0;
+        char Start[30] = {'\0'};
+        char Middle[30] = {'\0'};
+        char End[30] = {'\0'};
+        printf("WOORD [%.*s]\n",len,word);
 #endif
         if (tag && *tag)
             {
@@ -1201,7 +1205,12 @@ const char * rules::applyRules(const char * word, const char * tag,bool SegmentI
                     }
                 else
                     {
-                    lemmatiseer(word, word + len, Rules->Buf(), Rules->Buf() + Rules->end());
+                    lemmatiseer(word, word + len, Rules->Buf(), Rules->Buf() + Rules->end()
+#if TESTING
+                        ,Start,Middle,End
+#endif
+                        );
+
                     }
             else
                 {
@@ -1212,7 +1221,11 @@ const char * rules::applyRules(const char * word, const char * tag,bool SegmentI
                     }
                 else
                     {
-                    lemmatiseer(word, word + len, buf, buf + buflen);
+                    lemmatiseer(word, word + len, buf, buf + buflen
+#if TESTING
+                        ,Start,Middle,End
+#endif
+                        );
                     }
                 }
             }
@@ -1225,7 +1238,11 @@ const char * rules::applyRules(const char * word, const char * tag,bool SegmentI
                 }
             else
                 {
-                lemmatiseer(word, word + len, buf, buf + buflen);
+                lemmatiseer(word, word + len, buf, buf + buflen
+#if TESTING
+                        ,Start,Middle,End
+#endif
+                        );
                 }
             }
         return result;

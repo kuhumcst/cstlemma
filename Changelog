@@ -2,7 +2,7 @@
 Version 7.28 (4 October 2017)
 -------------------------------
 Fixed bug: version of flexrule file was not properly checked when using
-PoS-tagged input.
+PoS-tagged input. Ensure #define TESTING 1 can be used.
 
 -------------------------------
 Version 7.27 (14 September 2017)
