@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "flex.h"
 #include "utf8func.h"
 #include "caseconv.h"
-#include "option.h"
+//#include "option.h"
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -118,8 +118,8 @@ class rules
         int newStyleRules(){ return NewStyle; }
         char * readRules(FILE * flexrulefile, long & end);
         bool readRules(FILE * flexrulefile, const char * flexFileName);
-        const char * applyRules(const char * word, bool SegmentInitial);
-        const char * applyRules(const char * word, const char * tag, bool SegmentInitial);
+        const char * applyRules(const char * word, bool SegmentInitial,bool RulesUnique);
+        const char * applyRules(const char * word, const char * tag, bool SegmentInitial, bool RulesUnique);
         bool setNewStyleRules(int val);
 //        int newStyleRules();
     };
@@ -154,16 +154,16 @@ bool readRules(FILE * flexrulefile, const char * flexFileName)
     return taglessrules->readRules(flexrulefile, flexFileName);
     }
 
-const char * applyRules(const char * word, bool SegmentInitial)
+const char * applyRules(const char * word, bool SegmentInitial, bool RulesUnique)
     {
     assert(taglessrules);
-    return taglessrules->applyRules(word, SegmentInitial);
+    return taglessrules->applyRules(word, SegmentInitial, RulesUnique);
     }
 
-const char * applyRules(const char * word, const char * tag, bool SegmentInitial)
+const char * applyRules(const char * word, const char * tag, bool SegmentInitial, bool RulesUnique)
     {
     assert(taglessrules);
-    return taglessrules->applyRules(word, tag, SegmentInitial);
+    return taglessrules->applyRules(word, tag, SegmentInitial, RulesUnique);
     }
 
 bool rules::readRules(FILE * flexrulefile, const char * flexFileName)
@@ -871,9 +871,17 @@ static char * concat(char ** L)
         return 0;
     }
 
-static char ** pruneEquals(char ** L)
+static char ** pruneEquals(char ** L, bool RulesUnique)
     {
-    if (L)
+    if (RulesUnique)
+        {
+        for (int i = 1; L[i]; ++i)
+            {
+            delete[] L[i];
+            L[i] = 0;
+            }
+        }
+    else if (L)
         {
         for (int i = 0; L[i]; ++i)
             {
@@ -1077,7 +1085,7 @@ void deleteRules()
     }
 
 
-const char * rules::applyRules(const char * word,bool SegmentInitial)
+const char * rules::applyRules(const char * word,bool SegmentInitial, bool RulesUnique)
     {
     if (buf)
         {
@@ -1117,11 +1125,11 @@ const char * rules::applyRules(const char * word,bool SegmentInitial)
                 size_t length = 0;
                 word = changeCase(word, true, length);
                 donotAddLemmaUnlessRuleHasPrefix = false;
-                result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas)));
+                result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas), RulesUnique));
                 }
             else
                 {
-                result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas)));
+                result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas), RulesUnique));
                 }
 
 
@@ -1151,7 +1159,7 @@ const char * rules::applyRules(const char * word,bool SegmentInitial)
     }
 
 
-const char * rules::applyRules(const char * word, const char * tag,bool SegmentInitial)
+const char * rules::applyRules(const char * word, const char * tag,bool SegmentInitial,bool RulesUnique)
     {
     if (buf)
         {
@@ -1201,7 +1209,7 @@ const char * rules::applyRules(const char * word, const char * tag,bool SegmentI
                 if (Rules->newStyleRules() == 3)
                     {
                     char ** lemmas = 0;
-                    result = concat(pruneEquals(lemmatiseerV3(word, word + len, Rules->Buf(), Rules->Buf() + Rules->end(), 0, lemmas)));
+                    result = concat(pruneEquals(lemmatiseerV3(word, word + len, Rules->Buf(), Rules->Buf() + Rules->end(), 0, lemmas), RulesUnique));
                     }
                 else
                     {
@@ -1217,7 +1225,7 @@ const char * rules::applyRules(const char * word, const char * tag,bool SegmentI
                 if (newStyleRules() == 3)
                     {
                     char ** lemmas = 0;
-                    result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas)));
+                    result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas), RulesUnique));
                     }
                 else
                     {
@@ -1234,7 +1242,7 @@ const char * rules::applyRules(const char * word, const char * tag,bool SegmentI
             if (newStyleRules() == 3)
                 {
                 char ** lemmas = 0;
-                result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas)));
+                result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, buf + buflen, 0, lemmas), RulesUnique));
                 }
             else
                 {

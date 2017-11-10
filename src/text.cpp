@@ -371,6 +371,7 @@ void text::Lemmatise(ostream * fpo
                     ,int UseLemmaFreqForDisambiguation
                     ,bool nice
                     ,bool DictUnique
+                    ,bool RulesUnique
                     ,bool baseformsAreLowercase
                     ,int listLemmas
                     ,bool mergeLemmas
@@ -383,6 +384,7 @@ void text::Lemmatise(FILE * fpo
                     ,int UseLemmaFreqForDisambiguation
                     ,bool nice
                     ,bool DictUnique
+                    ,bool RulesUnique
                     ,bool baseformsAreLowercase
                     ,int listLemmas
                     ,bool mergeLemmas
@@ -392,6 +394,7 @@ void text::Lemmatise(FILE * fpo
     flex::baseformsAreLowercase = baseformsAreLowercase;
     lext::baseformsAreLowercase = baseformsAreLowercase;
     Word::DictUnique = DictUnique;
+    Word::RulesUnique = RulesUnique;
     baseformpointer::UseLemmaFreqForDisambiguation = UseLemmaFreqForDisambiguation;
     taggedWord::sep = Sep;
     basefrm::sep = Sep;

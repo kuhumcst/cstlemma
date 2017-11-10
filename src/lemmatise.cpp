@@ -173,11 +173,11 @@ void flex::print()
         types->print();
     }
 
-bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t & borrow,bool SegmentInitial)
+bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t & borrow,bool SegmentInitial, bool RulesUnique)
     {
     if(newStyleRules())
         {
-        bf = applyRules(word,tag,SegmentInitial);
+        bf = applyRules(word,tag,SegmentInitial, RulesUnique);
         return true;
         }
 
@@ -258,11 +258,11 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
         return false;
     }
 
-char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool SegmentInitial)
+char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool SegmentInitial, bool RulesUnique)
     {
     if(newStyleRules())
         {
-        bf = applyRules(word,SegmentInitial);
+        bf = applyRules(word,SegmentInitial, RulesUnique);
         static char hyphen[] = "-";
         return hyphen; // 20120710 Returning "-" directly generates warning in newer gcc
         }

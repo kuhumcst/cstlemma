@@ -123,6 +123,7 @@ class text
             ,int UseLemmaFreqForDisambiguation
             ,bool nice
             ,bool DictUnique
+            ,bool RulesUnique
             ,bool baseformsAreLowercase
             ,int listLemmas
             ,bool mergeLemmas
@@ -136,6 +137,7 @@ class text
             ,int UseLemmaFreqForDisambiguation
             ,bool nice
             ,bool DictUnique
+            ,bool RulesUnique
             ,bool baseformsAreLowercase
             ,int listLemmas
             ,bool mergeLemmas

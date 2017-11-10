@@ -62,6 +62,7 @@ class Word : public OutputClass
         static Word * Root;
         static int LineNumber; // The number of the line where the previous word was found. For line-wise output. 0 is initial value
         static bool DictUnique;
+        static bool RulesUnique;
         static int NewLinesAfterWord;
         static unsigned long int reducedtotal;
         char * m_word;

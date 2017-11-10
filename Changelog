@@ -1,4 +1,9 @@
 -------------------------------
+Version 7.29 (10 November 2017)
+-------------------------------
+Fixed bug: -U option had no effect if version 3 rules were used.
+
+-------------------------------
 Version 7.28 (4 October 2017)
 -------------------------------
 Fixed bug: version of flexrule file was not properly checked when using

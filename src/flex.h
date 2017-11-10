@@ -256,9 +256,9 @@ class flex
 #if defined PROGLEMMATISE
     public:
         static bool baseformsAreLowercase;
-        bool Baseform(const char * word,const char * tag,const char *& bf,size_t & borrow,bool SegmentInitial);
-        char * Baseform(const char * word,const char *& bf,size_t & borrow,bool SegmentInitial); // returns tag
         void print();
+        bool Baseform(const char * word, const char * tag, const char *& bf, size_t & borrow, bool SegmentInitial, bool RulesUnique);
+        char * Baseform(const char * word, const char *& bf, size_t & borrow, bool SegmentInitial, bool RulesUnique);
         void removeAmbiguous();
         bool readFromFile(FILE * fpflex,const char * flexFileName);
 #endif

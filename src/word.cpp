@@ -55,7 +55,8 @@ functionTree * Word::Bfuncs = 0;
 bool Word::hasb = false;
 bool Word::hasB = false;
 const char * Word::sep;
-bool Word::DictUnique = true;
+bool Word::DictUnique = false;
+bool Word::RulesUnique = false;
 int Word::NewLinesAfterWord = 0;
 int Word::LineNumber = 1;
 cmp_f Word::cmp = &Word::cmpword;
@@ -69,12 +70,12 @@ most probable, given the word's ending (then we would need to have a most
 probable type for the case that NO rule aplies, 
 i.e. the unkown word is in base form already.)
 */
-const char * baseform(char * word,const char ** tag /*return value!*/, bool SegmentInitial)
+const char * baseform(char * word,const char ** tag /*return value!*/, bool SegmentInitial, bool RulesUnique)
     { // construct baseform by applying general rules (e.g. removing endings)
     const char * wrd;
     size_t borrow;
     assert(tag);
-    *tag = Flex.Baseform(word,wrd,borrow,SegmentInitial);
+    *tag = Flex.Baseform(word,wrd,borrow,SegmentInitial, RulesUnique);
     if(*tag)
         return wrd;
     else
@@ -82,11 +83,11 @@ const char * baseform(char * word,const char ** tag /*return value!*/, bool Segm
     }
 
 
-const char * baseform(char * word,const char * tag,bool SegmentInitial)
+const char * baseform(char * word,const char * tag,bool SegmentInitial, bool RulesUnique)
     { // construct baseform by applying general rules (e.g. removing endings)
     const char * wrd;
     size_t borrow;
-    if(Flex.Baseform(word,tag,wrd,borrow,SegmentInitial))
+    if(Flex.Baseform(word,tag,wrd,borrow,SegmentInitial, RulesUnique))
         return wrd;
     else if(flex::baseformsAreLowercase)
         return allToLower(word); 
@@ -175,7 +176,7 @@ void Word::printLemmaClass()const
 int Word::addBaseFormsL()
     {
     const char * tag = 0;
-    const char * wrd = baseform(m_word,&tag,SegmentInitial);
+    const char * wrd = baseform(m_word,&tag,SegmentInitial, RulesUnique);
     if(!tag)
         tag = NOT_KNOWN;// TODO do something better (NUM, XX, TEGN, etc)
     if(!*wrd)
@@ -540,7 +541,7 @@ formattingFunction * taggedWord::getTaggedWordFunctionNoBb(int character,bool & 
 int taggedWord::addBaseFormsL()
     {
     const char *ttag = Lemmatiser::translate(m_tag); 
-    const char * wrd = baseform(m_word,ttag,SegmentInitial);
+    const char * wrd = baseform(m_word,ttag,SegmentInitial, RulesUnique);
     return addBaseFormL(wrd,LemmaTag(ttag));
     }
 

@@ -930,36 +930,36 @@ void Lemmatiser::showSwitches()
 
     if(Option.RulesUnique)
 #if STREAM
-        clog << "-U\tenforce unique flex rules (default)" << endl;
+        clog << "-U\tenforce unique flex rules" << endl;
 #else
-        info("-U\tenforce unique flex rules (default)");
+        info("-U\tenforce unique flex rules");
 #endif
     else
 #if STREAM
-        clog << "-U-\tallow ambiguous flex rules" << endl;
+        clog << "-U-\tallow ambiguous flex rules (default)" << endl;
 #else
-        info("-U-\tallow ambiguous flex rules");
+        info("-U-\tallow ambiguous flex rules (default)");
 #endif
 
     if(Option.DictUnique)
 #if STREAM
-        clog << "-u\tenforce unique dictionary look-up (default)" << endl;
+        clog << "-u\tenforce unique dictionary look-up" << endl;
 #else
-        info("-u\tenforce unique dictionary look-up (default)");
+        info("-u\tenforce unique dictionary look-up");
 #endif
     else
 #if STREAM
-        clog << "-u-\tallow ambiguous dictionary look-up" << endl;
+        clog << "-u-\tallow ambiguous dictionary look-up (default)" << endl;
 #else
-        info("-u-\tallow ambiguous dictionary look-up");
+        info("-u-\tallow ambiguous dictionary look-up (default)");
 #endif
     switch(Option.UseLemmaFreqForDisambiguation)
         {
         case 0: 
 #if STREAM
-            clog << "-H0\tuse lemma frequencies for disambigation (default)" << endl;
+            clog << "-H0\tuse lemma frequencies for disambigation" << endl;
 #else
-            info("-H0\tuse lemma frequencies for disambigation (default)");
+            info("-H0\tuse lemma frequencies for disambigation");
 #endif
             basefrm::hasW = true;
             break;
@@ -973,9 +973,9 @@ void Lemmatiser::showSwitches()
             break;
         case 2: 
 #if STREAM
-            clog << "-H2\tdon't use lemma frequencies for disambigation" << endl;
+            clog << "-H2\tdon't use lemma frequencies for disambigation (default)" << endl;
 #else
-            info("-H2\tdon't use lemma frequencies for disambigation");
+            info("-H2\tdon't use lemma frequencies for disambigation (default)");
 #endif
             break;
         }
@@ -1073,6 +1073,7 @@ void Lemmatiser::LemmatiseText(FILE * fpin,FILE * fpout,tallyStruct * tally)
                    ,Option.UseLemmaFreqForDisambiguation
                    ,Option.nice
                    ,Option.DictUnique
+                   ,Option.RulesUnique
                    ,Option.baseformsAreLowercase
                    ,listLemmas
                    ,   Option.Wformat != NULL // list lemmas with all word forms
