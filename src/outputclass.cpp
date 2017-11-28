@@ -69,6 +69,9 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
                 case 'r':s='\r';break;
                 case 'v':s='\v';break;
                 case 'b':s='\b';break;
+                case '$':s = '$'; break;
+                case '[':s = '['; break;
+                case ']':s = ']'; break;
                 default: s= *f;
                 }
             }
