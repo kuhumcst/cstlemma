@@ -1,4 +1,10 @@
 -------------------------------
+Version 7.30 (28 November 2017)
+-------------------------------
+Improved explanation of -W and -c options. Set -I per default to $w\s if the
+input is XML and tags are in an attribute.
+
+-------------------------------
 Version 7.29 (10 November 2017)
 -------------------------------
 Fixed bug: -U option had no effect if version 3 rules were used.

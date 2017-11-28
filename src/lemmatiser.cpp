@@ -1090,7 +1090,7 @@ int Lemmatiser::LemmatiseFile()
         {
         // 20140224
         // Set default for input format
-        if(Option.InputHasTags)
+        if(Option.InputHasTags && !Option.POSAttribute)
             Option.Iformat = dupl("$w/$t\\s");
         else
             Option.Iformat = dupl("$w\\s");
