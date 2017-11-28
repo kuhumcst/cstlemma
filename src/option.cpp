@@ -351,6 +351,8 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             LOG1LINE("        $t lexical type\n"
                    "        $w base form\n"
                    "        $W full form(s)\n"
+                   "           (You also need to specify -W<format>, so you cannot\n"
+                   "            use $W if -c<format> is specified)\n"
                    "        \\$ dollar\n"
                    "        \\[ [\n"
                    "        \\] ]\n"
@@ -363,7 +365,9 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             LOG1LINE("        Output format for data pertaining to the base form, as predicted by\n"
                    "        flex pattern rules. See -b\n"
                    "    -W<format string>\tdefault: not present.\n"
-                   "        Output format:\n"
+                   "          Output format pertaining to full form when showing full forms\n"
+                   "          for a given base form.\n"
+                   "          You cannot specify both -c<format> and -W<format>.\n"
                    "        $w full form\n"
                    "        $t lexical type(s) according to dictionary\n"
                    "        $f full form type frequency\n"
@@ -388,9 +392,10 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 #if STREAM
             cout <<  "    -c<format string>\tdefault:\t" commandlineQuote << DefaultCFormat << commandlineQuote << endl;
 #else
-            printf("    -c<format string>\tdefault:\t" commandlineQuote "%s" commandlineQuote "\n",DefaultCFormat);// word/lemma/tag lemma: if dictionary gives 1 solution, take dictionary, otherwise rules
+            printf("    -c<format string>\t (default:\t" commandlineQuote "%s" commandlineQuote ")\n",DefaultCFormat);// word/lemma/tag lemma: if dictionary gives 1 solution, take dictionary, otherwise rules
 #endif
-            LOG1LINE("        Output format:\n"
+            LOG1LINE("        Output format for full form and its possible base forms.\n"
+                   "          You cannot specify both -c<format> and -W<format>.\n"
                    "        $w full form\n"
                    "        $b base form(s) according to dictionary.\n"
                    "           (You also need to specify -b<format>)\n"
