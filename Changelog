@@ -1,4 +1,9 @@
 -------------------------------
+Version 7.31 (8 December 2017)
+-------------------------------
+Changed UTF8 to globUTF8 (global variable defined in letterfunc/utf8func)
+
+-------------------------------
 Version 7.30 (28 November 2017)
 -------------------------------
 Improved explanation of -W and -c options. Set -I per default to $w\s if the

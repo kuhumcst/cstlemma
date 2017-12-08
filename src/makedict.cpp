@@ -541,7 +541,7 @@ bool DictNode::add(char * flexform,char * lextype,char * baseform,ptrdiff_t offs
                 else
                     {
 
-                    if(UTF8char(flexform+i,UTF8) < UTF8char(u.sub->m_flexform,UTF8))
+                    if(UTF8char(flexform+i,globUTF8) < UTF8char(u.sub->m_flexform,globUTF8))
                         {
                         DictNode * tmpnode = u.sub;
                         u.sub = new DictNode(flexform + i,lextype,baseform,offset,this); // The new leaf becomes the first in the sub-sequence
@@ -595,7 +595,7 @@ bool DictNode::add(char * flexform,char * lextype,char * baseform,ptrdiff_t offs
                 }
             else
                 {
-                if(UTF8char(flexform+i,UTF8) > UTF8char(this->m_flexform+i,UTF8))
+                if(UTF8char(flexform+i,globUTF8) > UTF8char(this->m_flexform+i,globUTF8))
                     { 
                     // The new node must come somewhere after the first node in the sub-sequence
                     if(leaf)
@@ -640,9 +640,9 @@ bool DictNode::add(char * flexform,char * lextype,char * baseform,ptrdiff_t offs
     else if(next)
         {
         
-        if(UTF8char(next->m_flexform,UTF8) > UTF8char(flexform,UTF8))
+        if(UTF8char(next->m_flexform,globUTF8) > UTF8char(flexform,globUTF8))
             { // The new node is alphabetically before the next node
-            if(UTF8char(this->m_flexform,UTF8) < UTF8char(flexform,UTF8))
+            if(UTF8char(this->m_flexform,globUTF8) < UTF8char(flexform,globUTF8))
                 {// The new node is alphabetically after this node
                 DictNode * tmpnode = next;
                 next = new DictNode(flexform,lextype,baseform,offset);
@@ -685,7 +685,7 @@ bool DictNode::addFreq(char * flexform,char * lextype,int n,char * bf,ptrdiff_t 
         {
         strcasecmpN(flexform,this->m_flexform,i,j);
         }
-    if(i > 0 || UTF8char(flexform+i,UTF8) == UTF8char(this->m_flexform+j/*i*/,UTF8))
+    if(i > 0 || UTF8char(flexform+i,globUTF8) == UTF8char(this->m_flexform+j/*i*/,globUTF8))
         { // (partial) overlap
         if(!this->m_flexform[j/*i*/])
             { // looked-for string incorporates this string
@@ -697,7 +697,7 @@ bool DictNode::addFreq(char * flexform,char * lextype,int n,char * bf,ptrdiff_t 
                     }
                 else
                     {
-                    if(UTF8char(flexform+i,UTF8) < UTF8char(u.sub->m_flexform,UTF8))
+                    if(UTF8char(flexform+i,globUTF8) < UTF8char(u.sub->m_flexform,globUTF8))
                         {
                         return false; // Nothing to do; word isn't in dictionary.
                         }
@@ -731,7 +731,7 @@ bool DictNode::addFreq(char * flexform,char * lextype,int n,char * bf,ptrdiff_t 
             return false; // Nothing to do; word isn't in dictionary.
             }
         }
-    else if(next && UTF8char(flexform,UTF8) > UTF8char(this->m_flexform,UTF8))
+    else if(next && UTF8char(flexform,globUTF8) > UTF8char(this->m_flexform,globUTF8))
         {
         return next->addFreq(flexform,lextype,n,bf,offset,cse);
         }
