@@ -477,7 +477,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "    -A  Treat / as separator between alternative words.\n"
                    "    -A- Do not treat / as separator between alternative words (default)\n"
                    "    -e<n> ISO8859 Character encoding. 'n' is one of 1,2,7 and 9 (ISO8859-1,2, etc).\n"
-                   "    -eU Unicode (UTF8) input.\n"
+                   "    -eU Unicode (UTF-8) input.\n"
                    "    -e  Don't use case conversion.\n"
                    "    -X  XML input. Leave XML elements unchanged.\n"
                    "    The next options do not allow space between option letters and argument!\n"

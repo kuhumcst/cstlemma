@@ -223,7 +223,7 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
                     size_t length = 0;
                     strcpy(b,changeCase(b,true,length));
                     }
-                else if(IsAllUpper(word)) // made UTF8-capable
+                else if(IsAllUpper(word)) // made UTF-8-capable
                     {
                     size_t length = 0;
                     strcpy(b,changeCase(b,false,length));
