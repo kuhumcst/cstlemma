@@ -1,8 +1,8 @@
 VERSION=7
 MINOR_NUMBER=10
 
-BIN=~/bin/
-BIN=
+#BIN=~/bin/
+BIN=../
 
 LIB=~/bin/
 LIB=
