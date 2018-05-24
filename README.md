@@ -35,7 +35,7 @@ Both 32 and 64 bit versions can be made.
 * Linux:
     1. Download (e.g. git clone) cstlemma, parsesgml, letterfunc and hashmap. If you are going to use the Makefile that comes with cstlemma, locate each of these packages in separate subdirectories under the same directory, and call these subdirectories cstlemma, parsesgml, letterfunc and hashmap, respectively. You can use https://github.com/kuhumcst/cstlemma/blob/master/doc/makecstlemma.bash to do all of this automatically.
     2. Change directory to the 'cstlemma/src' directory.
-    3. Run 'make' or 'make cstlemma'. To get rid of object files, run 
+    3. Run 'make' or 'make all'. To get rid of object files, run 
     4. 'make clean'.
 
 **Running**
