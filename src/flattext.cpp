@@ -240,9 +240,9 @@ static
 const 
 #endif
 #if STREAM
-char * getwordI(istream * fpin,const char *& tag,field * format,field * wordfield,field * tagfield,unsigned long & newlines)
+char * getwordI(istream * fpin,const char *& tag,field * format,field * wordfield,field * tagfield,unsigned long & newlines, char * Iformat)
 #else
-char * getwordI(FILE * fpin, const char *& tag, field * format, field * wordfield, field * tagfield, unsigned long & newlines)
+char * getwordI(FILE * fpin, const char *& tag, field * format, field * wordfield, field * tagfield, unsigned long & newlines, char * Iformat)
 #endif
     {
     format->reset();
@@ -282,7 +282,12 @@ char * getwordI(FILE * fpin, const char *& tag, field * format, field * wordfiel
             {
             ++newlines;
             }
+#if STREAM
+        kars[0] = kar == EOF ? '\n' : (char)kar;
+        kars[1] = '\0';
+#else
         kars[0] = kar == EOF ? '\0' : (char)kar;
+#endif
         char * plastkar = nextfield->read(kars,nextfield);
         if(kar == EOF)
             {
@@ -296,16 +301,23 @@ char * getwordI(FILE * fpin, const char *& tag, field * format, field * wordfiel
         }
     if (nextfield && iterations != 0)
         {
-        int parts =  nextfield->noOfFields();
+        kars[0] = '\0';
+        nextfield->read(kars, nextfield);
+        if (nextfield)
+            {
+            int parts = nextfield->noOfFields();
 #if STREAM
-        cout << "ERROR: When reaching the end of the input file, " << parts << " part" << (parts > 1 ? "s" : "") << " of the input format specification string " << (parts > 1 ? "are" : "is") << " left unmatched.\n";
+            cout << "ERROR after reading " << iterations << " bytes. When reaching the end of the input file, " << parts << " part" << (parts > 1 ? "s" : "") << " of the input format specification string " << Iformat << " " << (parts > 1 ? "are" : "is") << " left unmatched.\n";
 #else
-        printf("ERROR: When reaching the end of the input file, %d part%s of the input format specification string %s left unmatched.\n", parts, parts > 1 ? "s" : "", parts > 1 ? "are" : "is");
+            printf("ERROR after reading %d bytes. When reaching the end of the input file, %d part%s of the input format specification string %s %s left unmatched.\n", iterations, parts, Iformat, parts > 1 ? "s" : "", parts > 1 ? "are" : "is");
 #endif
-        exit(0);
+            exit(0);
+            }
         }
-    if(tagfield)
+    if (tagfield)
+        {
         tag = tagfield->getString();
+        }
     return wordfield->getString();
     }
 
@@ -376,7 +388,7 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
 #endif
             exit(0);
             }
-        while(total < size && (w = getwordI(fpi,Tag,format,wordfield,tagfield,newlines)) != 0)
+        while(total < size && (w = getwordI(fpi,Tag,format,wordfield,tagfield,newlines,Iformat)) != 0)
             {
             lineno += newlines;
             if(*w)
@@ -440,7 +452,7 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
         {
         if(format)
             {
-            while (total < size && (w = getwordI(fpi, Tag, format, wordfield, tagfield, newlines)) != 0)
+            while (total < size && (w = getwordI(fpi, Tag, format, wordfield, tagfield, newlines, Iformat)) != 0)
                 {
                 if(Tag == 0)
                     {
@@ -491,7 +503,7 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
         {
         if(format)
             {
-            while (total < size && (w = getwordI(fpi, Tag, format, wordfield, tagfield, newlines)) != 0)
+            while (total < size && (w = getwordI(fpi, Tag, format, wordfield, tagfield, newlines, Iformat)) != 0)
                 {
                 if(treatSlashAsAlternativesSeparator && findSlashes(w))
                     createUnTaggedAlternatives(w);

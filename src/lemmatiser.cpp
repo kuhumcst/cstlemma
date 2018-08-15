@@ -1267,11 +1267,11 @@ int Lemmatiser::LemmatiseFile()
         << tally.newcnt 
         << " (" 
         << (tally.totcnt ? (tally.newcnt*200+1)/(2*tally.totcnt) : 100) 
-        << "%%)\nconflicting    " 
+        << "%)\nconflicting    " 
         << tally.newhom 
         << " (" 
         << (tally.totcnt ? (tally.newhom*200+1)/(2*tally.totcnt) : 100) 
-        << "%%)\n" << endl;
+        << "%)\n" << endl;
 #else
     info("\nall words      %10.lu\n"
              "unknown words  %10.lu (%lu%%)\n"
@@ -1289,11 +1289,11 @@ int Lemmatiser::LemmatiseFile()
         << tally.newcntTypes 
         << " (" 
         << (tally.totcntTypes ? (tally.newcntTypes*200+1)/(2*tally.totcntTypes) : 100UL) 
-        << "%%)\nconflicting    " 
+        << "%)\nconflicting    " 
         << tally.newhomTypes 
         << " (" 
         << (tally.totcntTypes ? (tally.newhomTypes*200+1)/(2*tally.totcntTypes) : 100UL) 
-        << "%%)" << endl;
+        << "%)" << endl;
 #else
         info("\nall types      %10.lu\n"
                  "unknown types  %10.lu (%lu%%)\n"

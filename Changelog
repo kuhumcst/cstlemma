@@ -1,4 +1,21 @@
 -------------------------------
+Version 7.32 (15 August 2018)
+-------------------------------
+When STREAM == 1 in defines.h, cstlemma is now able to read lines from standard
+input with the -I parameter defined. This did not work previously. The solution
+is twofold: (1) a new line character is sent to the current field interpreter
+when the end of a line is reached. (Therefore the last field in the -I pattern
+must be either \n or \s). (2) If the current field is still expecting input
+after the input has come to the end of the line (i.e. if the last field is \s),
+then a '\0' byte is sent to the current field. The current field is then able
+to set the 'next current field' to null, satisfying the requirement that all
+fields must have been matched when the input ends. (The reason why \s behaves
+different from \n is that \s reads all white space characters until the first
+non-white space character. The \n field only reads exactly one byte. If there
+is no non-white space character after the last white space character, the \s
+field has to be told that it is done.)
+
+-------------------------------
 Version 7.31 (8 December 2017)
 -------------------------------
 Changed UTF8 to globUTF8 (global variable defined in letterfunc/utf8func)
