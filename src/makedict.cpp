@@ -1097,6 +1097,8 @@ int makedict(FILE * fpin,FILE * fpout,bool nice,const char * format,const FreqFi
     int failed;
     bool T;
     int cnt = readLemmas(fpin,format,add,CollapseHomographs,failed,T);
+    if(cnt == 0)
+        return -1;
 #if STREAM
     cout << cnt << " word/lemma pairs included, " << failed << " not included (may be duplicates or words/lemma pairs only differing by word type)" << endl;
 #else

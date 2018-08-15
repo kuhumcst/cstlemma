@@ -1,5 +1,5 @@
 -------------------------------
-Version 7.32 (15 August 2018)
+Version 7.33 (15 August 2018)
 -------------------------------
 When STREAM == 1 in defines.h, cstlemma is now able to read lines from standard
 input with the -I parameter defined. This did not work previously. The solution
