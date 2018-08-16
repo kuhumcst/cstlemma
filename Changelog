@@ -1,4 +1,11 @@
 -------------------------------
+Version 7.34 (16 August 2018)
+-------------------------------
+The -s parameter accepts octal and hexadecimal escape sequences, e.g. -s\022 or
+-s\x12. This makes it easier to define a separator that very likely does not
+occur as part of a lemma.
+
+-------------------------------
 Version 7.33 (15 August 2018)
 -------------------------------
 When STREAM == 1 in defines.h, cstlemma is now able to read lines from standard

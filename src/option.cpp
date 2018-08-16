@@ -166,6 +166,26 @@ optionStruct::~optionStruct()
 #endif
     }
 
+static int hexchar(int c)
+    {
+    if ('0' <= c && c <= '9')
+        return c - '0';
+    else if ('a' <= c && c <= 'f')
+        return c - 'a' + 10;
+    else if ('A' <= c && c <= 'F')
+        return c - 'A' + 10;
+    else
+        return -1;
+    }
+
+static int octchar(int c)
+    {
+    if ('0' <= c && c <= '7')
+        return c - '0';
+    else
+        return -1;
+    }
+
 OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
     {
     switch (c)
@@ -689,7 +709,42 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                                 *p++ = '\n';
                                 memmove(p,p+1,strlen(p));
                                 break;
+                            case 'x': // followed by exactly two hex digits. \x01 to \xFF or \xff
+                                if (*(p + 2) && *(p + 3))
+                                    {
+                                    int firstNibble = hexchar(*(p + 2));
+                                    int secondNibble = hexchar(*(p + 3));
+                                    if (firstNibble >= 0 && secondNibble >= 0)
+                                        {
+                                        int R = firstNibble * 16 + secondNibble;
+                                        if (R)
+                                            {
+                                            *p++ = R;
+                                            memmove(p, p + 3, strlen(p));
+                                            break;
+                                            }
+                                        }
+                                    }
+                                // not a hexadecimal escape sequence 
+                                // fall through
                             default:
+                                if (*(p + 2) && *(p + 3))
+                                    { // octal \001 to \377
+                                    int firstTriad = octchar(*(p + 1));
+                                    int secondTriad = octchar(*(p + 2));
+                                    int thirdTriad = octchar(*(p + 3));
+                                    if (firstTriad >= 0 && secondTriad >= 0 && thirdTriad >= 0 && thirdTriad < 4)
+                                        {
+                                        int R = firstTriad * 64 + secondTriad * 8 + thirdTriad;
+                                        if (R)
+                                            {
+                                            *p++ = R;
+                                            memmove(p, p + 3, strlen(p));
+                                            break;
+                                            }
+                                        }
+                                    }
+                                // Not an octal escape sequence
                                 *p = *(p+1);
                                 ++p;
                                 memmove(p,p+1,strlen(p));
