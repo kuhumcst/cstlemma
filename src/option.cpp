@@ -463,7 +463,9 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "    -ql (equivalents:-qL -qw -qW)sort output by word (if -c) or lemma (if -W)\n"
                    "    -qp (equivalents:-qP -qt -qT)sort output by POS tag\n"
                    "          Combinations are allowed: -qwft means sort by word, by frequency and finally by POS tag.\n"
-                   "    -s<sep> multiple base forms (-b -B) are <sep>-separated. Example: -s" commandlineQuote " | " commandlineQuote);
+                   "    -s<sep> multiple base forms (-b -B) are <sep>-separated.\n"
+                   "        The separator can contain octal (\\nnn) and hexadecimal (\\xhh) escape sequences.\n"
+                   "        Examples: -s" commandlineQuote " | " commandlineQuote " and -s" commandlineQuote "\\022" commandlineQuote " or, equivalently, -s" commandlineQuote "\\x12" commandlineQuote);
 #if STREAM
             cout << "    -s  multiple base forms (-b -B) are " commandlineQuote << DefaultSep << commandlineQuote "-separated (default)" << endl;
 #else
