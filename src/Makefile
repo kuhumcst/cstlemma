@@ -1,5 +1,5 @@
 VERSION=7
-MINOR_NUMBER=10
+MINOR_NUMBER=34
 
 #BIN=~/bin/
 BIN=../
@@ -26,7 +26,7 @@ LETTERFUNCDIR    = ../../letterfunc/src
 SGMLDIR    = ../../parsesgml/src
 INCLUDEDIR = -I$(SRCDIR) -I$(HASHDIR) -I$(LETTERFUNCDIR) -I$(SGMLDIR)
 
-CC=g++ $(INCLUDEDIR) -O3 -Wall -pedantic -DNDEBUG 
+CC=g++ $(INCLUDEDIR) -O3 -Wall -Wno-reorder -pedantic -DNDEBUG 
 
 # -fPIC or -fpic: enable 'position independent code' generation. Necessary for shared libs
 # -fpic may generate smaller and faster code, but will have platform-dependent limitations
