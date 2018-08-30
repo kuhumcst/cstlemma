@@ -1111,18 +1111,18 @@ int makedict(FILE * fpin,FILE * fpout,bool nice,const char * format,const FreqFi
         if(!freq->itsName())
             {
 #if STREAM
-            cout << "No file name matching format " << freq->itsFormat() << endl;
+            cerr << "No file name matching format " << freq->itsFormat() << endl;
 #else
-            printf("No file name matching format %s\n",freq->itsFormat());
+            fprintf(stderr,"No file name matching format %s\n",freq->itsFormat());
 #endif
             break;
             }
         if(!freq->itsFormat())
             {
 #if STREAM
-            cout << "No format matching file name " << freq->itsName() << endl;
+            cerr << "No format matching file name " << freq->itsName() << endl;
 #else
-            printf("No format matching file name %s\n",freq->itsName());
+            fprintf(stderr, "No format matching file name %s\n",freq->itsName());
 #endif
             break;
             }
@@ -1139,9 +1139,9 @@ int makedict(FILE * fpin,FILE * fpout,bool nice,const char * format,const FreqFi
             }
         else
 #if STREAM
-            cout << "*** CANNOT OPEN " << freq->itsName() << endl;
+            cerr << "*** CANNOT OPEN " << freq->itsName() << endl;
 #else
-            printf("*** CANNOT OPEN %s\n",freq->itsName());
+            fprintf(stderr, "*** CANNOT OPEN %s\n",freq->itsName());
 #endif
         freq = freq->Next();
         }

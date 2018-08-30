@@ -520,9 +520,9 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                 if(UseLemmaFreqForDisambiguation < 0 || UseLemmaFreqForDisambiguation > 2)
                     {
 #if STREAM
-                    cout << "-H option: specify -H0, -H1 or -H2 (found -H" << locoptarg << ")" << endl;
+                    cerr << "-H option: specify -H0, -H1 or -H2 (found -H" << locoptarg << ")" << endl;
 #else
-                    printf("-H option: specify -H0, -H1 or -H2 (found -H%s)\n",locoptarg);
+                    fprintf(stderr, "-H option: specify -H0, -H1 or -H2 (found -H%s)\n",locoptarg);
 #endif
                     return Error;
                     }
@@ -618,9 +618,9 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                 else
                     {
 #if STREAM
-                    cout << "Invalid argument " << locoptarg << "for -p option." << endl;
+                    cerr << "Invalid argument " << locoptarg << "for -p option." << endl;
 #else
-                    printf("Invalid argument %s for -p option.\n",locoptarg);
+                    fprintf(stderr, "Invalid argument %s for -p option.\n",locoptarg);
 #endif
                     return Error;
                     }
@@ -938,9 +938,9 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                             if(optarg2)
                                 {
 #if STREAM
-                                cout << "Option argument " << optarg2 << " provided for option letter " << line[off] << " that doesn't use it on line " << lineno << " in option file \"" << locoptarg << "\"" << endl;
+                                cerr << "Option argument " << optarg2 << " provided for option letter " << line[off] << " that doesn't use it on line " << lineno << " in option file \"" << locoptarg << "\"" << endl;
 #else
-                                printf("Option argument %s provided for option letter %c that doesn't use it on line %d in option file \"%s\"\n",optarg2,line[off],lineno,locoptarg);
+                                fprintf(stderr, "Option argument %s provided for option letter %c that doesn't use it on line %d in option file \"%s\"\n",optarg2,line[off],lineno,locoptarg);
 #endif
                                 exit(1);
                                 }
@@ -950,9 +950,9 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
                 else
                     {
 #if STREAM
-                    cout << "Missing option letter on line " << lineno << " in option file \"" << locoptarg << "\"" << endl;
+                    cerr << "Missing option letter on line " << lineno << " in option file \"" << locoptarg << "\"" << endl;
 #else
-                    printf("Missing option letter on line %d in option file \"%s\"\n",lineno,locoptarg);
+                    fprintf(stderr, "Missing option letter on line %d in option file \"%s\"\n",lineno,locoptarg);
 #endif
                     exit(1);
                     }
@@ -1066,9 +1066,9 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
     else
         {
 #if STREAM
-        cout << "Cannot open option file " << locoptarg << endl;
+        cerr << "Cannot open option file " << locoptarg << endl;
 #else
-        printf("Cannot open option file %s\n",locoptarg);
+        fprintf(stderr, "Cannot open option file %s\n",locoptarg);
 #endif
         }
     return result;

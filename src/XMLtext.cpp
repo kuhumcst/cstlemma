@@ -645,7 +645,7 @@ XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
 #if STREAM
                 cerr << "Input format " << Option.Iformat << " must specify '$w'." << endl;
 #else
-                printf("Input format %s must specify '$w'.\n",Option.Iformat);
+                fprintf(stderr, "Input format %s must specify '$w'.\n",Option.Iformat);
 #endif
                 exit(0);
                 }

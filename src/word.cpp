@@ -162,7 +162,10 @@ formattingFunction * Word::getUnTaggedWordFunctionNoBb(int character,bool & Sort
 
 void Word::print()const
     {
-    funcs->printIt(this);
+#if STREAM
+    if(*m_word != '\n' && *m_tag != '\n')
+#endif
+        funcs->printIt(this);
     }
 
 void Word::printLemmaClass()const
@@ -347,9 +350,9 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
         else
             {
 #if STREAM
-            cout << "Error: Missing -b pattern on commandline. (Output format " << cformat << " specifies dictionary field $b)" << endl;
+            cerr << "Error: Missing -b pattern on commandline. (Output format " << cformat << " specifies dictionary field $b)" << endl;
 #else
-            printf("Error: Missing -b pattern on commandline. (Output format %s specifies dictionary field $b)\n",cformat);
+            fprintf(stderr,"Error: Missing -b pattern on commandline. (Output format %s specifies dictionary field $b)\n",cformat);
 #endif
             exit(0);
             }
@@ -357,9 +360,9 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
     else if(bformat)
         {
 #if STREAM
-        cout << "Warning: -b pattern \"" << bformat << "\"specified on commandline but not used. (Output format " << cformat << " doesn't specify dictionary field $b)" << endl;
+        cerr << "Warning: -b pattern \"" << bformat << "\"specified on commandline but not used. (Output format " << cformat << " doesn't specify dictionary field $b)" << endl;
 #else
-        printf("Warning: -b pattern \"%s\"specified on commandline but not used. (Output format %s doesn't specify dictionary field $b)\n",bformat,cformat);
+        fprintf(stderr, "Warning: -b pattern \"%s\"specified on commandline but not used. (Output format %s doesn't specify dictionary field $b)\n",bformat,cformat);
 #endif
         }
 
@@ -372,9 +375,9 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
         else
             {
 #if STREAM
-            cout << "Error: Missing -B pattern on commandline. (Output format " << cformat << " specifies flexrule field $B)" << endl;
+            cerr << "Error: Missing -B pattern on commandline. (Output format " << cformat << " specifies flexrule field $B)" << endl;
 #else
-            printf("Error: Missing -B pattern on commandline. (Output format %s specifies flexrule field $B)\n",cformat);
+            fprintf(stderr, "Error: Missing -B pattern on commandline. (Output format %s specifies flexrule field $B)\n",cformat);
 #endif
             exit(0);
             }
@@ -382,9 +385,9 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
     else if(bformat)
         {
 #if STREAM
-        cout << "Warning: -B pattern specified on commandline but not used. (Output format " << cformat << " doesn't specify flexrule field $B)" << endl;
+        cerr << "Warning: -B pattern specified on commandline but not used. (Output format " << cformat << " doesn't specify flexrule field $B)" << endl;
 #else
-        printf("Warning: -B pattern specified on commandline but not used. (Output format %s doesn't specify flexrule field $B)\n",cformat);
+        fprintf(stderr, "Warning: -B pattern specified on commandline but not used. (Output format %s doesn't specify flexrule field $B)\n",cformat);
 #endif
         }
     return SortInput;

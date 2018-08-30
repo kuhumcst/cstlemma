@@ -23,6 +23,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if (defined PROGMAKEDICT) || (defined PROGMAKESUFFIXFLEX)
 
 #include "fieldfnc.h"
+#if STREAM
+#include <iostream>
+using namespace std;
+#endif
 #include <string.h>
 
 static int s_bm = 0;
@@ -188,7 +192,11 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
             case 'f':
                 if(neededFields & 1)
                     {
-                    printf("Invalid format string %s (duplicate f or F)\n",format);
+#if STREAM
+                    cerr << "Invalid format string " << format << " (duplicate f or F)" << endl;
+#else
+                    fprintf(stderr, "Invalid format string %s (duplicate f or F)\n", format);
+#endif
                     return 0;
                     }
                 neededFields |= 1;
@@ -198,7 +206,11 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
             case 'b':
                 if(neededFields & 2)
                     {
-                    printf("Invalid format string %s (duplicate b or B)\n",format);
+#if STREAM
+                    cerr << "Invalid format string " << format << " (duplicate b or B)" << endl;
+#else
+                    fprintf(stderr, "Invalid format string %s (duplicate b or B)\n", format);
+#endif
                     return 0;
                     }
                 neededFields |= 2;
@@ -208,7 +220,11 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
             case 't':
                 if(T)
                     {
-                    printf("Invalid format string %s (duplicate t or T)\n",format);
+#if STREAM
+                    cerr << "Invalid format string " << format << " (duplicate t or T)" << endl;
+#else
+                    fprintf(stderr, "Invalid format string %s (duplicate t or T)\n", format);
+#endif
                     return 0;
                     }
                 T = true;
@@ -219,7 +235,11 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
                 break;
             default:
                 {
-                printf("Invalid format string \"%s\"\n (Only characters fbtFBT? are allowed, but found %.2x=\"%c\")\n",format,format[n],format[n]);
+#if STREAM
+                cerr << "Invalid format string \"" << format << "\"\n (Only characters fbtFBT? are allowed, but found " << hex << format[n] << "=\"" << format[n] << "\")" << endl;
+#else
+                fprintf(stderr, "Invalid format string \"%s\"\n (Only characters fbtFBT? are allowed, but found %.2x=\"%c\")\n", format, format[n], format[n]);
+#endif
                 return 0;
                 }
             }
@@ -227,15 +247,27 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
 
     switch(neededFields)
         {
+#if STREAM
         case 0:
-            printf("Invalid format string %s (F and B not specified)\n",format);
+            cerr << "Invalid format string " << format << " (F and B not specified)" << endl;
             return 0;
         case 1:
-            printf("Invalid format string %s (B not specified)\n",format);
+            cerr << "Invalid format string " << format << " (B not specified)" << endl;
             return 0;
         case 2:
-            printf("Invalid format string %s (F not specified)\n",format);
+            cerr << "Invalid format string " << format << " (F not specified)" << endl;
             return 0;
+#else
+        case 0:
+            fprintf(stderr,"Invalid format string %s (F and B not specified)\n",format);
+            return 0;
+        case 1:
+            fprintf(stderr, "Invalid format string %s (B not specified)\n",format);
+            return 0;
+        case 2:
+            fprintf(stderr, "Invalid format string %s (F not specified)\n",format);
+            return 0;
+#endif
         }
 
     int cnt = 0;

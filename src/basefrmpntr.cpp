@@ -208,7 +208,6 @@ void baseformpointer::printfbf(FILE *fp,functionTree * fns,const char * sep)
 void baseformpointer::reassign(basefrm * arg_bf)
     {
     owning = false;
-//    bf->inc(this->bf);
     if(basefrm::hasW)
         arg_bf->addFullForms(this->bf);
     delete this->bf;
@@ -226,14 +225,12 @@ void baseformpointer::DissambiguateByLemmaFrequency()
     {
     int maxfreq = 0;
     baseformpointer * p = this;
-//    baseformpointer * q = NULL;
     for(;p;p = p->next)
         {
         int f = p->bf->lemmaFreq();
         if(f > maxfreq)
             {
             maxfreq = f;
-//            q = p;
             }
         }
     for(p = this;p;p = p->next)
@@ -241,9 +238,7 @@ void baseformpointer::DissambiguateByLemmaFrequency()
         int f = p->bf->lemmaFreq();
         if(f < maxfreq)
             {
-//            maxfreq = f;
             p->hidden = true;
-//            printf("DissambiguateByLemmaFrequency-hide %d<%d:",f,maxfreq);p->bf->testPrint();q->bf->testPrint();
             }
         }
     }
@@ -265,14 +260,12 @@ void baseformpointer::DissambiguateByTagFriends(const char * tag)
         {
         int closeness = -1;
         baseformpointer * p = this;
-//        baseformpointer * q;
         for(;p;p = p->next)
             {
             int f = p->bf->Closeness(tag);
             if(f >= 0 && (closeness < 0 || f < closeness))
                 {
                 closeness = f;
-//                q = p;
                 }
             }
         for(p = this;p;p = p->next)
@@ -281,7 +274,6 @@ void baseformpointer::DissambiguateByTagFriends(const char * tag)
             if(f > closeness) // The lower, the better!
                 {
                 p->hidden = true;
-//                printf("DissambiguateByTagFriends-hide:%s",tag);p->bf->testPrint();q->bf->testPrint();
                 }
             }
         }
@@ -304,7 +296,6 @@ int baseformpointer::addBaseForm(const char * s,const char * t,size_t len,/*int 
         }
     else
         return 0;
-//        printf("Equal!");
     }
 #else
 int baseformpointer::addBaseForm(const char * s,const char * t,size_t len) 
@@ -323,7 +314,6 @@ int baseformpointer::addBaseForm(const char * s,const char * t,size_t len)
         }
     else
         return 0;
-//        printf("Equal!");
     }
 #endif
 #endif

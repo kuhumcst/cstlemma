@@ -121,11 +121,11 @@ bool functionTree::OK(const OutputClass * outputObj)const
             if(cnt < 0)
                 {
 #if STREAM
-                cout << "Something wrong in field specification.\n"
+                cerr << "Something wrong in field specification.\n"
 "The number-of-values specification " << m_nmbr << " is only valid if there is a field\n"
 "with a variable number of values." << endl;
 #else
-                printf("Something wrong in field specification.\n"
+                fprintf(stderr,"Something wrong in field specification.\n"
 "The number-of-values specification %d is only valid if there is a field\n"
 "with a variable number of values.\n",m_nmbr);
 #endif

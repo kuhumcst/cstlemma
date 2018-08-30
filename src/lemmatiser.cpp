@@ -193,9 +193,9 @@ Lemmatiser::~Lemmatiser()
 static void cannotOpenFile(const char * s1,const char * name, const char * s2)
     {
 #if STREAM
-    cout << s1 << " \"" << name  << "\" " << s2 << endl;
+    cerr << s1 << " \"" << name  << "\" " << s2 << endl;
 #else
-    printf("%s \"%s\" %s\n",s1,name,s2);
+    fprintf(stderr,"%s \"%s\" %s\n",s1,name,s2);
 #endif
     }
 #endif
@@ -1098,18 +1098,18 @@ int Lemmatiser::LemmatiseFile()
     if(Option.XML && (Option.keepPunctuation != 1))
         {
 #if STREAM
-        cout << "Automatic tokenization (-p option) is not supported for XML input." << endl;
+        cerr << "Automatic tokenization (-p option) is not supported for XML input." << endl;
 #else
-        printf("Automatic tokenization (-p option) is not supported for XML input.\n");
+        fprintf(stderr,"Automatic tokenization (-p option) is not supported for XML input.\n");
 #endif
         return -1;
         }
     else if((Option.Iformat != 0) && (Option.keepPunctuation != 1))
         {
 #if STREAM
-        cout << "You can specify -I or -p, not both." << endl;
+        cerr << "You can specify -I or -p, not both." << endl;
 #else
-        printf("You can specify -I or -p, not both.\n");
+        fprintf(stderr,"You can specify -I or -p, not both.\n");
 #endif
         return -1;
         }

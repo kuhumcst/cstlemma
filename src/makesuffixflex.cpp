@@ -98,9 +98,9 @@ void base::test(char * Text,char * save,char * buf,const char * Type)
         if(strcmp(save,bf))
             {
 #if STREAM
-            cout << Text << " Buf " << buf << " Difference: baseform should be: " << save << ", found: " << bf << endl;
+            cerr << Text << " Buf " << buf << " Difference: baseform should be: " << save << ", found: " << bf << endl;
 #else
-            printf("%s Buf %s Difference: baseform should be: %s, found: %s\n",Text,buf,save,bf);
+            fprintf(stderr, "%s Buf %s Difference: baseform should be: %s, found: %s\n",Text,buf,save,bf);
 #endif
             Exit();
             }
@@ -108,9 +108,9 @@ void base::test(char * Text,char * save,char * buf,const char * Type)
     else
         {
 #if STREAM
-        cout << Text << " Baseform " << buf << " not found (should have baseform " << save << ")" << endl;
+        cerr << Text << " Baseform " << buf << " not found (should have baseform " << save << ")" << endl;
 #else
-        printf("%s Baseform %s not found (should have baseform %s)\n",Text,buf,save);
+        fprintf(stderr, "%s Baseform %s not found (should have baseform %s)\n",Text,buf,save);
 #endif
         Exit();
         }

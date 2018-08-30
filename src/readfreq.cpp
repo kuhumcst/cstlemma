@@ -22,6 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "readfreq.h"
 #if defined PROGMAKEDICT
 #include "fieldfnc.h"
+#if STREAM
+#include <iostream>
+using namespace std;
+#endif
 #include <string.h>
 #include <stdlib.h>
 
@@ -236,7 +240,11 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
                 break;
             default:
                 {
-                printf("Invalid format string \"%s\"\n (Only characters ?bfntBFNT are allowed, but found %.2x=\"%c\")\n",format,format[n],format[n]);
+#if STREAM
+                cerr << "Invalid format string \"" << format << "\"\n (Only characters ?bfntBFNT are allowed, but found " << hex << format[n] << "=\"" << format[n] << "\")" << endl;
+#else
+                fprintf(stderr, "Invalid format string \"%s\"\n (Only characters ?bfntBFNT are allowed, but found %.2x=\"%c\")\n",format,format[n],format[n]);
+#endif
                 delete [] fieldFncs;
                 return;
                 }
@@ -254,13 +262,21 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
         }
     if(!hasFullform)
         {
-        printf("Format string %s lacks F (full form)\n",format);
+#if STREAM
+        cerr << "Format string " << format << " lacks F (full form)" << endl;
+#else
+        fprintf(stderr, "Format string %s lacks F (full form)\n",format);
+#endif
         delete [] fieldFncs;
         return;
         }
     if(!hasFreq)
         {
-        printf("Format string %s lacks N (frequency)\n",format);
+#if STREAM
+        cerr << "Format string " << format << " lacks N (frequencyn" << endl;
+#else
+        fprintf(stderr, "Format string %s lacks N (frequency)\n",format);
+#endif
         delete [] fieldFncs;
         return;
         }
@@ -271,13 +287,21 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
     // to the word/lemma list and the frequency list.
     if(T && !hasType)
         {
-        printf("Format string %s lacks T (type)\n",format);
+#if STREAM
+        cerr << "Format string " << format << " lacks T (type)" << endl;
+#else
+        fprintf(stderr, "Format string %s lacks T (type)\n",format);
+#endif
         delete [] fieldFncs;
         return;
         }
     else if(!T && hasType)
         {
-        printf("Format string %s has T (type), but dictionary is built without lexical type infromation.\n",format);
+#if STREAM
+        cerr << "Format string " << format << " has T (type), but dictionary is built without lexical type infromation." << endl;
+#else
+        fprintf(stderr, "Format string %s has T (type), but dictionary is built without lexical type infromation.\n",format);
+#endif
         delete [] fieldFncs;
         return;
         }
@@ -289,7 +313,11 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
         for(size_t b = a + 1;b < nflds;++b)
             if(fieldFncs[a] == fieldFncs[b] && fieldFncs[a] != readNothing)
                 {
-                printf("Invalid format string %s (duplicates)\n",format);
+#if STREAM
+                cerr << "Invalid format string " << format << " (duplicates)" << endl;
+#else
+                fprintf(stderr, "Invalid format string %s (duplicates)\n",format);
+#endif
                 delete [] fieldFncs;
                 return;
                 }
@@ -331,38 +359,66 @@ void readFrequencies(FILE * fpin,const char * format,adderFreq func,bool T)
               || (hasBaseform && baseformindex == 0)
               )
                 {
-                printf("A required field according to the format %s is missing in line %d:\n",format,line);
+#if STREAM
+                cerr << "A required field according to the format " << format << " is missing in line " << line << ":" << endl;
+#else
+                fprintf(stderr, "A required field according to the format %s is missing in line %d:\n",format,line);
+#endif
                 if(hasFullform)
                     {
                     if(flexformindex > 0)
                         {
-                        printf("F:%s\n",flexform);
+#if STREAM
+                        cerr << "F:" << flexform << endl;
+#else
+                        fprintf(stderr, "F:%s\n", flexform);
+#endif
                         }
                     else
                         {
-                        printf("F:(null)\n");
+#if STREAM
+                        cerr << "F:(null)" << endl;
+#else
+                        fprintf(stderr, "F:(null)\n");
+#endif
                         }
                     }
                 if(hasBaseform)
                     {
                     if(baseformindex > 0)
                         {
-                        printf("B:%s\n",baseform);
+#if STREAM
+                        cerr << "B:" << baseform << endl;
+#else
+                        fprintf(stderr, "B:%s\n", baseform);
+#endif
                         }
                     else
                         {
-                        printf("B:(null)\n");
+#if STREAM
+                        cerr << "B:(null)" << endl;
+#else
+                        fprintf(stderr, "B:(null)\n");
+#endif
                         }
                     }
                 if(hasType)
                     {
                     if(lextypeindex  > 0) 
                         {
-                        printf("T:%s\n",lextype);
+#if STREAM
+                        cerr << "T:" << lextype << endl;
+#else
+                        fprintf(stderr, "T:%s\n", lextype);
+#endif
                         }
                     else
                         {
-                        printf("T:(null)\n");
+#if STREAM
+                        cerr << "T:(null)" << endl;
+#else
+                        fprintf(stderr, "T:(null)\n");
+#endif
                         }
                     }
                 }

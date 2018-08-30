@@ -647,58 +647,6 @@ static int lemmatiseer(const char * word, const char * wordend, const char * buf
         return 0;
     }
 
-/*
-static void Strrev(char * s)
-    {
-    char * e = s + strlen(s);
-    while (s < --e)
-        {
-        char t = *s;
-        *s++ = *e;
-        *e = t;
-        }
-    }
-
-static void printpat(const char ** fields, int findex)
-    {
-    char start[100] = { 0 };
-    char end[100] = { 0 };
-    sprintf(start + strlen(start), "%.*s", (int)(fields[1] - fields[0] - 1), fields[0]);
-    printf("%s", start);
-    for (int M = 5; M < findex; M += 2)
-        {
-        printf("*%.*s", (int)(fields[M] - fields[M - 1] - 1), fields[M - 1]);
-        }
-    if (findex > 2)
-        {
-        Strrev(end);
-        size_t L = strlen(end);
-        sprintf(end + L, "%.*s", (int)(fields[3] - fields[2] - 1), fields[2]);
-        Strrev(end + L);
-        Strrev(end);
-        printf("*%s\t-->\t", end);
-        }
-    else
-        {
-        printf("%s\t-->\t", end);
-        }
-
-    printf("%.*s", (int)(fields[2] - fields[1] - 1), fields[1]);
-    for (int M = 5; M < findex; M += 2)
-        {
-        printf("*%.*s", (int)(fields[M + 1] - fields[M] - 1), fields[M]);
-        }
-    if (findex > 2)
-        {
-        printf("*%.*s\n", (int)(fields[4] - fields[3] - 1), fields[3]);
-        }
-    else
-        {
-        printf("\n");
-        }
-    }
-*/
-
 static char * rewrite(const char *& word, const char *& wordend, const char * p)
     {
     startEnd vars[20];
@@ -1170,9 +1118,9 @@ const char * rules::applyRules(const char * word, const char * tag,bool SegmentI
             size_t length = 0;
             if (strchr(word, '/') > 0)
 #if STREAM
-                cout << "Strange word [" << word << "] tag [" << tag << "]" << endl;
+                cerr << "Strange word [" << word << "] tag [" << tag << "]" << endl;
 #else
-                printf("Strange word [%s] tag [%s]\n",word,tag);
+                fprintf(stderr,"Strange word [%s] tag [%s]\n",word,tag);
 #endif
             word = changeCase(word, true, length);
             /*

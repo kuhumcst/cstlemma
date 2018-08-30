@@ -1,9 +1,8 @@
 -------------------------------
-Version 7.34 (16 August 2018)
+Version 7.35 (30 August 2018)
 -------------------------------
-The -s parameter accepts octal and hexadecimal escape sequences, e.g. -s\022 or
--s\x12. This makes it easier to define a separator that very likely does not
-occur as part of a lemma.
+Removed spurious almost empty lines at the end of the output if STREAM == 1.
+Also made sure that warnings and error messages are sent to stderr, not stdout.
 
 -------------------------------
 Version 7.33 (15 August 2018)

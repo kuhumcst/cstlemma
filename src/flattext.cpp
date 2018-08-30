@@ -191,9 +191,9 @@ static char * getword(FILE * fp,const char *& tag,bool InputHasTags,int keepPunc
                         if(p - buf2 == sizeof(buf2) - 1)
                             {
 #if STREAM
-                            cout << "BUFFER OVERFLOW A [" << buf2 << "]" << endl;
+                            cerr << "BUFFER OVERFLOW A [" << buf2 << "]" << endl;
 #else
-                            printf("BUFFER OVERFLOW A [%s]\n",buf2);
+                            fprintf(stderr,"BUFFER OVERFLOW A [%s]\n",buf2);
 #endif
                             break;
                             }
@@ -219,9 +219,9 @@ static char * getword(FILE * fp,const char *& tag,bool InputHasTags,int keepPunc
         if(p - buf == sizeof(buf) - 1)
             {
 #if STREAM
-            cout << "BUFFER OVERFLOW B [" << buf << "]" << endl;;
+            cerr << "BUFFER OVERFLOW B [" << buf << "]" << endl;;
 #else
-            printf("BUFFER OVERFLOW B [%s]\n",buf);
+            fprintf(stderr,"BUFFER OVERFLOW B [%s]\n",buf);
 #endif
             break;// overflow?
             }
@@ -307,9 +307,9 @@ char * getwordI(FILE * fpin, const char *& tag, field * format, field * wordfiel
             {
             int parts = nextfield->noOfFields();
 #if STREAM
-            cout << "ERROR after reading " << iterations << " bytes. When reaching the end of the input file, " << parts << " part" << (parts > 1 ? "s" : "") << " of the input format specification string " << Iformat << " " << (parts > 1 ? "are" : "is") << " left unmatched.\n";
+            cerr << "ERROR after reading " << iterations << " bytes. When reaching the end of the input file, " << parts << " part" << (parts > 1 ? "s" : "") << " of the input format specification string " << Iformat << " " << (parts > 1 ? "are" : "is") << " left unmatched.\n";
 #else
-            printf("ERROR after reading %d bytes. When reaching the end of the input file, %d part%s of the input format specification string %s %s left unmatched.\n", iterations, parts, Iformat, parts > 1 ? "s" : "", parts > 1 ? "are" : "is");
+            fprintf(stderr,"ERROR after reading %d bytes. When reaching the end of the input file, %d part%s of the input format specification string %s %s left unmatched.\n", iterations, parts, Iformat, parts > 1 ? "s" : "", parts > 1 ? "are" : "is");
 #endif
             exit(0);
             }
@@ -342,8 +342,7 @@ void flattext::printUnsorted(
             }
         if(tunsorted[k])
             {
-            tunsorted[k]->print(//fpo
-                                );
+            tunsorted[k]->print();
             }
         Word::NewLinesAfterWord = 0;
         }
@@ -382,9 +381,9 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
         if(!wordfield)
             {
 #if STREAM
-            cout << "Input format " << Iformat << " must specify '$w'." << endl;
+            cerr << "Input format " << Iformat << " must specify '$w'." << endl;
 #else
-            printf("Input format %s must specify '$w'.\n",Iformat);
+            fprintf(stderr,"Input format %s must specify '$w'.\n",Iformat);
 #endif
             exit(0);
             }
@@ -477,14 +476,14 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
                         {
 #if STREAM
                         if(total > 1 && lineno > 1)
-                            cout << "Tag missing in word #" << total << " (\"" << w << "\") (line #" << lineno << ")." << endl;
+                            cerr << "Tag missing in word #" << total << " (\"" << w << "\") (line #" << lineno << ")." << endl;
                         else
-                            cout << "Tag missing in word #" << total << " (\"" << w << "\") (line #" << lineno << "). (Is the input text tagged?)" << endl;
+                            cerr << "Tag missing in word #" << total << " (\"" << w << "\") (line #" << lineno << "). (Is the input text tagged?)" << endl;
 #else
                         if(total > 1 && lineno > 1)
-                            printf("Tag missing in word #%lu (\"%s\") (line #%lu).\n",total,w,lineno);
+                            fprintf(stderr,"Tag missing in word #%lu (\"%s\") (line #%lu).\n",total,w,lineno);
                         else
-                            printf("Tag missing in word #%lu (\"%s\") (line #%lu). (Is the input text tagged?)\n",total,w,lineno);
+                            fprintf(stderr,"Tag missing in word #%lu (\"%s\") (line #%lu). (Is the input text tagged?)\n",total,w,lineno);
 #endif
                         exit(0);
                         }

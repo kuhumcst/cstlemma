@@ -156,16 +156,9 @@ void basefrm::L() const
     assert(basefrm::hasW);
     for(unsigned int i = 0;i < nfullForm;++i)
         {
-//        fullForm[i]->print();
         wfuncs->printIt(fullForm[i]);
         if(i < (unsigned int)(nfullForm - 1))
             print(m_fp,sep);
-#if STREAM
-            //*m_fp << sep;
-#else
-            //fprintf(m_fp,"%s",sep);
-#endif
-//        fullForm[i]->printw(fp,wfuncs,sep);
         }
     }
 

@@ -201,16 +201,16 @@ node::node(node * next,char * tail,char * baseform,bool fullWord,bool empty)
     if(!*tail && !empty)
         {
 #if STREAM
-        cout << "TAIL IS EMPTY BUT empty IS FALSE. (Found text:\"" << baseform << "\")" << endl;
+        cerr << "TAIL IS EMPTY BUT empty IS FALSE. (Found text:\"" << baseform << "\")" << endl;
 #else
-        printf("TAIL IS EMPTY BUT empty IS FALSE. (Found text:\"%s\")\n",baseform);
+        fprintf(stderr,"TAIL IS EMPTY BUT empty IS FALSE. (Found text:\"%s\")\n",baseform);
 #endif
         }
     else if(*tail && empty)
 #if STREAM
-        cout << "TAIL IS NOT EMPTY BUT empty IS TRUE (Found text:\"" << baseform << "\")" << endl;
+        cerr << "TAIL IS NOT EMPTY BUT empty IS TRUE (Found text:\"" << baseform << "\")" << endl;
 #else
-        printf("TAIL IS NOT EMPTY BUT empty IS TRUE (Found text:\"%s\")\n",baseform);
+        fprintf(stderr,"TAIL IS NOT EMPTY BUT empty IS TRUE (Found text:\"%s\")\n",baseform);
 #endif
     basef = new base(baseform,fullWord);
     ++mutated;
@@ -230,16 +230,16 @@ node::node(node * next,char * tail,int n,char * baseform,bool fullWord,bool empt
     if(!*tail && !empty)
         {
 #if STREAM
-        cout << "TAIL IS EMPTY BUT empty IS FALSE " << baseform << endl;
+        cerr << "TAIL IS EMPTY BUT empty IS FALSE " << baseform << endl;
 #else
-        printf("TAIL IS EMPTY BUT empty IS FALSE %s\n",baseform);
+        fprintf(stderr,"TAIL IS EMPTY BUT empty IS FALSE %s\n",baseform);
 #endif
         }
     else if(*tail && empty)
 #if STREAM
-        cout << "TAIL IS NOT EMPTY BUT empty IS TRUE " << baseform << endl;
+        cerr << "TAIL IS NOT EMPTY BUT empty IS TRUE " << baseform << endl;
 #else
-        printf("TAIL IS NOT EMPTY BUT empty IS TRUE %s\n",baseform);
+        fprintf(stderr,"TAIL IS NOT EMPTY BUT empty IS TRUE %s\n",baseform);
 #endif
     basef = new base(baseform,fullWord);
     ++mutated;
@@ -374,9 +374,9 @@ type::type(const char * tp,char * tail,char * baseform,bool fullWord,type * next
     else
         {
 #if STREAM
-        cout << "type::type TYPE " << tp << " TAIL 0" << endl;
+        cerr << "type::type TYPE " << tp << " TAIL 0" << endl;
 #else
-        printf("type::type TYPE %s TAIL 0\n",tp);
+        fprintf(stderr,"type::type TYPE %s TAIL 0\n",tp);
 #endif
         end = new node(0,tail,baseform,fullWord,false);
         }
@@ -442,7 +442,7 @@ flex::~flex()
     --COUNT;
     extern int LemmaCOUNT, DictNodeCOUNT;
 #if STREAM
-    cout << basefrm::COUNT << " basefrm\n " 
+    cerr << basefrm::COUNT << " basefrm\n " 
         << baseformpointer::COUNT << "baseformpointer\n " 
         << dictionary::COUNT << "dictionary\n "  
         << field::COUNT << "field\n " 
@@ -462,7 +462,7 @@ flex::~flex()
         << text::COUNT << "text\n "  
         << Word::COUNT << "Word" << endl;
 #else
-    printf(
+    fprintf(stderr,
         "%d basefrm\n%d "
         "baseformpointer\n%d "
         "dictionary\n%d "
@@ -558,9 +558,9 @@ base * flex::add(char * line)
         if(!close)
             {
 #if STREAM
-            cout << "missing '\\t' (TAB) in line " << cnt << endl;
+            cerr << "missing '\\t' (TAB) in line " << cnt << endl;
 #else
-            printf("missing '\\t' (TAB) in line %d\n",cnt);
+            fprintf(stderr,"missing '\\t' (TAB) in line %d\n",cnt);
 #endif
             return 0;
             }

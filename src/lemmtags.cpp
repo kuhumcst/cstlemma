@@ -23,6 +23,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if defined PROGLEMMATISE
 
 #include "caseconv.h"
+#if STREAM
+#include <iostream>
+using namespace std;
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -144,7 +148,11 @@ bool readLemmaTags(FILE * fpx,bool nice)
                 }
             else
                 {
-                printf("error in tag translation table in line %d: [%s].\n",line,xx);
+#if STREAM
+                cerr << "error in tag translation table in line " << line << ": [" << xx << "]." << endl;
+#else
+                fprintf(stderr, "error in tag translation table in line %d: [%s].\n",line,xx);
+#endif
                 }
             ++fulltagcnt;
             }

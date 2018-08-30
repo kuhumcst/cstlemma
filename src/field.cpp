@@ -149,7 +149,9 @@ char * readTab::read(char * kar,field *& nextfield)
 
 char * readNewLine::read(char * kar,field *& nextfield)
     {
-    if(*kar == '\n')
+    if (*kar == '\r')
+        return NULL;
+    else if(*kar == '\n')
         {
         nextfield = next;
         return NULL;

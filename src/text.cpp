@@ -236,11 +236,11 @@ void text::AddField(field * fld)
 static void invalidFormatString(char * Iformat,char * pformat)
     {
 #if STREAM
-    cout << "Invalid format string \"" << Iformat << "\"" << endl;
-    cout << "                        " << setw((int)(strlen(Iformat) - strlen(pformat))) << "^" << endl;
+    cerr << "Invalid format string \"" << Iformat << "\"" << endl;
+    cerr << "                        " << setw((int)(strlen(Iformat) - strlen(pformat))) << "^" << endl;
 #else
-    printf("Invalid format string \"%s\"\n",Iformat);
-    printf("                        %*c\n",(int)(strlen(Iformat) - strlen(pformat)),'^');
+    fprintf(stderr,"Invalid format string \"%s\"\n",Iformat);
+    fprintf(stderr,"                        %*c\n",(int)(strlen(Iformat) - strlen(pformat)),'^');
 #endif
     }
 

@@ -91,14 +91,13 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
         if(!tmp)
             {
 #if STREAM
-            cout << "unknown field " << *f << " in format \"" << allFormat << "\"" << endl;
-            cout << "                            " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
+            cerr<< "unknown field " << *f << " in format \"" << allFormat << "\"" << endl;
+            cerr << "                            " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
 #else
-            printf("unknown field %c in format \"%s\"\n",*f,allFormat);
-            printf("                            %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
+            fprintf(stderr, "unknown field %c in format \"%s\"\n",*f,allFormat);
+            fprintf(stderr, "                            %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
 #endif
             exit(0);
-//            return NULL;
             }
         tree.setFunction(tmp);
         ++f;
@@ -117,11 +116,11 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
         if(!newf || *newf != ']')
             {
 #if STREAM
-            cout << "No matching ] in format \"" << allFormat << "\"" << endl;
-            cout <<"                          " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
+            cerr << "No matching ] in format \"" << allFormat << "\"" << endl;
+            cerr <<"                          " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
 #else
-            printf("No matching ] in format \"%s\"\n",allFormat);
-            printf("                          %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
+            fprintf(stderr, "No matching ] in format \"%s\"\n",allFormat);
+            fprintf(stderr, "                          %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
 #endif
             exit(0);
             }
@@ -133,11 +132,11 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
         if(testType == 0)
             {
 #if STREAM
-            cout << "No countable expression found in format \"" << allFormat << "\"" << endl;
-            cout << "                                          " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
+            cerr << "No countable expression found in format \"" << allFormat << "\"" << endl;
+            cerr << "                                          " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
 #else
-            printf("No countable expression found in format \"%s\"\n",allFormat);
-            printf("                                          %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
+            fprintf(stderr, "No countable expression found in format \"%s\"\n",allFormat);
+            fprintf(stderr, "                                          %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
 #endif
             exit(0);
             }
@@ -158,11 +157,11 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
         if(!isdigit(*f))
             {
 #if STREAM
-            cout << "format \"" << allFormat << "\" must have one or more digits after " << *--f << "." << endl;
-            cout << "         " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
+            cerr << "format \"" << allFormat << "\" must have one or more digits after " << *--f << "." << endl;
+            cerr << "         " << setw((int)(strlen(allFormat) - strlen(f))) << "^" << endl;
 #else
-            printf("format \"%s\" must have one or more digits after %c.\n",allFormat,*--f);
-            printf("         %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
+            fprintf(stderr, "format \"%s\" must have one or more digits after %c.\n",allFormat,*--f);
+            fprintf(stderr, "         %*c\n",(int)(strlen(allFormat) - strlen(f)),'^');
 #endif
             exit(0);
             }
@@ -234,11 +233,11 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
     if(condition > -1 && !(loctestType & NUMBERTEST))
         {
 #if STREAM
-        cout << "format \"" << allFormat << "\" has illegal test." << endl;
-        cout << "         " << setw((int)(strlen(allFormat) - strlen(f) - condition)) << "^" << endl;
+        cerr << "format \"" << allFormat << "\" has illegal test." << endl;
+        cerr << "         " << setw((int)(strlen(allFormat) - strlen(f) - condition)) << "^" << endl;
 #else
-        printf("format \"%s\" has illegal test.\n",allFormat);
-        printf("         %*c\n",(int)(strlen(allFormat) - strlen(f) - condition),'^');
+        fprintf(stderr,"format \"%s\" has illegal test.\n",allFormat);
+        fprintf(stderr, "         %*c\n",(int)(strlen(allFormat) - strlen(f) - condition),'^');
 #endif
         exit(0);
         }
