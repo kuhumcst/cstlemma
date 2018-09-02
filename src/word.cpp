@@ -163,7 +163,7 @@ formattingFunction * Word::getUnTaggedWordFunctionNoBb(int character,bool & Sort
 void Word::print()const
     {
 #if STREAM
-    if(*m_word != '\n' && *m_tag != '\n')
+    if(*m_word != '\n')
 #endif
         funcs->printIt(this);
     }

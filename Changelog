@@ -1,4 +1,14 @@
 -------------------------------
+Version 7.36 (2 September 2018)
+-------------------------------
+Removed superfluous and, in case of option -t-, havoc wreaking test that a tag
+must be != '\n'. It is sufficient to test that a word is != '\n'. (The strange
+case that a word seems to be '\n' occurs at the end of the output if STREAM is
+defined to be 1 in defines.h. This word is an artefact, caused by the '\n' that
+is emitted when the stream reaches EOF. The '\n' is necessary to satisfy an
+input format like -I '....\n'. See the function getwordI() in flattext.cpp.)
+
+-------------------------------
 Version 7.35 (30 August 2018)
 -------------------------------
 Removed spurious almost empty lines at the end of the output if STREAM == 1.
