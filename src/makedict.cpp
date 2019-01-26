@@ -44,7 +44,7 @@ using namespace std;
 class DictNode;
 class Lemma;
 typedef int tchildrencount; // type for variables that are optimal for counting
-                            // small numbers, but the value of which evantually
+                            // small numbers, but the value of which eventually
                             // will be typecasted to tchildren.
 
 static char *** pstrings = NULL;
