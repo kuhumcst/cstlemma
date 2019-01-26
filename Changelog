@@ -1,4 +1,10 @@
 -------------------------------
+Version 7.37 (27 January 2019)
+-------------------------------
+Fixed a bug in word.cpp that sometimes caused the lemma to be prefixed by the
+word. E.g lemma *osvi for the word 'os'. (If the correct lemma is 'vi'.)
+
+-------------------------------
 Version 7.36 (2 September 2018)
 -------------------------------
 Removed superfluous and, in case of option -t-, havoc wreaking test that a tag
