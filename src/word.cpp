@@ -447,7 +447,7 @@ char * Word::commonStem(lext * Plext,int nmbr,const char * a_type,unsigned int f
                 return 0;
                 }
             char * bf = Plext[ii].BaseFormSuffix;
-            char * komma = strchr(bf,',');
+            /*char * komma = strchr(bf,',');
             if(komma)
                 {
                 if(suffix[0])
@@ -465,7 +465,7 @@ char * Word::commonStem(lext * Plext,int nmbr,const char * a_type,unsigned int f
                     off = Plext[ii].S.Offset;
                     }
                 }
-            else
+            else*/
                 {
                 if(suffix[0])
                     {
@@ -484,7 +484,8 @@ char * Word::commonStem(lext * Plext,int nmbr,const char * a_type,unsigned int f
             }
         }
     size_t length = off;
-    strcpy(buf,changeCase(m_word,true,length));
+    if(length)
+        strcpy(buf,changeCase(m_word,true,length));
     strcpy(buf+length,suffix);
     return buf;
     }
