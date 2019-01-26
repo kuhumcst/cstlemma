@@ -191,7 +191,6 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
                 {
                 size_t length = 0;
                 word = changeCase(word,true,length);
-
                 }
             bf = word;
             borrow = wlen;
