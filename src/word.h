@@ -163,12 +163,12 @@ class Word : public OutputClass
             }
         static bool hasb;
         static bool hasB;
-        unsigned int maxFrequency(lext * Plext,int nmbr,const char * a_type,int & n);// The dictionary's available
-                               // lexical information for this word.
         char * commonStem(lext * Plext,int nmbr,const char * type,unsigned int freq,unsigned int & offset);
          // Find the common type of the most frequent readings
         char * commonType(lext * Plext,int nmbr,unsigned int freq);
     public:
+        static unsigned int maxFrequency(lext * Plext, int nmbr, const char * a_type, int & n);// The dictionary's available
+                                                                                               // lexical information for this word.
         void inc(){++cnt;}
         static functionTree * funcs;
         static bool setFormat(const char * cformat,const char * bformat,const char * Bformat,bool InputHasTags);
@@ -244,7 +244,7 @@ class Word : public OutputClass
         Word(const char * word)
             : 
                 hasAddedItselfToBaseForm(false),FoundInDict(false),owns(true),SegmentInitial(true)
-                ,pbfD(NULL),pbfL(NULL),cnt(1)
+                ,pbfD(NULL),pbfL(NULL),cnt(1), m_tag(NULL)
             {
             this->m_word = new char[strlen(word) + 1];
             strcpy(this->m_word,word);
@@ -260,6 +260,7 @@ class Word : public OutputClass
                 owns(false),
                 SegmentInitial(w.SegmentInitial),
                 m_word(w.m_word),
+                m_tag(NULL),
                 pbfD(w.pbfD),
                 pbfL(w.pbfL),
                 cnt(w.cnt)

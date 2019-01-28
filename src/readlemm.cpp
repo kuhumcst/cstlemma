@@ -276,7 +276,7 @@ int readLemmas(FILE * fpin,const char * format,adder func,bool CollapseHomograph
     bool eof = false;
     while(!eof)
         {
-        unsigned int ind = 0;
+        ind = 0;
         kar = 0;
         while(!eof && ind < sizeof(FIELDS)/sizeof(FIELDS[0]) && FIELDS[ind])
             {

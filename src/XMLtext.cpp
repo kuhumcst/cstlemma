@@ -506,7 +506,7 @@ void CallBackEmptyTag(void * arg)
     ((XMLtext *)arg)->CallBackEmptyTag();
     }
 
-void XMLtext::reachedTokenEnd(char * ch)
+void XMLtext::reachedTokenEnd(char * Ch)
     {
     token * Tok = getJustMadeToken();
     if(Tok)
@@ -514,7 +514,7 @@ void XMLtext::reachedTokenEnd(char * ch)
         char * start = Tok->tokenToken.getStart();
         char * end = Tok->tokenToken.getEnd();
         if(start == end)
-            Tok->tokenToken.set(start,ch);
+            Tok->tokenToken.set(start,Ch);
         }
     }
 

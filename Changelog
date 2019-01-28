@@ -1,4 +1,16 @@
 -------------------------------
+Version 7.38 (28 January 2019)
+-------------------------------
+Fixed a problem with dictionary look-up. The findword() function in
+dictionary.cpp did not check the PoS tag of the word. A sentence initial
+preposition 'For' would be found as a noun 'For'. Instead, find() must
+see that 'For' does not exist in the dictionary as a preposition, and
+attempt to find the lowercased version 'for' in the dictionary (which
+does indeed exist). Previously, the error would be detected too late and
+the flexrules would be used instead of the dictionary look up. However,
+the flexrules would also treat 'For' as a noun.
+
+-------------------------------
 Version 7.37 (27 January 2019)
 -------------------------------
 Fixed a bug in word.cpp that sometimes caused the lemma to be prefixed by the

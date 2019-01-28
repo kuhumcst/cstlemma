@@ -37,10 +37,10 @@ class substring
         substring():start(NULL),end(NULL)
             {
             }
-        void set(char * start,char * end)
+        void set(char * Start,char * End)
             {
-            this->start = start;
-            this->end = end;
+            this->start = Start;
+            this->end = End;
             }
         char * getStart() const
             {

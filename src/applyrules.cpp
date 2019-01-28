@@ -147,11 +147,11 @@ bool setNewStyleRules(int val)
     return true;
     }
 
-bool readRules(FILE * flexrulefile, const char * flexFileName)
+bool readRules(FILE * flexrulefile, const char * FlexFileName)
     {
     if (taglessrules == 0)
         taglessrules = new rules();
-    return taglessrules->readRules(flexrulefile, flexFileName);
+    return taglessrules->readRules(flexrulefile, FlexFileName);
     }
 
 const char * applyRules(const char * word, bool SegmentInitial, bool RulesUnique)
@@ -166,16 +166,16 @@ const char * applyRules(const char * word, const char * tag, bool SegmentInitial
     return taglessrules->applyRules(word, tag, SegmentInitial, RulesUnique);
     }
 
-bool rules::readRules(FILE * flexrulefile, const char * flexFileName)
+bool rules::readRules(FILE * flexrulefile, const char * FlexFileName)
     {
-    if (flexFileName)
+    if (FlexFileName)
         {
-        ::flexFileName = flexFileName;
+        ::flexFileName = FlexFileName;
         }
     long end;
     if (flexrulefile)
         return 0 != readRules(flexrulefile, end);
-    return flexFileName != 0;
+    return FlexFileName != 0;
     }
 
 /*static*/ char * rules::readRules(FILE * flexrulefile, long & end)
@@ -224,15 +224,15 @@ bool rules::readRules(FILE * flexrulefile, const char * flexFileName)
 
 static hashmap::hash<rules> * Hash = NULL;
 
-bool readRules(const char * flexFileName) // Does not read at all.
+bool readRules(const char * FlexFileName) // Does not read at all.
     { // Rules are read on a as-needed basis.
-    if (flexFileName)
+    if (FlexFileName)
         {
-        ::flexFileName = flexFileName;
+        ::flexFileName = FlexFileName;
         }
     if (Hash == NULL)
         Hash = new hashmap::hash<rules>(&rules::tagName, 10); // Memoizes the rule files that have been read.
-    return flexFileName != 0;
+    return FlexFileName != 0;
     }
 
 int newStyleRules()
@@ -913,7 +913,7 @@ static char ** lemmatiseerV3
     int pos = 0;
     pos = *(int*)buf;
     const char * until;
-    char ** result;
+    char ** Result;
     assert((pos & 3) == 0);
     assert(pos >= 0);
     if (pos == 0)
@@ -967,7 +967,7 @@ static char ** lemmatiseerV3
                 /* Unambiguous children. If no child succeeds, take the
                 candidate, otherwise take the succeeding child's result. */
                 char ** childcandidates = lemmatiseerV3(cword, cwordend, p, until, defaultCandidate, lemmas);
-                result = childcandidates ? childcandidates : addLemma(lemmas, defaultCandidate);
+                Result = childcandidates ? childcandidates : addLemma(lemmas, defaultCandidate);
                 delete[] candidate.L;
                 break;
                 }
@@ -980,12 +980,12 @@ static char ** lemmatiseerV3
                 current candidate. We pass the candidate so it can be put
                 in the right position in the sequence of answers. */
                 char ** childcandidates = chainV3(cword, cwordend, p, until, defaultCandidate, lemmas);
-                result = childcandidates ? childcandidates : addLemma(lemmas, defaultCandidate);
+                Result = childcandidates ? childcandidates : addLemma(lemmas, defaultCandidate);
                 delete[] candidate.L;
                 break;
                 }
             default:
-                result = lemmas;
+                Result = lemmas;
             }
         }
     else
@@ -998,7 +998,7 @@ static char ** lemmatiseerV3
                 /* Unambiguous siblings. If no sibling succeeds, take the
                 parent's candidate. */
                 char ** childcandidates = lemmatiseerV3(word, wordend, until, maxpos, parentcandidate, lemmas);
-                result = childcandidates ? childcandidates : addLemma(lemmas, parentcandidate);
+                Result = childcandidates ? childcandidates : addLemma(lemmas, parentcandidate);
                 break;
                 }
             case 1:
@@ -1007,14 +1007,14 @@ static char ** lemmatiseerV3
                 /* Ambiguous siblings. If a sibling fails, the parent's
                 candidate is taken. */
                 char ** childcandidates = chainV3(word, wordend, until, maxpos, parentcandidate, lemmas);
-                result = childcandidates ? childcandidates : addLemma(lemmas, parentcandidate);
+                Result = childcandidates ? childcandidates : addLemma(lemmas, parentcandidate);
                 break;
                 }
             default:
-                result = lemmas;
+                Result = lemmas;
             }
         }
-    return result;
+    return Result;
     }
 
 

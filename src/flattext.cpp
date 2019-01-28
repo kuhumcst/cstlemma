@@ -402,7 +402,6 @@ flattext::flattext(FILE * fpi,bool a_InputHasTags,char * Iformat,int keepPunctua
         }
     else
         {
-        unsigned long newlines;
         while(total < size && (w = getword(fpi,Tag,InputHasTags,keepPunctuation,slashFound,newlines)) != 0)
             {
             lineno += newlines;

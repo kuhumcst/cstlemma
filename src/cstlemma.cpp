@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#define CSTLEMMAVERSION "7.37"
-#define CSTLEMMADATE "2019.1.27"
+#define CSTLEMMAVERSION "7.38"
+#define CSTLEMMADATE "2019.1.28"
 #define CSTLEMMACOPYRIGHT "2002-2018 Center for Sprogteknologi"
 
 #include "lemmatiser.h"
@@ -58,7 +58,7 @@ int main(int argc, char * argv[])
         LOG1LINE("");
         LOG1LINE("CSTLEMMA version " CSTLEMMAVERSION " (" CSTLEMMADATE ")");
         LOG1LINE("Copyright (C) " CSTLEMMACOPYRIGHT);
-        if(sizeof(ptrdiff_t) == 8)
+        if /*constexpr*/(sizeof(ptrdiff_t) == 8)
             LOG1LINE("64-bit");
         else
             LOG1LINE("32-bit");

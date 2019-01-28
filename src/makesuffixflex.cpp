@@ -1028,15 +1028,15 @@ void flex::makeFlexRules
         ,bool nice
         ,const char * format
         ,int & failed
-        ,long CutoffRefcount
-        ,bool showRefcount
+        ,long CutoffRefCount
+        ,bool ShowRefCount
         ,const char * flexrulefilename
         )
     {
     int count;
     char name[256];
-    flex::CutoffRefcount = CutoffRefcount;
-    flex::showRefcount = showRefcount;
+    flex::CutoffRefcount = CutoffRefCount;
+    flex::showRefcount = ShowRefCount;
     training = true;
     for(int SRep = 0;/*see test below*/;++SRep)
         {
@@ -1133,9 +1133,9 @@ void flex::makeFlexRules
     write(fpflex,nice);
     if(flexrulefilename)
         {
-        char name[256];
+//        char name[256];
         for( flex::CutoffRefcount = 0
-           ; flex::CutoffRefcount <= CutoffRefcount
+           ; flex::CutoffRefcount <= CutoffRefCount
            ; ++flex::CutoffRefcount
            )
             {
