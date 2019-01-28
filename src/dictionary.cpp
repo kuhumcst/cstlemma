@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "dictionary.h"
+#include "lemmatiser.h"
+#include "lemmtags.h"
+#include "word.h"
 #if defined PROGLEMMATISE
 
 #include "utf8func.h"
@@ -119,19 +122,19 @@ void dictionary::printall2(FILE * fp)
         }
     }
 
-bool dictionary::findword(const char * word,tcount & Pos,int & Nmbr)
+bool dictionary::findword(const char * word, const char * tag, tcount & Pos,int & Nmbr)
     {
-    if(findwordSub(word,Pos,Nmbr))
+    if(findwordSub(word,tag,Pos,Nmbr))
         {
         return true;
         }
     else if(is_Upper(word))
-        return findwordSub(allToLower(word),Pos,Nmbr);
+        return findwordSub(allToLower(word), tag, Pos,Nmbr);
     else
         return false;
     }
 
-bool dictionary::findwordSub(const char * word,tcount & Pos,int & Nmbr)
+bool dictionary::findwordSub(const char * word, const char * tag, tcount & Pos,int & Nmbr)
     {
     int kar = UTF8char(word,staticUTF8);
     const char * w = word;
@@ -169,9 +172,38 @@ bool dictionary::findwordSub(const char * word,tcount & Pos,int & Nmbr)
                 }
             else // This is a leaf. Do the baseform and type stuff.
                 {
-                Pos = pos;
-                Nmbr = nmbr;
-                return true;
+                if (tag)
+                    {
+                    lext * plext;
+                    const char * Tp = Lemmatiser::translate(tag); // tag as found in the text
+                                                                    // See whether the word's tag can be found in the
+                                                                    // dictionary's lexical information.
+                    plext = LEXT + pos;
+                    int m;
+
+                    const char * baseTp = LemmaTag(Tp);
+
+                    unsigned int maxFreq = Word::maxFrequency(LEXT, nmbr, baseTp, m);
+
+                    for (int n = nmbr; n; --n, ++plext)
+                        {
+                        if (plext->S.frequency >= maxFreq)
+                            {
+                            if (!strcmp(Tp, (plext->Type))) // Word is in dictionary,
+                                {
+                                Pos = pos;
+                                Nmbr = nmbr;
+                                return true;
+                                }
+                            }
+                        }
+                    }
+                else
+                    {
+                    Pos = pos;
+                    Nmbr = nmbr;
+                    return true;
+                    }
                 }
             }
         else // Initial character alphabetically greater than any of the

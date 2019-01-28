@@ -623,7 +623,7 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
         // There is a conflict between the tagger and the dictionary. 
         // The word is in the dictionary, but not with the lexical type assigned by the tagger.
         cntL += addBaseFormsL();
-        
+#if 0        
         if(nmbr)
             {
             maxFreq = maxFrequency(Plext,nmbr,0,m);
@@ -661,6 +661,7 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
                         break;
                 }
             }
+#endif
         }
     return cnt;
     }
@@ -670,7 +671,7 @@ void Word::lookup(text * txt)
     bool conflict = false;
     tcount Pos;
     int Nmbr;
-    if(dictionary::findword(itsWord(),Pos,Nmbr))
+    if(dictionary::findword(itsWord(),m_tag,Pos,Nmbr))
         {
         addBaseFormsDL(LEXT + Pos,Nmbr,conflict,txt->cntD,txt->cntL);
         if(conflict)

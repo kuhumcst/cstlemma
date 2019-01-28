@@ -46,9 +46,9 @@ class dictionary
         static void printlex2(char * head,tindex pos, FILE * fp);
         static void printnode(size_t indent, tindex pos, FILE * fp);
         static void printnode2(char * head,tindex pos, FILE * fp);
-        static bool findwordSub(const char * word,tcount & Pos,int & Nmbr);
+        static bool findwordSub(const char * word, const char * tag, tcount & Pos,int & Nmbr);
     public:
-        static bool findword(const char * word,tcount & Pos,int & Nmbr);
+        static bool findword(const char * word,const char * tag,tcount & Pos,int & Nmbr);
         bool initdict(FILE * fpin);
         dictionary();
         ~dictionary();
