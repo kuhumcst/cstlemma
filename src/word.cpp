@@ -114,6 +114,13 @@ void Word::deleteStaticMembers()
     delete Bfuncs;Bfuncs = 0;
     }
 
+#if PRINTRULE
+void Word::p() const
+    {
+    if (pbfL)
+        pbfL->printfrule(fp, Bfuncs, sep);
+    }
+#endif
 
 formattingFunction * Word::getUnTaggedWordFunction(int character,bool & SortInput,int & testType)
     {
@@ -136,6 +143,10 @@ formattingFunction * Word::getUnTaggedWordFunction(int character,bool & SortInpu
             return new functionNoArg(&Word::B,&Word::countBaseFormsL);
         case 's':
             return new functionNoArg(&Word::s,0);
+#if PRINTRULE
+        case 'p':
+            return new functionNoArg(&Word::p, 0);
+#endif
         default:
             return 0;
         }
@@ -155,6 +166,10 @@ formattingFunction * Word::getUnTaggedWordFunctionNoBb(int character,bool & Sort
             return new functionNoArg(&Word::w,0);
         case 's':
             return new functionNoArg(&Word::s,0);
+#if PRINTRULE
+        case 'p':
+            return new functionNoArg(&Word::p, 0);
+#endif
         default:
             return 0;
         }
@@ -187,59 +202,42 @@ int Word::addBaseFormsL()
     return addBaseFormL(wrd,LemmaTag(tag));
     }
 
+int Word::addBaseFormL(const char * s, const char * t)
+    {
+    int cntL = 0;
+    const char * l_sep;
+    while ((l_sep = strchr(s, ' ')) != 0)
+        {
+        if (pbfL)
+            cntL += pbfL->addBaseForm(s, t, l_sep - s
 #if PFRQ || FREQ24
-int Word::addBaseFormL(const char * s,const char * t)
-    {
-    int cntL = 0;
-    const char * l_sep;
-    while((l_sep = strchr(s,' ')) != 0)
-        {
-        //       ++cntL;
-        if(pbfL)
-            cntL += pbfL->addBaseForm(s,t,l_sep - s,/*1,*/0/*freq*/);
-        else
-            {
-            pbfL = new baseformpointer(s,t,l_sep - s,/*1,*/0/*freq*/);
-            ++cntL;
-            }
-        s = l_sep + 1;
-        }
-    if(pbfL)
-        cntL += pbfL->addBaseForm(s,t,strlen(s),/*1,*/0/*freq*/);
-    else
-        {
-        pbfL = new baseformpointer(s,t,strlen(s),/*1,*/0/*freq*/);
-        ++cntL;
-        }
-    return cntL;
-    }
-#else
-int Word::addBaseFormL(const char * s,const char * t)
-    {
-    int cntL = 0;
-    const char * l_sep;
-    while((l_sep = strchr(s,' ')) != 0)
-        {
-        //       ++cntL;
-        if(pbfL)
-            cntL += pbfL->addBaseForm(s,t,l_sep - s);
-        else
-            {
-            pbfL = new baseformpointer(s,t,l_sep - s);
-            ++cntL;
-            }
-        s = l_sep + 1;
-        }
-    if(pbfL)
-        cntL += pbfL->addBaseForm(s,t,strlen(s));
-    else
-        {
-        pbfL = new baseformpointer(s,t,strlen(s));
-        ++cntL;
-        }
-    return cntL;
-    }
+                                      ,0
 #endif
+            );
+        else
+            {
+            pbfL = new baseformpointer(s, t, l_sep - s
+#if PFRQ || FREQ24
+                                       , 0
+#endif
+            );
+            ++cntL;
+            }
+        s = l_sep + 1;
+        }
+/* There is always a space after the lemma, so all lemmas have been handled
+   in the loop above.
+
+    if (pbfL)
+        cntL += pbfL->addBaseForm(s, t, p, strlen(s));
+    else
+        {
+        pbfL = new baseformpointer(s, t, p, strlen(s));
+        ++cntL;
+        }
+        */
+    return cntL;
+    }
 
 int Word::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
                                  // lexical information for this word.
@@ -546,7 +544,11 @@ int taggedWord::addBaseFormsL()
     {
     const char *ttag = Lemmatiser::translate(m_tag); 
     const char * wrd = baseform(m_word,ttag,SegmentInitial, RulesUnique);
+#if PRINTRULE
+    return addBaseFormL(wrd, LemmaTag(ttag));
+#else
     return addBaseFormL(wrd,LemmaTag(ttag));
+#endif
     }
 
 

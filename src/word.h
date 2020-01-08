@@ -136,6 +136,10 @@ class Word : public OutputClass
             if(pbfL)
                 pbfL->printfbf(fp,Bfuncs,sep);
             }
+#if PRINTRULE
+        void p() const;/*20191216 rule by which lemma is formed. Display '=' in
+                           case of dictionary look up or rule w/o wild cards.*/
+#endif
         void s() const
             {
 #if STREAM
@@ -287,6 +291,29 @@ class Word : public OutputClass
             --COUNT;
 #endif
             }
+#if PRINTRULE
+#if PFRQ || FREQ24
+        int addBaseFormD(const char * s, const char * t, unsigned int frequency)
+            {
+            //this->cnt++;
+            if (pbfD)
+                return pbfD->addBaseForm(s, t, "dict", strlen(s), frequency);
+            else
+                pbfD = new baseformpointer(s, t, "dict", strlen(s), frequency);
+            return 1;
+            }
+#else
+        int addBaseFormD(const char * s, const char * t)
+            {
+            //this->cnt++;
+            if (pbfD)
+                return pbfD->addBaseForm(s, t, strlen(s));
+            else
+                pbfD = new baseformpointer(s, t, strlen(s));
+            return 1;
+            }
+#endif
+#else
 #if PFRQ || FREQ24
         int addBaseFormD(const char * s,const char * t,unsigned int frequency)
             {
@@ -307,6 +334,7 @@ class Word : public OutputClass
                 pbfD = new baseformpointer(s,t,strlen(s));
             return 1;
             }
+#endif
 #endif
         int addBaseFormL(const char * s,const char * t);
         virtual int addBaseFormsL();
