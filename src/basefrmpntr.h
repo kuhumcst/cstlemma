@@ -73,9 +73,15 @@ class baseformpointer
 #if STREAM
         void printfbf(ostream *fp,functionTree * fns,const char * sep);
         void printFn(ostream *fp,bfn Fn,const char * sep);
+#if PRINTRULE
+        void printfrule(ostream *fp, functionTree * fns, const char * sep);
+#endif
 #else
         void printfbf(FILE *fp,functionTree * fns,const char * sep);
         void printFn(FILE *fp,bfn Fn,const char * sep);
+#if PRINTRULE
+        void printfrule(FILE *fp, functionTree * fns, const char * sep);
+#endif
 #endif
 #if PFRQ || FREQ24
         baseformpointer(const char * s,const char * t,size_t len,unsigned int frequency);

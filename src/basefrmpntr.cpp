@@ -48,27 +48,27 @@ void baseformpointer::testPrint()
     }
 
 #if FREQ24
-baseformpointer::baseformpointer(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency):owning(true),next(NULL),hidden(false)
+baseformpointer::baseformpointer(const char * s, const char * t, size_t len,/*int cnt,*/unsigned int frequency) :owning(true), next(NULL), hidden(false)
     {
-    bf = new basefrm(s,t,*this,len,/*cnt,*/frequency);
+    bf = new basefrm(s, t, *this, len,/*cnt,*/frequency);
 #ifdef COUNTOBJECTS
     ++COUNT;
 #endif
     }
 #else
 #if PFRQ
-baseformpointer::baseformpointer(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency)
-        :owning(true),next(NULL),hidden(false),pfrq(frequency)
+baseformpointer::baseformpointer(const char * s, const char * t, size_t len,/*int cnt,*/unsigned int frequency)
+    :owning(true), next(NULL), hidden(false), pfrq(frequency)
     {
-    bf = new basefrm(s,t,*this,len);
+    bf = new basefrm(s, t, *this, len);
 #ifdef COUNTOBJECTS
     ++COUNT;
 #endif
     }
 #else
-baseformpointer::baseformpointer(const char * s,const char * t,size_t len):owning(true),next(NULL),hidden(false)
+baseformpointer::baseformpointer(const char * s, const char * t, size_t len) :owning(true), next(NULL), hidden(false)
     {
-    bf = new basefrm(s,t,*this,len);
+    bf = new basefrm(s, t, *this, len);
 #ifdef COUNTOBJECTS
     ++COUNT;
 #endif
@@ -205,6 +205,55 @@ void baseformpointer::printfbf(FILE *fp,functionTree * fns,const char * sep)
         }
     }
 
+#if PRINTRULE
+#if STREAM
+void baseformpointer::printfrule(ostream *fp, functionTree * fns, const char * sep)
+#else
+void baseformpointer::printfrule(FILE *fp, functionTree * fns, const char * sep)
+#endif
+{
+if (fns)
+    {
+    bool doSep = false;
+    baseformpointer * bfp = this;
+    while (bfp)
+        {
+        if (!bfp->hidden)
+            {
+            if (!hasDuplicateLemma(this, bfp))
+                {
+                if (doSep)
+                    print(fp, sep);
+                else
+                    doSep = true;
+                fns->printIt(bfp->bf);
+                }
+            }
+        bfp = bfp->next;
+        }
+    if (UseLemmaFreqForDisambiguation == 1)
+        {
+        bfp = this;
+        while (bfp)
+            {
+            if (bfp->hidden)
+                {
+                if (!hasDuplicateLemma(this, bfp))
+                    {
+                    if (doSep)
+                        print(fp, sep);
+                    else
+                        doSep = true;
+                    fns->printIt(bfp->bf);
+                    }
+                }
+            bfp = bfp->next;
+            }
+        }
+    }
+}
+#endif
+
 void baseformpointer::reassign(basefrm * arg_bf)
     {
     owning = false;
@@ -279,6 +328,45 @@ void baseformpointer::DissambiguateByTagFriends(const char * tag)
         }
     }
 
+#if PRINTRULE
+#if PFRQ || FREQ24
+int baseformpointer::addBaseForm(const char * s, const char * t, const char * p,size_t len,/*int cnt,*/unsigned int frequency)
+    {
+    if (!bf->equal(s, t))
+        {
+        if (next)
+            {
+            return next->addBaseForm(s, t, p,len,/*cnt,*/frequency);
+            }
+        else
+            {
+            next = new baseformpointer(s, t, p,len,/*cnt,*/frequency);
+            }
+        return 1;
+        }
+    else
+        return 0;
+    }
+#else
+int baseformpointer::addBaseForm(const char * s, const char * t, size_t len)
+    {
+    if (!bf->equal(s, t))
+        {
+        if (next)
+            {
+            return next->addBaseForm(s, t,len);
+            }
+        else
+            {
+            next = new baseformpointer(s, t, len);
+            }
+        return 1;
+        }
+    else
+        return 0;
+    }
+#endif
+#else
 #if PFRQ || FREQ24
 int baseformpointer::addBaseForm(const char * s,const char * t,size_t len,/*int cnt,*/unsigned int frequency)
     {
@@ -315,5 +403,6 @@ int baseformpointer::addBaseForm(const char * s,const char * t,size_t len)
     else
         return 0;
     }
+#endif
 #endif
 #endif
