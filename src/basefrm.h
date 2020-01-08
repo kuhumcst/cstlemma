@@ -62,6 +62,9 @@ class basefrm : public OutputClass
 #endif
         char * m_s;
         char * m_t;
+#if PRINTRULE
+        char * m_p;
+#endif
         static int index;
     public:
 #if STREAM
@@ -92,6 +95,9 @@ class basefrm : public OutputClass
 #endif
         void W() const;
         void L() const;
+#if PRINTRULE
+        void P() const;
+#endif
     public:
         static functionTree * bfuncs;// used if -W option set
         static functionTree * Bfuncs;// used if -W option set
@@ -110,11 +116,22 @@ class basefrm : public OutputClass
         int cmpf(const basefrm * b) const{return b->lemmaFreq() - lemmaFreq();}
         int cmpt(const basefrm * b) const{return strcmp(m_t,b->m_t);}
         int cmps(const basefrm * b) const{return strcmp(m_s,b->m_s);}
+#if PRINTRULE
+        int cmpp(const basefrm * b) const { return strcmp(m_p, b->m_p); }
+#endif
         baseformpointer & m_owner;
+#if PRINTRULE
+#if FREQ24
+        basefrm(const char * s, const char * t, const char * p, baseformpointer & owner, size_t len,/*int cnt,*/unsigned int frequency) :fullForm(NULL), nfullForm(0), freq24(frequency), m_owner(owner)
+#else
+        basefrm(const char * s, const char * t, baseformpointer & owner, size_t len/*int cnt,*/) : fullForm(NULL), nfullForm(0), m_owner(owner)
+#endif
+#else
 #if FREQ24
         basefrm(const char * s,const char * t,baseformpointer & owner,size_t len,/*int cnt,*/unsigned int frequency):fullForm(NULL),nfullForm(0),freq24(frequency),m_owner(owner)
 #else
         basefrm(const char * s,const char * t,baseformpointer & owner,size_t len/*int cnt,*/):fullForm(NULL),nfullForm(0),m_owner(owner)
+#endif
 #endif
             {
             this->m_s = new char[len+1];
@@ -122,6 +139,13 @@ class basefrm : public OutputClass
             this->m_s[len] = '\0';
             this->m_t = new char[strlen(t)+1];
             strcpy(this->m_t,t);
+#if PRINTRULE
+            this->m_p = strchr(this->m_s, '\v');
+            if (this->m_p)
+                {
+                *this->m_p++ = 0;
+                }
+#endif
 #ifdef COUNTOBJECTS
             ++COUNT;
 #endif
@@ -137,7 +161,20 @@ class basefrm : public OutputClass
         void testPrint()const;
         bool equal(const char * s,const char * t)
             {
-            return !strcmp(s,this->m_s) && !strcmp(t,this->m_t);
+#if PRINTRULE
+            /* s contains lemma\vrule */
+            if (strcmp(t, this->m_t))
+                return false;
+            const char * S = this->m_s;
+            while (*s == *S)
+                {
+                ++s;
+                ++S;
+                }
+            return !*S && (!*s || *s == '\v');
+#else
+            return !strcmp(s, this->m_s) && !strcmp(t, this->m_t);
+#endif
             }
         int Closeness(const char * tag);
         void removeFullForm(Word * w);
