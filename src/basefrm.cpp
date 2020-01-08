@@ -102,6 +102,10 @@ formattingFunction * basefrm::getBasefrmFunctionNoW(int character,bool & DummySo
             return new functionNoArgB(&basefrm::W);
         case 't':
             return new functionNoArgB(&basefrm::T);
+#if PRINTRULE
+        case 'p':
+            return new functionNoArgB(&basefrm::P);
+#endif
         }
     return 0;
     }
@@ -122,7 +126,7 @@ void basefrm::getAbsorbedBy(basefrm * other)
 
 basefrm::~basefrm()
     {
-    delete [] m_s;
+    delete [] m_s; // Also deletes m_p ! (They are allocated as one string.)
     delete [] m_t;
     delete [] fullForm;
 #ifdef COUNTOBJECTS
@@ -339,10 +343,18 @@ int basefrm::Closeness(const char * tag)
 
 void basefrm::testPrint()const
     {
+#if PRINTRULE
+#if STREAM
+    cout << m_s << "/" << m_t << "/" << m_p << endl;
+#else
+    printf("%s/%s/%s\n", m_s, m_t,m_p);
+#endif
+#else
 #if STREAM
     cout << m_s << "/" << m_t << endl;
 #else
     printf("%s/%s\n",m_s,m_t);
+#endif
 #endif
     }
 
@@ -401,5 +413,12 @@ void basefrm::W() const
     {
     print(basefrm::m_fp,m_s);
     }
+
+#if PRINTRULE
+void basefrm::P() const
+    {
+    print(basefrm::m_fp, m_p);
+    }
+#endif
 
 #endif
