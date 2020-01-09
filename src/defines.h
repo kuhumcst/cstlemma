@@ -141,6 +141,8 @@ non-const character strings.
 #define CHAR const char
 #endif
 
+#ifndef PRINTRULE
 #define PRINTRULE 1 /* $p in output format prints rule by which lemma was formed */
+#endif
 
 #endif

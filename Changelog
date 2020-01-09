@@ -1,4 +1,15 @@
 -------------------------------
+Version 8.0.1 (9 January 2020)
+-------------------------------
+New format option $p that prints the rule (pattern and replacement)
+responsible for how the lemma is constructed from the input word.
+Turned on with compiler option -DPRINTRULE. (Work in progress.)
+
+New cstlemma option -l+ that tries to mimick the casing of the word
+in the lemma. (This was already promised by -l-, but -l- did in reality
+just nothing, whereas -l converted words to lowercase.) (Work in progress.)
+
+-------------------------------
 Version 7.38 (28 January 2019)
 -------------------------------
 Fixed a problem with dictionary look-up. The findword() function in
