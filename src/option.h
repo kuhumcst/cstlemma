@@ -35,6 +35,7 @@ typedef enum {GoOn = 0,Leave = 1,Error = 2} OptReturnTp;
 #endif
 
 extern char * dupl(const char * s);
+enum caseTp;
 
 struct optionStruct
     {
@@ -114,7 +115,7 @@ struct optionStruct
     int UseLemmaFreqForDisambiguation;      // -H text::Lemmatise
     bool DictUnique;                        // -u text::Lemmatise
 #endif
-    bool baseformsAreLowercase;             // -l text::Lemmatise
+    caseTp baseformsAreLowercase;             // -l text::Lemmatise
 
 
 #if defined PROGLEMMATISE
@@ -162,5 +163,5 @@ struct optionStruct
     void setUseLemmaFreqForDisambiguation(bool b);
     void setDictUnique(bool b);
 #endif
-    void setbaseformsAreLowercase(bool b);
+    void setbaseformsAreLowercase(caseTp b);
     };

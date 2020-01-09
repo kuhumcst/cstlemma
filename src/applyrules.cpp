@@ -193,15 +193,15 @@ bool rules::readRules(FILE * flexrulefile, const char * FlexFileName)
     {
     if (flexrulefile)
         {
-        int start;
-        if (fread(&start, sizeof(int), 1, flexrulefile) != 1)
+        int istart;
+        if (fread(&istart, sizeof(int), 1, flexrulefile) != 1)
             return bufbuf;
-        if (start == 0)
+        if (istart == 0)
             {
             if (!setNewStyleRules(2))
                 return bufbuf;
             }
-        else if (start == *(int*)"\rV3\r")
+        else if (istart == *(int*)"\rV3\r")
             {
             if (!setNewStyleRules(3))
                 return bufbuf;
@@ -323,56 +323,98 @@ static bool substr(const char ** fields, int k, const char * w, const char * wen
     }
 
 #if PRINTRULE
-static const char * printpat(const char ** fields, int findex,char * start,char * end)
+static const char * printpat(const char ** fields, int findex,const char * start, int startbytes,const char * end)
     {
+    /*
     int length = (int)(fields[1] - fields[0] - 1)
         + strlen(start)
         + strlen(end)
         + (findex > 2 ? (int)(fields[3] - fields[2] - 1) : 0)
-        + 1 // 127 \177, character separating pattern from replacement
+        + 1 // 127 \174, character separating pattern from replacement
         + (int)(fields[2] - fields[1] - 1)
         + (findex > 2 ? (int)(fields[4] - fields[3] - 1) : 0);
-
+    printf("lengthA %d\n", length);
     if (findex > 2)
         {
-        length += (int)(fields[4] - fields[2] - 2);
+        printf("findex %d\n", findex);
+        length += 2+(int)(fields[4] - fields[2] - 2);
 
         for (int M = 5; M < findex; M += 2)
             length += (int)(fields[M + 1] - fields[M - 1] - 2);
         }
+        */
+    //printf("start %s ; %.*s\n", start,startbytes,start);
+    //printf("findex %d\n",findex);
+    size_t length =
+        startbytes//strlen(start) // first of start in pattern
+    //    + (int)(fields[1] - fields[0] - 1) // last of start in pattern
+        + (int)(fields[2] - fields[1] - 1); // start in replacement
+    //printf("lengthA %d\n", length);
+    if (findex > 2)
+        {
+        length += 1 /*+ (int)(fields[3] - fields[2] - 1)*/; // wildcard, first of end in pattern
+        length += strlen(end) + 1; // last of end in pattern, separator
+        length += 1 + (int)(fields[4] - fields[3] - 1); // wildcard, end in replacement
+        for (int M = 5; M < findex; M += 2)
+            {
+            length += 1 + (int)(fields[M] - fields[M - 1] - 1); // wildcard, infix in pattern
+            length += 1 + (int)(fields[M + 1] - fields[M] - 1); // wildcard, infix in replacement
+            }
+        }
+    else
+        {
+        length += strlen(end) + 1; // end in pattern, separator
+        }
 
-    ++length;
+    length += 1; // zero
+
+    //printf("lengthB %d\n", length);
+
     char * buf = new char[length];
     char * fm = buf;
-    sprintf(start + strlen(start), "%.*s", (int)(fields[1] - fields[0] - 1), fields[0]);
-    fm += sprintf(fm, "%s", start);
+    fm += sprintf(fm, "%.*s", startbytes,start);
+    // strlen(start)
+    //fm += sprintf(fm, "%.*s", (int)(fields[1] - fields[0] - 1), fields[0]);
+    // (int)(fields[1] - fields[0] - 1)
     for (int M = 5; M < findex; M += 2)
         {
         fm += sprintf(fm, "*%.*s", (int)(fields[M] - fields[M - 1] - 1), fields[M - 1]);
+        // 1 + (int)(fields[M] - fields[M - 1] - 1)
         }
     if (findex > 2)
         {
+        /*
         Strrev(end);
         size_t L = strlen(end);
         sprintf(end + L, "%.*s", (int)(fields[3] - fields[2] - 1), fields[2]);
         Strrev(end + L);
         Strrev(end);
-        fm += sprintf(fm, "*%s\177", end);
+        fm += sprintf(fm, "*%s\174", end);
+        */
+        //fm += sprintf(fm,"*%.*s%s\174", (int)(fields[3] - fields[2] - 1), fields[2], end);
+        fm += sprintf(fm, "*%s\174", end);
+        // 2 + (int)(fields[3] - fields[2] - 1) + strlen(end)
         }
     else
-        {
-        fm += sprintf(fm, "%s\177", end);
+        {// Whole word matched by prefix. No wildcard after prefix.
+        fm += sprintf(fm, "%s\174", end);
+        // 1 + strlen(end)
         }
 
     fm += sprintf(fm, "%.*s", (int)(fields[2] - fields[1] - 1), fields[1]);
+    // (int)(fields[2] - fields[1] - 1)
     for (int M = 5; M < findex; M += 2)
         {
         fm += sprintf(fm, "*%.*s", (int)(fields[M + 1] - fields[M] - 1), fields[M]);
+        // 1 + (int)(fields[M + 1] - fields[M] - 1)
         }
     if (findex > 2)
         {
         fm += sprintf(fm, "*%.*s", (int)(fields[4] - fields[3] - 1), fields[3]);
+        // 1 + (int)(fields[4] - fields[3] - 1)
         }
+    assert(length == strlen(buf) + 1);
+//    printf("buf %s\n", buf);
     return buf;
     }
 #endif
@@ -713,7 +755,7 @@ static int lemmatiseer(const char * word, const char * wordend, const char * buf
 
 static char * rewrite(const char *& word, const char *& wordend, const char * p
 #if PRINTRULE
-                     , char * start, char * end, const char *& rule
+                     , const char * start, const char * end, const char *& rule
 #endif
                      )
     {
@@ -794,7 +836,7 @@ static char * rewrite(const char *& word, const char *& wordend, const char * p
 #if PRINTRULE
             if (start)
                 {
-                rule = printpat(fields, findex, start, end);
+                rule = printpat(fields, findex, start, word-start, wordend);
                 }
 #endif
             }
@@ -806,7 +848,7 @@ static char * rewrite(const char *& word, const char *& wordend, const char * p
 #if PRINTRULE
             if (start)
                 {
-                rule = printpat(fields, findex, start, end);
+                rule = printpat(fields, findex, start, vars[0].s - start, wordend);
                 }
 #endif
             }
@@ -867,11 +909,12 @@ static LemmaRule * addLemma(LemmaRule * lemmas, lemmaCandidate * lemma)
             lemmas = new LemmaRule [2];
             lemmas[1].Lem = 0;
             lemmas[0].Lem = lemma->L;
+            lemma->L = 0;
 #if PRINTRULE
             lemmas[1].rule = 0;
             lemmas[0].rule = lemma->rule;
+            lemma->rule = 0;
 #endif
-            lemma->L = 0;
             }
         }
     return lemmas;
@@ -938,7 +981,7 @@ static LemmaRule * pruneEquals(LemmaRule * L, bool RulesUnique)
                     {
                     delete[] L[j].Lem;
 #if PRINTRULE
-                    delete[] L[i].rule;
+                    delete[] L[j].rule;
 #endif
                     for (int k = j; L[k].Lem; ++k)
                         {
@@ -962,8 +1005,8 @@ static LemmaRule * lemmatiseerV3
     , lemmaCandidate * parentcandidate
     , LemmaRule * lemmas
 #if PRINTRULE
-    , char * start
-    , char * end
+    , const char * start
+    , const char * end
 #endif
     );
 
@@ -975,8 +1018,8 @@ static LemmaRule * chainV3
     , lemmaCandidate * parentcandidate
     , LemmaRule * lemmas
 #if PRINTRULE
-    , char * start
-    , char * end
+    , const char * start
+    , const char * end
 #endif
     )
     {
@@ -1023,8 +1066,8 @@ static LemmaRule * lemmatiseerV3
     , lemmaCandidate * parentcandidate
     , LemmaRule * lemmas
 #if PRINTRULE
-    , char * start
-    , char * end
+    , const char * start
+    , const char * end
 #endif
     )
     {
@@ -1081,8 +1124,8 @@ static LemmaRule * lemmatiseerV3
     off *= sizeof(int);
     p = buf + off;
 #if PRINTRULE
-    int slen = strlen(start);
-    int elen = strlen(end);
+  //  int slen = strlen(start);
+   // int elen = strlen(end);
    // printf("slen %d [%s] word [%s] end [%s] wordend [%s]\n", slen, start, word, end, wordend, p);
 #endif
 
@@ -1169,10 +1212,11 @@ static LemmaRule * lemmatiseerV3
             }
         }
 #if PRINTRULE
+    /*
     start[slen] = 0;
     Strrev(end);
     end[elen] = 0;
-    Strrev(end);
+    Strrev(end);*/
 #endif
     return Result;
     }
@@ -1200,7 +1244,7 @@ static const char * apply( const char * word
                          )
     {
     size_t len = strlen(word);
-    if (flex::baseformsAreLowercase)
+    if (flex::baseformsAreLowercase == elower)
         {
         size_t length = 0;
         word = changeCase(word, true, length);
@@ -1222,7 +1266,10 @@ static const char * apply( const char * word
     if (newStyleRules() == 3)
         {
         LemmaRule * lemmas = 0;
-        if (SegmentInitial && !flex::baseformsAreLowercase && isUpper((const unsigned char)word[0]))
+        if (  SegmentInitial 
+           && (flex::baseformsAreLowercase == easis || flex::baseformsAreLowercase == emimicked)
+           && isUpper((const unsigned char)word[0])
+           )
             {
             /* A capitalized word at the start of a segment should be
             lemmatized in two ways, if the rules are case sensitive:
@@ -1235,16 +1282,16 @@ static const char * apply( const char * word
             donotAddLemmaUnlessRuleHasPrefix = true;
             lemmas = lemmatiseerV3(word, word + len, buf, maxpos, 0, lemmas
 #if PRINTRULE
-                                   , Start
-                                   , End
+                                   , word
+                                   , word
 #endif
-            );
+                );
             size_t length = 0;
             word = changeCase(word, true, length);
             donotAddLemmaUnlessRuleHasPrefix = false;
             result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, maxpos, 0, lemmas
 #if PRINTRULE
-                                                      , Start, End
+                                                      , word, word
 #endif
             ), RulesUnique));
             }
@@ -1252,7 +1299,7 @@ static const char * apply( const char * word
             {
             result = concat(pruneEquals(lemmatiseerV3(word, word + len, buf, maxpos, 0, lemmas
 #if PRINTRULE
-                                                      , Start, End
+                                                      , word, word
 #endif
             ), RulesUnique));
             }

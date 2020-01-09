@@ -37,16 +37,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
                 // assumptions about what are characters in the 
                 // range >127, then set to DEFAULTENCODING.
 void setEncoding(int encoding);
-/*
-const char * allToLowerISO(const char * s);
-void AllToLowerISO(char * s);
-void AllToUpperISO(char * s);
-bool isAlphaISO(int s); 
-void toUpper(char * s);
-bool isAllUpper(const char * s);
-extern const bool * alpha;
-*/
-//void toLower(char * s);
 extern const bool * space;
 #define isSpace(s) space[(int)(s) & 0xFF]
 
@@ -70,14 +60,11 @@ extern const unsigned char * lowerEquivalent;
 #endif
 
 extern bool (*is_Upper)(const char * s);
-//extern unsigned int (*Upper)(int k);
-//extern unsigned int (*Lower)(int k);
-//extern void (*NToLower)(char * s,const char * stop); // 20100303, partly replaces Lower
 extern int (*strcasecmpN)(const char *s, const char *p,ptrdiff_t & is,ptrdiff_t & ip); // 20100303, partly replaces Lower
 extern int (*strcmpN)(const char *s, const char *p,ptrdiff_t & is,ptrdiff_t & ip); // 20100303, increments to UTF-8 character boundaries
 extern bool (*is_Alpha)(int s);
 extern const char * (*allToLower)(const char * s);
-//extern void (*AllToLower)(char * s);
 extern bool (*IsAllUpper)(const char * s);
-//extern void (*allToUpper)(char * s);
+enum caseTp { easis, elower, emimicked }; // 
+
 #endif

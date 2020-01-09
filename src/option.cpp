@@ -115,7 +115,7 @@ optionStruct::optionStruct()
     //Iformat = dupl("$w/$t");
     Iformat = 0;
     UseLemmaFreqForDisambiguation = 2;
-    baseformsAreLowercase = false;
+    baseformsAreLowercase = easis;
     size = ULONG_MAX;
     treatSlashAsAlternativesSeparator = false;
 #endif
@@ -453,7 +453,8 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "                (Output +lemma if the word is found in the dictionary,\n"
                    "                 otherwise -lemma)\n"
                    "    -l  force lemma to all-lowercase (default in versions < 7.0 of cstlemma)\n"
-                   "    -l- make case of lemma similar to full form's case (default)\n"
+                   "    -l- keep the lemma in the casing produced by the transformation rule or built in dictionary (default)\n"
+                   "    -l+ let casing of lemma mimick that of the full form\n"
                    "    -p  keep punctuation (default)\n"
                    "    -p- ignore punctuation (only together with -t- and no -W or -I)\n"
                    "    -p+ treat punctuation as tokens (only together with -t- and no -W or -I)\n"
@@ -543,7 +544,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             Iformat = dupl(locoptarg); 
             break;
         case 'l':
-            baseformsAreLowercase = !locoptarg || *locoptarg != '-';
+            baseformsAreLowercase = !locoptarg ? elower : *locoptarg == '-' ? easis : emimicked;
             break;
 #endif
         case 'L':
@@ -1178,7 +1179,7 @@ void optionStruct::setDictUnique(bool b)
     DictUnique = b;
     }
 
-void optionStruct::setbaseformsAreLowercase(bool b)
+void optionStruct::setbaseformsAreLowercase(caseTp b)
     {
     baseformsAreLowercase = b;
     }

@@ -187,7 +187,7 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
         size_t wlen = strlen(word);
         if(wlen > 256)
             {
-            if(baseformsAreLowercase)
+            if(baseformsAreLowercase == elower)
                 {
                 size_t length = 0;
                 word = changeCase(word,true,length);
@@ -197,7 +197,7 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
             return true;
             }
         static char aWord[256];
-        if(baseformsAreLowercase)
+        if(baseformsAreLowercase == elower)
             {
             size_t length = 0;
             strncpy(aWord,changeCase(word,true,length),sizeof(aWord)-1);
@@ -217,7 +217,7 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
                 strncpy(b,word,borrow);
                 strcpy(b+borrow,Base->bf());
 
-                if(baseformsAreLowercase)
+                if(baseformsAreLowercase == elower)
                     {
                     size_t length = 0;
                     strcpy(b,changeCase(b,true,length));
@@ -275,7 +275,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool Se
         size_t wlen = strlen(word);
         if(wlen > 256)
             {
-            if(baseformsAreLowercase)
+            if(baseformsAreLowercase == elower)
                 {
                 size_t length = 0;
                 word = changeCase(word,true,length);
@@ -285,7 +285,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool Se
             return 0;
             }
         static char aWord[256];
-        if(baseformsAreLowercase)
+        if(baseformsAreLowercase == elower)
             {
             size_t length = 0;
             strncpy(aWord,changeCase(word,true,length),sizeof(aWord)-1);
@@ -306,7 +306,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool Se
                 {
                 strncpy(b,word,borrow);
                 strcpy(b+borrow,Base->bf());
-                if(baseformsAreLowercase)
+                if(baseformsAreLowercase == elower)
                     {
                     size_t length = 0;
                     strcpy(b,changeCase(b,true,length));

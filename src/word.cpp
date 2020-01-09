@@ -85,11 +85,11 @@ const char * baseform(char * word,const char ** tag /*return value!*/, bool Segm
 
 const char * baseform(char * word,const char * tag,bool SegmentInitial, bool RulesUnique)
     { // construct baseform by applying general rules (e.g. removing endings)
-    const char * wrd;
+    const char * bf;
     size_t borrow;
-    if(Flex.Baseform(word,tag,wrd,borrow,SegmentInitial, RulesUnique))
-        return wrd;
-    else if(flex::baseformsAreLowercase)
+    if(Flex.Baseform(word,tag,bf,borrow,SegmentInitial, RulesUnique))
+        return bf;
+    else if(flex::baseformsAreLowercase == elower)
         return allToLower(word); 
     else
         return word; 

@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if defined PROGLEMMATISE
 #include "applyrules.h"
 #include "tags.h"
+#include "caseconv.h"
 #endif
 #include "option.h"
 #if defined PROGMAKEDICT 
@@ -979,17 +980,23 @@ void Lemmatiser::showSwitches()
 #endif
             break;
         }
-    if(Option.baseformsAreLowercase)
+    if(Option.baseformsAreLowercase == elower)
 #if STREAM
         clog << "-l\tlemmas are forced to lowercase (default)" << endl;
 #else
         info("-l\tlemmas are forced to lowercase (default)");
 #endif
-    else
+    else if (Option.baseformsAreLowercase == emimicked)
 #if STREAM
         clog << "-l-\tlemmas are same case as full form" << endl;
 #else
         info("-l-\tlemmas are same case as full form");
+#endif
+    else
+#if STREAM
+        clog << "-l-\tcase of lemmas is decided by rules or dictionary" << endl;
+#else
+        info("-l-\tcase of lemmas is decided by rules or dictionary");
 #endif
 
     if(Option.size < ULONG_MAX)

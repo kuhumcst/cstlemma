@@ -34,9 +34,12 @@ needed to construct the lemma from the full form, which are an offset to the
 The full form itself is not in this structure, but encoded in the Nodes that
 are traversed to reach the lext-object, starting at the top Nodes-object.
 */
+
+enum caseTp;
+
 struct lext
     {
-    static bool baseformsAreLowercase;
+    static enum caseTp baseformsAreLowercase;
 #ifdef COUNTOBJECTS
     public:
     static int COUNT;

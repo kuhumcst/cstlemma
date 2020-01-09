@@ -39,6 +39,7 @@ using namespace std;
 class Word;
 class taggedWord;
 class basefrm;
+enum caseTp;
 
 struct tallyStruct
     {
@@ -124,7 +125,7 @@ class text
             ,bool nice
             ,bool DictUnique
             ,bool RulesUnique
-            ,bool baseformsAreLowercase
+            ,caseTp baseformsAreLowercase
             ,int listLemmas
             ,bool mergeLemmas
             );
@@ -138,7 +139,7 @@ class text
             ,bool nice
             ,bool DictUnique
             ,bool RulesUnique
-            ,bool baseformsAreLowercase
+            ,enum caseTp baseformsAreLowercase
             ,int listLemmas
             ,bool mergeLemmas
             );

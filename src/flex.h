@@ -33,6 +33,8 @@ typedef enum {normal,/*notdeeper,*/onlydeeper} traverseTp;
 class node;
 #endif
 
+enum caseTp;
+
 extern bool training;
 
 class base
@@ -255,7 +257,7 @@ class flex
 #endif
 #if defined PROGLEMMATISE
     public:
-        static bool baseformsAreLowercase;
+        static caseTp baseformsAreLowercase;
         void print();
         bool Baseform(const char * word, const char * tag, const char *& bf, size_t & borrow, bool SegmentInitial, bool RulesUnique);
         char * Baseform(const char * word, const char *& bf, size_t & borrow, bool SegmentInitial, bool RulesUnique);

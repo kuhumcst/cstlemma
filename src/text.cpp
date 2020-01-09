@@ -372,7 +372,7 @@ void text::Lemmatise(ostream * fpo
                     ,bool nice
                     ,bool DictUnique
                     ,bool RulesUnique
-                    ,bool baseformsAreLowercase
+                    ,caseTp baseformsAreLowercase
                     ,int listLemmas
                     ,bool mergeLemmas
                     )
@@ -385,7 +385,7 @@ void text::Lemmatise(FILE * fpo
                     ,bool nice
                     ,bool DictUnique
                     ,bool RulesUnique
-                    ,bool baseformsAreLowercase
+                    ,caseTp baseformsAreLowercase
                     ,int listLemmas
                     ,bool mergeLemmas
                     )
