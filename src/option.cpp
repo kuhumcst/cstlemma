@@ -115,7 +115,7 @@ optionStruct::optionStruct()
     //Iformat = dupl("$w/$t");
     Iformat = 0;
     UseLemmaFreqForDisambiguation = 2;
-    baseformsAreLowercase = easis;
+    baseformsAreLowercase = caseTp::easis;
     size = ULONG_MAX;
     treatSlashAsAlternativesSeparator = false;
 #endif
@@ -544,7 +544,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             Iformat = dupl(locoptarg); 
             break;
         case 'l':
-            baseformsAreLowercase = !locoptarg ? elower : *locoptarg == '-' ? easis : emimicked;
+            baseformsAreLowercase = !locoptarg ? caseTp::elower : *locoptarg == '-' ? caseTp::easis : caseTp::emimicked;
             break;
 #endif
         case 'L':

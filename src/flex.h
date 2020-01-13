@@ -33,7 +33,7 @@ typedef enum {normal,/*notdeeper,*/onlydeeper} traverseTp;
 class node;
 #endif
 
-enum caseTp;
+enum class caseTp;
 
 extern bool training;
 

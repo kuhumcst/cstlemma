@@ -181,23 +181,26 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
         return true;
         }
 
+    // Next code is for old style rules!
     if(types)
         {
         size_t offset = 0;
         size_t wlen = strlen(word);
         if(wlen > 256)
             {
-            if(baseformsAreLowercase == elower)
-                {
+            if(baseformsAreLowercase == caseTp::elower)
+                { // Change case of very long words to lowercase if baseforms
+                  // are all lowercase.
                 size_t length = 0;
                 word = changeCase(word,true,length);
                 }
-            bf = word;
+            bf = word; // Do not attempt to lemmatise very long words.
+                       // Just set lemma to be equal to the word.
             borrow = wlen;
             return true;
             }
         static char aWord[256];
-        if(baseformsAreLowercase == elower)
+        if(baseformsAreLowercase == caseTp::elower)
             {
             size_t length = 0;
             strncpy(aWord,changeCase(word,true,length),sizeof(aWord)-1);
@@ -205,6 +208,7 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
             }
         else
             strcpy(aWord,word);
+        // aWord is a copy (lowercase if elower) of word.
         base * Base;
         Strrev(aWord);
         if(types->Baseform(aWord,tag,Base,offset))
@@ -217,18 +221,18 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
                 strncpy(b,word,borrow);
                 strcpy(b+borrow,Base->bf());
 
-                if(baseformsAreLowercase == elower)
-                    {
+                if(baseformsAreLowercase == caseTp::elower)
+                    {//All characters lowercase
                     size_t length = 0;
                     strcpy(b,changeCase(b,true,length));
                     }
                 else if(IsAllUpper(word)) // made UTF-8-capable
-                    {
+                    {// All characters capital
                     size_t length = 0;
                     strcpy(b,changeCase(b,false,length));
                     }
                 else if(borrow == 0 && is_Upper(word))
-                    {
+                    {// First character capital, remainder lower case
                     size_t length = 0;
                     strcpy(b,changeCase(b,false,length));
                     length = 0;
@@ -275,7 +279,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool Se
         size_t wlen = strlen(word);
         if(wlen > 256)
             {
-            if(baseformsAreLowercase == elower)
+            if(baseformsAreLowercase == caseTp::elower)
                 {
                 size_t length = 0;
                 word = changeCase(word,true,length);
@@ -285,7 +289,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool Se
             return 0;
             }
         static char aWord[256];
-        if(baseformsAreLowercase == elower)
+        if(baseformsAreLowercase == caseTp::elower)
             {
             size_t length = 0;
             strncpy(aWord,changeCase(word,true,length),sizeof(aWord)-1);
@@ -306,7 +310,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool Se
                 {
                 strncpy(b,word,borrow);
                 strcpy(b+borrow,Base->bf());
-                if(baseformsAreLowercase == elower)
+                if(baseformsAreLowercase == caseTp::elower)
                     {
                     size_t length = 0;
                     strcpy(b,changeCase(b,true,length));

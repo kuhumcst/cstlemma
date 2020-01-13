@@ -289,7 +289,7 @@ void basefrm::addFullForms(basefrm * other)
             Word ** nnwlist = new Word *[nnnfullForm];
             for(int ind = 0;ind < nnnfullForm;++ind)
                 nnwlist[ind] = nwlist[ind];
-            delete nwlist;
+            delete [] nwlist;
             fullForm = nnwlist;
             }
         else

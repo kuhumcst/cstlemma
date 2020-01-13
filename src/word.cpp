@@ -89,7 +89,7 @@ const char * baseform(char * word,const char * tag,bool SegmentInitial, bool Rul
     size_t borrow;
     if(Flex.Baseform(word,tag,bf,borrow,SegmentInitial, RulesUnique))
         return bf;
-    else if(flex::baseformsAreLowercase == elower)
+    else if(flex::baseformsAreLowercase == caseTp::elower)
         return allToLower(word); 
     else
         return word; 

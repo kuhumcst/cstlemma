@@ -35,7 +35,7 @@ The full form itself is not in this structure, but encoded in the Nodes that
 are traversed to reach the lext-object, starting at the top Nodes-object.
 */
 
-enum caseTp;
+enum class caseTp;
 
 struct lext
     {

@@ -35,7 +35,7 @@ typedef enum {GoOn = 0,Leave = 1,Error = 2} OptReturnTp;
 #endif
 
 extern char * dupl(const char * s);
-enum caseTp;
+enum class caseTp;
 
 struct optionStruct
     {

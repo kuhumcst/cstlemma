@@ -980,13 +980,13 @@ void Lemmatiser::showSwitches()
 #endif
             break;
         }
-    if(Option.baseformsAreLowercase == elower)
+    if(Option.baseformsAreLowercase == caseTp::elower)
 #if STREAM
         clog << "-l\tlemmas are forced to lowercase (default)" << endl;
 #else
         info("-l\tlemmas are forced to lowercase (default)");
 #endif
-    else if (Option.baseformsAreLowercase == emimicked)
+    else if (Option.baseformsAreLowercase == caseTp::emimicked)
 #if STREAM
         clog << "-l-\tlemmas are same case as full form" << endl;
 #else

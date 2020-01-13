@@ -93,7 +93,7 @@ class rules
         long End;
         int NewStyle;
     public:
-        rules() : TagName(0), buf(bufbuf), buflen(sizeof(bufbuf) - 1), NewStyle(2)
+        rules() : TagName(0), buf(bufbuf), buflen(sizeof(bufbuf) - 1), End(0), NewStyle(2)
             {
             }
         rules(const char * TagName) : buflen(sizeof(bufbuf) - 1), NewStyle(2)
@@ -1244,7 +1244,7 @@ static const char * apply( const char * word
                          )
     {
     size_t len = strlen(word);
-    if (flex::baseformsAreLowercase == elower)
+    if (flex::baseformsAreLowercase == caseTp::elower)
         {
         size_t length = 0;
         word = changeCase(word, true, length);
@@ -1267,7 +1267,7 @@ static const char * apply( const char * word
         {
         LemmaRule * lemmas = 0;
         if (  SegmentInitial 
-           && (flex::baseformsAreLowercase == easis || flex::baseformsAreLowercase == emimicked)
+           && (flex::baseformsAreLowercase == caseTp::easis || flex::baseformsAreLowercase == caseTp::emimicked)
            && isUpper((const unsigned char)word[0])
            )
             {

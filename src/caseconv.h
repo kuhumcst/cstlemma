@@ -65,6 +65,6 @@ extern int (*strcmpN)(const char *s, const char *p,ptrdiff_t & is,ptrdiff_t & ip
 extern bool (*is_Alpha)(int s);
 extern const char * (*allToLower)(const char * s);
 extern bool (*IsAllUpper)(const char * s);
-enum caseTp { easis, elower, emimicked }; // 
+enum class caseTp { easis, elower, emimicked }; // 
 
 #endif
