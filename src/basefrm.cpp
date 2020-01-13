@@ -105,6 +105,8 @@ formattingFunction * basefrm::getBasefrmFunctionNoW(int character,bool & DummySo
 #if PRINTRULE
         case 'p':
             return new functionNoArgB(&basefrm::P);
+        case 'r':
+            return new functionNoArgB(&basefrm::R);
 #endif
         }
     return 0;
@@ -389,10 +391,11 @@ static void printOther(
 #endif
                        ,const char * s)
     {
+    if(s)
 #if STREAM
-    *fpo << s;
+        *fpo << s;
 #else
-    fprintf(fpo,"%s",s);
+        fprintf(fpo,"%s",s);
 #endif
     }
 
@@ -418,6 +421,10 @@ void basefrm::W() const
 void basefrm::P() const
     {
     print(basefrm::m_fp, m_p);
+    }
+void basefrm::R() const
+    {
+    print(basefrm::m_fp, m_r());
     }
 #endif
 

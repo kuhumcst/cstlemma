@@ -1,4 +1,10 @@
 -------------------------------
+Version 8.0.2 (13 January 2020)
+-------------------------------
+New format option $r that prints the replacement. $p prints the pattern, and
+not both pattern and replacement as in version 8.0.1.
+
+-------------------------------
 Version 8.0.1 (9 January 2020)
 -------------------------------
 New format option $p that prints the rule (pattern and replacement)

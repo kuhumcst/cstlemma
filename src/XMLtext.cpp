@@ -51,6 +51,8 @@ static void printXML(
 #endif
                      ,const char * s)
     {
+    if(!s)
+        return;
     REFER(fpo) // unused
 #if STREAM
     while(*s)

@@ -64,6 +64,10 @@ class basefrm : public OutputClass
         char * m_t;
 #if PRINTRULE
         char * m_p;
+        const char* m_r() const
+            {
+            return m_p ? m_p + strlen(m_p) + 1 : 0L;
+            }
 #endif
         static int index;
     public:
@@ -97,6 +101,7 @@ class basefrm : public OutputClass
         void L() const;
 #if PRINTRULE
         void P() const;
+        void R() const;
 #endif
     public:
         static functionTree * bfuncs;// used if -W option set
@@ -144,6 +149,8 @@ class basefrm : public OutputClass
             if (this->m_p)
                 {
                 *this->m_p++ = 0;
+                char* r = strchr(this->m_p, '\v');
+                *r = 0;
                 }
 #endif
 #ifdef COUNTOBJECTS

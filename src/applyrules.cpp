@@ -330,7 +330,7 @@ static const char * printpat(const char ** fields, int findex,const char * start
         + strlen(start)
         + strlen(end)
         + (findex > 2 ? (int)(fields[3] - fields[2] - 1) : 0)
-        + 1 // 127 \174, character separating pattern from replacement
+        + 1 // \v, character separating pattern from replacement
         + (int)(fields[2] - fields[1] - 1)
         + (findex > 2 ? (int)(fields[4] - fields[3] - 1) : 0);
     printf("lengthA %d\n", length);
@@ -389,15 +389,15 @@ static const char * printpat(const char ** fields, int findex,const char * start
         sprintf(end + L, "%.*s", (int)(fields[3] - fields[2] - 1), fields[2]);
         Strrev(end + L);
         Strrev(end);
-        fm += sprintf(fm, "*%s\174", end);
+        fm += sprintf(fm, "*%s\v", end);
         */
-        //fm += sprintf(fm,"*%.*s%s\174", (int)(fields[3] - fields[2] - 1), fields[2], end);
-        fm += sprintf(fm, "*%s\174", end);
+        //fm += sprintf(fm,"*%.*s%s\v", (int)(fields[3] - fields[2] - 1), fields[2], end);
+        fm += sprintf(fm, "*%s\v", end);
         // 2 + (int)(fields[3] - fields[2] - 1) + strlen(end)
         }
     else
         {// Whole word matched by prefix. No wildcard after prefix.
-        fm += sprintf(fm, "%s\174", end);
+        fm += sprintf(fm, "%s\v", end);
         // 1 + strlen(end)
         }
 
