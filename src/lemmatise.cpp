@@ -181,7 +181,7 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
         return true;
         }
 
-    // Next code is for old style rules!
+    // Next code is for old style (suffix-)rules! (< 2009)
     if(types)
         {
         size_t offset = 0;

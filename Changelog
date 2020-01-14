@@ -1,4 +1,11 @@
 -------------------------------
+Version 8.0.3 (14 January 2020)
+-------------------------------
+Option -l+ now works as intended.
+Several improvements of C++ source, such as replacing 'typedef enum' with
+'enum class' for better scoping.
+
+-------------------------------
 Version 8.0.2 (13 January 2020)
 -------------------------------
 New format option $r that prints the replacement. $p prints the pattern, and

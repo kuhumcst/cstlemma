@@ -544,7 +544,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             Iformat = dupl(locoptarg); 
             break;
         case 'l':
-            baseformsAreLowercase = !locoptarg ? caseTp::elower : *locoptarg == '-' ? caseTp::easis : caseTp::emimicked;
+            baseformsAreLowercase = (!locoptarg || !*locoptarg) ? caseTp::elower : *locoptarg == '-' ? caseTp::easis : caseTp::emimicked;
             break;
 #endif
         case 'L':
