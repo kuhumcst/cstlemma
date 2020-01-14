@@ -25,8 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class FreqFile;
 #endif
 
-typedef enum {MAKEDICT,MAKEFLEXPATTERNS,LEMMATISE} whattodoTp;
-typedef enum {GoOn = 0,Leave = 1,Error = 2} OptReturnTp;
+enum class whattodoTp {MAKEDICT,MAKEFLEXPATTERNS,LEMMATISE};
+enum class OptReturnTp {GoOn = 0,Leave = 1,Error = 2};
 
 #if defined _WIN32
 #define commandlineQuote "\""

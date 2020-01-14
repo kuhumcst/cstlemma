@@ -310,7 +310,7 @@ public:
         }
     };
 
-typedef enum {casesensitive,caseinsensitive} Case;
+enum class Case {casesensitive,caseinsensitive};
 
 class DictNode
     {
@@ -677,7 +677,7 @@ bool DictNode::add(char * flexform,char * lextype,char * baseform,ptrdiff_t offs
 bool DictNode::addFreq(char * flexform,char * lextype,int n,char * bf,ptrdiff_t offset,Case cse)/*20120709 unsigned int -> ptrdiff_t*/
     {
     ptrdiff_t i,j;
-    if(cse == casesensitive)
+    if(cse == Case::casesensitive)
         {
         strcmpN(flexform,this->m_flexform,i,j);
         }
@@ -927,7 +927,7 @@ static void addFreq(int n,char * flexform,char * lextype,char * bf)
         ptrdiff_t j;
         strcmpN(bf,flexform,i,j);
         }
-    if(root->addFreq(flexform,lextype,n,bf ? bf : NULL,i,casesensitive))
+    if(root->addFreq(flexform,lextype,n,bf ? bf : NULL,i,Case::casesensitive))
         {
         g_added++;
         addedcnt += n;
@@ -939,7 +939,7 @@ static void addFreq(int n,char * flexform,char * lextype,char * bf)
             ptrdiff_t j;
             strcasecmpN(bf,flexform,i,j);
             }
-        if(root->addFreq(flexform,lextype,n,bf ? bf/*+i*/ : NULL,i,caseinsensitive))
+        if(root->addFreq(flexform,lextype,n,bf ? bf/*+i*/ : NULL,i, Case::caseinsensitive))
             {
             g_added++;
             addedcnt += n;
@@ -961,7 +961,7 @@ static int compare(const void * arg1, const void * arg2)
 static tlength compressStrings(tcount nstrings,tcount * nUniqueStrings)
     {
     pstrings = new char ** [nstrings];
-    root->getStrings();
+    root->getStrings();// Side effect: initializes pstrings
 
 #if STREAM
     cout << "sorting " << nstrings << " strings..." << flush;
@@ -1038,7 +1038,7 @@ static int compareLeaf(const void *arg1, const void * arg2)
 static tcount compressLeafs(tcount nLeaf,tcount * nUniqueLemmas)
     {
     pLeafs = new DictNode * [nLeaf];
-    root->getLemmas();
+    root->getLemmas(); // side effect: initializes pLeafs
     tcount i,j,k;
 #if STREAM
     cout << "sorting " << nLeaf << " leafs..." << flush;

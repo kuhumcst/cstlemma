@@ -95,7 +95,7 @@ optionStruct::optionStruct()
     keepPunctuation = 1;
     Sep = dupl(DefaultSep);
 #endif
-    whattodo = LEMMATISE;
+    whattodo = whattodoTp::LEMMATISE;
     argi = NULL;
     argo = NULL;
     arge = NULL;
@@ -236,7 +236,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             break;
 #endif
         case 'D':
-            whattodo = MAKEDICT;
+            whattodo = whattodoTp::MAKEDICT;
             break;
         case 'e':
             arge = dupl(locoptarg);
@@ -275,7 +275,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                         );
                 exit(-1);
                 }
-            whattodo = MAKEFLEXPATTERNS;
+            whattodo = whattodoTp::MAKEFLEXPATTERNS;
             break;
         case 'h':
         case '?':
@@ -512,7 +512,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "    -Xl<lemma>  Destination of lemma is the specified attribute. e.g -Xllemma\n"
                    "    -Xc<lemmaclass>  Destination of lemma class is the specified attribute. e.g -Xllemmaclass");
 #endif
-            return Leave;
+            return OptReturnTp::Leave;
 #if defined PROGLEMMATISE
         case 'H':
             if(locoptarg)
@@ -525,13 +525,13 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 #else
                     fprintf(stderr, "-H option: specify -H0, -H1 or -H2 (found -H%s)\n",locoptarg);
 #endif
-                    return Error;
+                    return OptReturnTp::Error;
                     }
                 }
             else
                 {   
                 LOG1LINE("-H option: specify -H0, -H1 or -H2");
-                return Error;
+                return OptReturnTp::Error;
                 }
             break;
 #endif
@@ -548,7 +548,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             break;
 #endif
         case 'L':
-            whattodo = LEMMATISE; // default action
+            whattodo = whattodoTp::LEMMATISE; // default action
             break;
 #if defined PROGLEMMATISE
         case 'm':
@@ -623,7 +623,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 #else
                     fprintf(stderr, "Invalid argument %s for -p option.\n",locoptarg);
 #endif
-                    return Error;
+                    return OptReturnTp::Error;
                     }
                 }
             else
@@ -687,7 +687,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             "YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n"
             "PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n"
             "POSSIBILITY OF SUCH DAMAGES.\n");
-            return Leave;
+            return OptReturnTp::Leave;
 // << GNU
 #if defined PROGMAKESUFFIXFLEX
         case 'R':
@@ -722,7 +722,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                                         int R = firstNibble * 16 + secondNibble;
                                         if (R)
                                             {
-                                            *p++ = R;
+                                            *p++ = (char)R;
                                             memmove(p, p + 3, strlen(p));
                                             break;
                                             }
@@ -741,7 +741,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                                         int R = firstTriad * 64 + secondTriad * 8 + thirdTriad;
                                         if (R)
                                             {
-                                            *p++ = R;
+                                            *p++ = (char)R;
                                             memmove(p, p + 3, strlen(p));
                                             break;
                                             }
@@ -786,7 +786,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             "TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n"
             "PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\n"
             "REPAIR OR CORRECTION.");
-            return Leave;
+            return OptReturnTp::Leave;
 // << GNU
 #if defined PROGLEMMATISE
         case 'W':
@@ -847,7 +847,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             nice = locoptarg == NULL  || *locoptarg != '-';
             break;
         }
-    return GoOn;
+    return OptReturnTp::GoOn;
     }
 
 
@@ -857,7 +857,7 @@ OptReturnTp optionStruct::readOptsFromFile(char * locoptarg,char * progname)
     char ** poptions;
     char * options;
     FILE * fpopt = fopen(locoptarg,"r");
-    OptReturnTp result = GoOn;
+    OptReturnTp result = OptReturnTp::GoOn;
     if(fpopt)
         {
         char * p;
@@ -1082,7 +1082,7 @@ OptReturnTp optionStruct::readArgs(int argc, char * argv[])
     SortOutput = 0;
     Wformat = NULL;
 #endif
-    OptReturnTp result = GoOn;
+    OptReturnTp result = OptReturnTp::GoOn;
     while((c = getopt(argc,argv, opts)) != -1)
         {
         OptReturnTp res = doSwitch(c,myoptarg,argv[0]);

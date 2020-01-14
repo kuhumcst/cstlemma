@@ -219,7 +219,10 @@ class flex
         static long CutoffRefcount;
         static bool showRefcount;
         flex():types(0)
-            {
+#if defined PROGMAKESUFFIXFLEX
+        ,notadded(0)
+#endif
+        {
 #ifdef COUNTOBJECTS
             ++COUNT;
 #endif

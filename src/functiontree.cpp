@@ -38,7 +38,7 @@ int functionTree::COUNT = 0;
 #endif
 
 
-functionTree::functionTree():m_fnc(NULL),next(NULL),child(NULL),m_comp(eany),m_nmbr(-1),Hidden(false)
+functionTree::functionTree():m_fnc(NULL),next(NULL),child(NULL),m_comp(comparison::eany),m_nmbr(-1),Hidden(false)
     {
 #ifdef COUNTOBJECTS
     ++COUNT;
@@ -88,7 +88,7 @@ int functionTree::count(const OutputClass * outputObj)const
 int functionTree::count2(const OutputClass * outputObj)const
     {
     int ret = -1;
-    if(m_comp != eless && m_comp != eequal && m_comp != emore && m_comp != enotequal)
+    if(m_comp != comparison::eless && m_comp != comparison::eequal && m_comp != comparison::emore && m_comp != comparison::enotequal)
         {
         if(m_fnc)
             ret = m_fnc->count(outputObj);
@@ -107,10 +107,10 @@ bool functionTree::OK(const OutputClass * outputObj)const
     int cnt = -1;
     switch(m_comp)
         {
-        case eless:
-        case eequal:
-        case enotequal:
-        case emore:
+        case comparison::eless:
+        case comparison::eequal:
+        case comparison::enotequal:
+        case comparison::emore:
             if(child)
                 {
                 assert(child);
@@ -136,13 +136,13 @@ bool functionTree::OK(const OutputClass * outputObj)const
         }
     switch(m_comp)
         {
-        case eless:
+        case comparison::eless:
             return cnt < m_nmbr;
-        case eequal:
+        case comparison::eequal:
             return cnt == m_nmbr;
-        case enotequal:
+        case comparison::enotequal:
             return cnt != m_nmbr;
-        case emore:
+        case comparison::emore:
             return cnt > m_nmbr;
         default:
             return true;
@@ -153,7 +153,7 @@ bool functionTree::passTest(const OutputClass * outputObj)const
     {
     if(OK(outputObj))
         {
-        if(m_comp != etest && child && !child->passTest(outputObj))
+        if(m_comp != comparison::etest && child && !child->passTest(outputObj))
             return false;
         if(next)
             return next->passTest(outputObj);
@@ -165,7 +165,7 @@ bool functionTree::passTest(const OutputClass * outputObj)const
 
 bool functionTree::skip(const OutputClass * outputObj)const
     {
-    if(m_comp == etest) // bare [...] (no comparisons)
+    if(m_comp == comparison::etest) // bare [...] (no comparisons)
         // [...] tests for two situations:
         // 1) whether nested [...] have conditions that are not met and 
         // 2) whether anything countable that is not between [...]0 or [...]<1 returns zero

@@ -194,6 +194,9 @@ bool node::BaseformSub(char * invertedWord,base *& bf,size_t & ln)
 
 node::node(node * next,char * tail,char * baseform,bool fullWord,bool empty)
 :m_next(next),m_sub(0)
+#if defined PROGMAKESUFFIXFLEX
+    ,marked(0)
+#endif
     {
     m_len = strlen(tail);
     this->m_tail = new char[m_len+1];

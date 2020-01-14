@@ -755,7 +755,7 @@ static int lemmatiseer(const char * word, const char * wordend, const char * buf
 
 static char * rewrite(const char *& word, const char *& wordend, const char * p
 #if PRINTRULE
-                     , const char * start, const char * end, const char *& rule
+                     , const char * start, /*const char * end,*/ const char *& rule
 #endif
                      )
     {
@@ -1113,7 +1113,7 @@ static LemmaRule * lemmatiseerV3
     candidate.L = rewrite(cword, cwordend, p
 #if PRINTRULE
                          , start
-                         , end
+                         //, end
                          , candidate.rule
 #endif
                          );
@@ -1259,10 +1259,6 @@ static const char * apply( const char * word
     char Middle[30] = { '\0' };
     printf("WOORD [%.*s]\n", len, word);
 #endif
-#if TESTING || PRINTRULE
-    char Start[30] = { '\0' };
-    char End[30] = { '\0' };
-#endif        
     if (newStyleRules() == 3)
         {
         LemmaRule * lemmas = 0;

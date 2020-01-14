@@ -135,14 +135,14 @@ Lemmatiser::Lemmatiser(optionStruct & a_Option) : listLemmas(0),SortInput(false)
 #endif
         switch(Option.whattodo)
             {
-            case MAKEDICT:
+            case whattodoTp::MAKEDICT:
                 {
 #if defined PROGMAKEDICT
                 status = MakeDict();
 #endif
                 break;
                 }
-            case MAKEFLEXPATTERNS:
+            case whattodoTp::MAKEFLEXPATTERNS:
                 {
 #if defined PROGMAKESUFFIXFLEX
                 status = MakeFlexPatterns();
@@ -170,11 +170,11 @@ Lemmatiser::~Lemmatiser()
     instance--;
     switch(Option.whattodo)
         {
-        case MAKEDICT:
+        case whattodoTp::MAKEDICT:
             {
             break;
             }
-        case MAKEFLEXPATTERNS:
+        case whattodoTp::MAKEFLEXPATTERNS:
             {
             break;
             }

@@ -242,12 +242,15 @@ bool flex::Baseform(const char * word,const char * tag,const char *& bf,size_t &
 
                 b += strlen(b);
                 Base = Base->Next();
-                //if(Base)
+                if(Base)
                     {
                     *b++ = ' ';
                     }
-                /*else
-                    break;*/
+                else
+                    {
+                    *b++ = ' ';
+                    break;
+                    }
                     // 20191220 Make sure there is a space after the lemma,
                     // also the last one! The new rules do that, too.
                 }

@@ -110,7 +110,7 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
         }*/
     else if(*f == '[')
         {
-        tree.setComp(etest);
+        tree.setComp(comparison::etest);
         const char * newf = f + 1;
         newf = Format(newf,gfnc,tree.addChild(),allFormat,SortInput,locloctestType);
         if(!newf || *newf != ']')
@@ -152,7 +152,7 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
     if(*f == '<' || *f == '>' || *f == '~')
         {
         condition = 1;
-        tree.setComp(*f == '<' ? eless : *f == '>' ? emore : enotequal);
+        tree.setComp(*f == '<' ? comparison::eless : *f == '>' ? comparison::emore : comparison::enotequal);
         ++f;
         if(!isdigit(*f))
             {
@@ -188,7 +188,7 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
     else if(isdigit(*f))
         {
         condition = 0;
-        tree.setComp(eequal);
+        tree.setComp(comparison::eequal);
         int nmbr = *f - '0';
         for(;;)
         //do
@@ -209,20 +209,20 @@ const char * OutputClass::Format(const char * format,getFunction gfnc,functionTr
     else if(*f == '+')
         {
         condition = 1;
-        tree.setComp(emore);
+        tree.setComp(comparison::emore);
         tree.setNmbr(0);
         ++f;
         }
     else if(*f == '*')
         {
         condition = 1;
-        tree.setComp(eany);
+        tree.setComp(comparison::eany);
         ++f;
         }
     else if(*f == '?')
         {
         condition = 1;
-        tree.setComp(eany);
+        tree.setComp(comparison::eany);
         tree.hide();
         ++f;
         }

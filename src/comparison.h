@@ -22,12 +22,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef COMPARISON_H
 #define COMPARISON_H
 
-typedef enum {eless   // [...]<2
+enum class comparison
+             {eless   // [...]<2
              ,eequal  // [...]2
              ,enotequal  // [...]~2
              ,emore   // [...]>2  [...]+
              ,eany    //  ...     [...]*
              ,etest   // [...]
-             } comparison ;
+             }  ;
 
 #endif

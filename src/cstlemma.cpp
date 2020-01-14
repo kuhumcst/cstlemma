@@ -77,10 +77,10 @@ int main(int argc, char * argv[])
     int ret;
 
     OptReturnTp optResult = Option.readArgs(argc,argv);
-    if(optResult == Error)
+    if(optResult == OptReturnTp::Error)
         return 1;
 
-    if(optResult == Leave)
+    if(optResult == OptReturnTp::Leave)
         { // option -r, -w, -? or -h
         return 0;
         }
@@ -90,11 +90,11 @@ int main(int argc, char * argv[])
         {
         switch(Option.whattodo)
             {
-            case MAKEDICT:
+            case whattodoTp::MAKEDICT:
                 {
                 break;
                 }
-            case MAKEFLEXPATTERNS:
+            case whattodoTp::MAKEFLEXPATTERNS:
                 {
                 break;
                 }
