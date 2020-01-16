@@ -90,9 +90,9 @@ changes in pre-, in- and suffixes alike. In
 *Proceedings of the Joint Conference of the 47th
 Annual Meeting of the ACL and the 4th International
 Joint Conference on Natural Language Processing
-of the AFNLP*, pages 145–153. Association
+of the AFNLP*, pages 145â€“153. Association
 for Computational Linguistics.
-http://aclweb.org/anthology/P/P09/P09-1017.pdf
+https://www.aclweb.org/anthology/P09-1017.pdf
 
 **Contact info**
 
