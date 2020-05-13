@@ -96,10 +96,10 @@ class rules
         long End;
         int NewStyle;
     public:
-        rules() : TagName(0), buf(bufbuf), buflen(sizeof(bufbuf) - 1), End(0), NewStyle(2)
+        rules() : TagName(0), buf(bufbuf), buflen(sizeof(bufbuf) - 1), End(0), NewStyle(3)
             {
             }
-        rules(const char * TagName) : buflen(sizeof(bufbuf) - 1), NewStyle(2)
+        rules(const char * TagName) : buflen(sizeof(bufbuf) - 1), NewStyle(3)
             {
             this->TagName = new char[strlen(TagName) + 1];
             strcpy(this->TagName, TagName);
@@ -246,6 +246,8 @@ bool readRules(const char * FlexFileName) // Does not read at all.
         }
     if (Hash == NULL)
         Hash = new hashmap::hash<rules>(&rules::tagName, 10); // Memoizes the rule files that have been read.
+    if (taglessrules == 0)
+        taglessrules = new rules();
     return FlexFileName != 0;
     }
 
@@ -253,7 +255,7 @@ int newStyleRules()
     {
     if (taglessrules)
         return taglessrules->newStyleRules();
-    return 0;
+    return 3;
 //    return NewStyle;
     }
 

@@ -1,4 +1,19 @@
 -------------------------------
+Version 8.0.4 (13 May 2020)
+-------------------------------
+Fixed bug that disabled the use of rules if 
+(1) the input is tagged and
+(2) there is no flexrules file without a tag name extension, e.g.:
+
+    flexrules       <--- this one missing
+    flexrules.ADJ
+    flexrules.ADV
+    ...
+
+(An extensionless flexrules file is used as a fall-back if a token has an
+unknown tag.)
+
+-------------------------------
 Version 8.0.3 (14 January 2020)
 -------------------------------
 Option -l+ now works as intended.
