@@ -1,4 +1,9 @@
 -------------------------------
+Version 8.0.5 (1 Sep 2020)
+-------------------------------
+Fixed bug in dictionary lookup for tagged words.
+
+-------------------------------
 Version 8.0.4 (13 May 2020)
 -------------------------------
 Fixed bug that disabled the use of rules if 

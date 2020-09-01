@@ -197,6 +197,7 @@ bool dictionary::findwordSub(const char * word, const char * tag, tcount & Pos,i
                                 }
                             }
                         }
+                    return false;
                     }
                 else
                     {
