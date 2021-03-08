@@ -82,10 +82,10 @@ class baseformpointer
 #if PRINTRULE
         void printfrule(FILE *fp, functionTree * fns, const char * sep);
 #endif
+#endif
 #if PRINTRULE
         void P();
         void R();
-#endif
 #endif
 #if PFRQ || FREQ24
         baseformpointer(const char * s,const char * t,size_t len,unsigned int frequency);
