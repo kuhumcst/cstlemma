@@ -96,8 +96,6 @@ formattingFunction * basefrm::getBasefrmFunctionNoW(int character,bool & DummySo
         case 'n':
             return new functionNoArgB(&basefrm::N);
 #endif
-            /*case 'p':
-            return new functionNoArgB(&basefrm::P);*/
         case 'w':
             return new functionNoArgB(&basefrm::W);
         case 't':

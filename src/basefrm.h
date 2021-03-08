@@ -99,11 +99,11 @@ class basefrm : public OutputClass
 #endif
         void W() const;
         void L() const;
+    public:
 #if PRINTRULE
         void P() const;
         void R() const;
 #endif
-    public:
         static functionTree * bfuncs;// used if -W option set
         static functionTree * Bfuncs;// used if -W option set
         static functionTree * wfuncs;// used if -W option set
@@ -190,6 +190,13 @@ class basefrm : public OutputClass
 class tagpairs;
 extern tagpairs * TagFriends;
 
+extern void (*print)(
+#if STREAM
+        ostream* fpo
+#else
+        FILE* fpo
+#endif
+        , const char* s);
 
 #endif
 #endif

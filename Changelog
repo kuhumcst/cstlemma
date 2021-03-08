@@ -6,7 +6,8 @@ Version 8.1.0 (8 Mar 2021)
     word starting with the dictionary entry, but with extra characters.
     For example, 'Joel' was lemmatized to 'Joe' if 'Joe' didn't have children
     in the dictionary.
-(2) Added new output functions $p and $r that can be included in the -B option.
+(2) Added new output functions $p and $r that can be included in the -W option
+    or, if there is no -W option, in the -B option.
     $p evaluates to the pattern part of the rule that constructs the lemma from
        the input word.
     $r evaluates to the replacement part of the rule that constructs the lemma

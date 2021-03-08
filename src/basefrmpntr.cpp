@@ -252,6 +252,16 @@ if (fns)
         }
     }
 }
+
+void baseformpointer::P()
+    { 
+    this->bf->P(); 
+    }
+void baseformpointer::R() 
+    { 
+    this->bf->R(); 
+    }
+
 #endif
 
 void baseformpointer::reassign(basefrm * arg_bf)

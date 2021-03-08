@@ -120,7 +120,25 @@ void Word::p() const
     if (pbfL)
         pbfL->printfrule(fp, Bfuncs, sep);
     }
+void Word::r() const
+    {
+    if (pbfL)
+        pbfL->printfrule(fp, Bfuncs, sep);
+    }
 #endif
+#if PRINTRULE
+void Word::P() const
+{
+        if (pbfL)
+                pbfL->P();
+}
+void Word::R() const
+{
+        if (pbfL)
+                pbfL->R();
+}
+#endif
+
 
 formattingFunction * Word::getUnTaggedWordFunction(int character,bool & SortInput,int & testType)
     {
@@ -145,7 +163,9 @@ formattingFunction * Word::getUnTaggedWordFunction(int character,bool & SortInpu
             return new functionNoArg(&Word::s,0);
 #if PRINTRULE
         case 'p':
-            return new functionNoArg(&Word::p, 0);
+            return new functionNoArg(&Word::P, 0);
+        case 'r':
+            return new functionNoArg(&Word::R, 0);
 #endif
         default:
             return 0;
@@ -168,7 +188,9 @@ formattingFunction * Word::getUnTaggedWordFunctionNoBb(int character,bool & Sort
             return new functionNoArg(&Word::s,0);
 #if PRINTRULE
         case 'p':
-            return new functionNoArg(&Word::p, 0);
+            return new functionNoArg(&Word::P, 0);
+        case 'r':
+            return new functionNoArg(&Word::R, 0);
 #endif
         default:
             return 0;

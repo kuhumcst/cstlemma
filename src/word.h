@@ -139,6 +139,10 @@ class Word : public OutputClass
 #if PRINTRULE
         void p() const;/*20191216 rule by which lemma is formed. Display '=' in
                            case of dictionary look up or rule w/o wild cards.*/
+        void r() const;/*20210308 rule by which lemma is formed. Display '=' in
+                           case of dictionary look up or rule w/o wild cards.*/
+        void P() const;
+        void R() const;
 #endif
         void s() const
             {
