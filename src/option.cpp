@@ -384,6 +384,9 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 #endif
             LOG1LINE("        Output format for data pertaining to the base form, as predicted by\n"
                    "        flex pattern rules. See -b\n"
+                   "        $p pattern part of the rule by which lemma is constructed.\n"
+                   "        $r replacement part of the rule by which lemma is constructed.\n"
+                   "        See -b for more options.\n"
                    "    -W<format string>\tdefault: not present.\n"
                    "          Output format pertaining to full form when showing full forms\n"
                    "          for a given base form.\n"
