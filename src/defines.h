@@ -141,9 +141,7 @@ non-const character strings.
 #define CHAR const char
 #endif
 
-#ifndef PRINTRULE
 #define PRINTRULE 1 /* $p in output format prints rule by which lemma was formed */
-#endif
 
 #define LEMMATIZEV0 0 // if 1, accepts first generation of affix rules
 
