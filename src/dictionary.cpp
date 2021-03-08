@@ -150,6 +150,7 @@ bool dictionary::findwordSub(const char * word, const char * tag, tcount & Pos,i
             }
         else if(kar2 == kar)
             {
+            bool wMatched = false;
             if(kar)
                 {
                 ptrdiff_t p,q;
@@ -158,6 +159,7 @@ bool dictionary::findwordSub(const char * word, const char * tag, tcount & Pos,i
                 if(s[p])
                     return false;
                 w += q;
+                wMatched = true; // 20210308
                 }
             nmbr = NODES.numberOfChildren[pos];
             pos = NODES.pos[pos];
@@ -166,8 +168,10 @@ bool dictionary::findwordSub(const char * word, const char * tag, tcount & Pos,i
                 pos = -pos; // Make it a valid index.
                 kar = UTF8char(w,staticUTF8);
                 }
-            else if(*w && *++w)
-                {
+            else if(*w && (*++w||wMatched))
+                { /* 20210308
+                     The dictionary word is too short, and the dictionary does
+                     not contain the full word. */
                 return false;
                 }
             else // This is a leaf. Do the baseform and type stuff.
