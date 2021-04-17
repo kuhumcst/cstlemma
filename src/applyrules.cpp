@@ -1198,11 +1198,11 @@ static const char* apply ( const char* word
     size_t len = strlen(word);
     if(flex::baseformsAreLowercase == caseTp::elower)
         {
-        size_t length = 0;
-        word = changeCase(word, true, length); //Non-destructive! 'word' points
+        //size_t length = 0;
+        word = changeCase(word, true, len/*gth*/); //Non-destructive! 'word' points
                     // to temporary location with lower cased copy of original.
+	//len = strlen(word);
         }
-
     donotAddLemmaUnlessRuleHasPrefix = false;
     delete[] result;
     result = 0;
@@ -1223,24 +1223,24 @@ static const char* apply ( const char* word
                                          , word
 #endif
                                         );
-            size_t length = 0;
+            //size_t length = 0;
             // Lemmatize word converted to lowercase
-            word = changeCase(wordInOriginalCasing, true, length);
-            len = strlen(word);
+            word = changeCase(wordInOriginalCasing, true, len/*gth*/);
+            //len = strlen(word);
             lemmas = newStyleLemmatizeV3(word, word + len, buf, maxpos, 0, lemmas
 #if PRINTRULE
                                          , word
 #endif
                                         );
             // Lemmatize word with initial capital, remainder in lowercase
-            length = 1; 
+            //length = 1; 
             word = CapitalizeAndLowercase(wordInOriginalCasing);
             len = strlen(word);
             result = concat(pruneEquals(newStyleLemmatizeV3(word, word + len, buf, maxpos, 0, lemmas
 #if PRINTRULE
-                                                            , word
+                                                           , word
 #endif
-                            ), RulesUnique));
+                                                           ), RulesUnique));
             }
         else if(SegmentInitial
            && (flex::baseformsAreLowercase == caseTp::easis)
@@ -1258,28 +1258,27 @@ static const char* apply ( const char* word
             donotAddLemmaUnlessRuleHasPrefix = true;
             lemmas = newStyleLemmatizeV3(word, word + len, buf, maxpos, 0, lemmas
 #if PRINTRULE
-                                         , word
+                                        , word
 #endif
-            );
-            size_t length = 0;
-            word = changeCase(word, true, length);
+                                        );
+            //size_t length = 0;
+            word = changeCase(word, true, len/*gth*/);
+            //len = strlen(word);
             donotAddLemmaUnlessRuleHasPrefix = false;
             result = concat(pruneEquals(newStyleLemmatizeV3(word, word + len, buf, maxpos, 0, lemmas
 #if PRINTRULE
-                                                            , word
+                                                           , word
 #endif
-            ), RulesUnique));
+                                                           ), RulesUnique));
             }
         else
             {
             result = concat(pruneEquals(newStyleLemmatizeV3(word, word + len, buf, maxpos, 0, lemmas
 #if PRINTRULE
-                                                            , word
+                                                           , word
 #endif
-            ), RulesUnique));
+                                                           ), RulesUnique));
             }
-
-
         }
     else
 #if LEMMATIZEV0
