@@ -72,14 +72,18 @@ i.e. the unkown word is in base form already.)
 */
 const char * baseform(char * word,const char ** tag /*return value!*/, bool SegmentInitial, bool RulesUnique)
     { // construct baseform by applying general rules (e.g. removing endings)
-    const char * wrd;
+    static const char * wrd;
     size_t borrow;
     assert(tag);
     *tag = Flex.Baseform(word,wrd,borrow,SegmentInitial, RulesUnique);
     if(*tag)
+	{
         return wrd;
+	}
     else
+	{
         return allToLower(word); 
+	}
     }
 
 
@@ -586,7 +590,6 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
     
     plext = Plext;
     int m;
-
     const char * baseTp = LemmaTag(Tp);
 
     unsigned int maxFreq = maxFrequency(Plext,nmbr,baseTp,m);
@@ -711,7 +714,9 @@ void Word::lookup(text * txt)
         txt->cntL += addBaseFormsL();
         }
     if(basefrm::hasW)
+	{
         addFullForm();
+	}
     }
 
 
