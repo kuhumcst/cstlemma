@@ -26,8 +26,7 @@ LETTERFUNCDIR    = ../../letterfunc/src
 SGMLDIR    = ../../parsesgml/src
 INCLUDEDIR = -I$(SRCDIR) -I$(HASHDIR) -I$(LETTERFUNCDIR) -I$(SGMLDIR)
 
-#CC=g++ $(INCLUDEDIR) -O3 -Wall -Wno-reorder -pedantic -DNDEBUG 
-CC=g++ $(INCLUDEDIR) -O3 -Wall -Wno-reorder -pedantic 
+CC=g++ $(INCLUDEDIR) -O3 -Wall -Wno-reorder -pedantic -DNDEBUG 
 
 # -fPIC or -fpic: enable 'position independent code' generation. Necessary for shared libs
 # -fpic may generate smaller and faster code, but will have platform-dependent limitations
