@@ -1,4 +1,13 @@
 -------------------------------
+Version 8.1.1 (17 April 2021)
+-------------------------------
+Fixed in applyrules.cpp: recompute string length after 
+                         converting word to lowercase.
+Example:                 Al-İstişrâḳ 16 bytes 
+                         al-istişrâḳ 15 bytes
+This bug would sometimes cause memory corruption.
+
+-------------------------------
 Version 8.1.0 (8 Mar 2021)
 -------------------------------
 (1) Fixed bug in dictionary lookup: A dictionary entry with no children (as a
