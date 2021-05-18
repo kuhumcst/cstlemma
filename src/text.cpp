@@ -693,6 +693,8 @@ void text::Lemmatise(FILE * fpo
 
 void text::insert(const char * w)
     {
+    static char wbuf[1000];
+    w = convert(w, wbuf, wbuf + sizeof(wbuf) - 1);
     if(!Hash)
         {
         Hash = new hashmap::hash<Word>(&Word::itsWord,1000);

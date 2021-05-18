@@ -94,9 +94,9 @@ static void printXML(
                 fprintf(basefrm::m_fp,"&gt;");
                 break;
             case '&':
-                if(strchr(s+1,';'))
+                /*if(strchr(s+1,';'))
                     fputc('&',basefrm::m_fp);
-                else
+                else*/
                     fprintf(basefrm::m_fp,"&amp;");
                 break;
             case '\'':
@@ -523,24 +523,32 @@ void XMLtext::reachedTokenEnd(char * Ch)
 #if STREAM
 XMLtext::XMLtext(istream * fpi,optionStruct & Option)
 #else
-XMLtext::XMLtext(FILE * fpi,optionStruct & Option)
+XMLtext::XMLtext(FILE* fpi, optionStruct& Option)
 #endif
-           :text(Option.InputHasTags,Option.nice)
-           ,Token(NULL)
-           ,ancestor(Option.ancestor)
-           ,element(Option.element)
-           ,segment(Option.segment)
-           ,POSAttribute(Option.POSAttribute)
-           ,lemmaAttribute(Option.lemmaAttribute)
-           ,lemmaClassAttribute(Option.lemmaClassAttribute)
-           ,Crumbs(NULL)
-           ,ClosingTag(false)
-           ,WordPosComing(false)
-           ,POSPosComing(false)
-           ,LemmaPosComing(false)
-           ,LemmaClassPosComing(false)
-           ,alltext(NULL)
-           ,wordAttribute(Option.wordAttribute)
+    :text(Option.InputHasTags, Option.nice)
+    , Token(NULL)
+    , ancestor(Option.ancestor)
+    , element(Option.element)
+    , segment(Option.segment)
+    , POSAttribute(Option.POSAttribute)
+    , lemmaAttribute(Option.lemmaAttribute)
+    , lemmaClassAttribute(Option.lemmaClassAttribute)
+    , Crumbs(NULL)
+    , ClosingTag(false)
+    , WordPosComing(false)
+    , POSPosComing(false)
+    , LemmaPosComing(false)
+    , LemmaClassPosComing(false)
+    , alltext(NULL)
+    , wordAttribute(Option.wordAttribute)
+    {
+    }
+
+#if STREAM
+void XMLtext::DoYourWork(istream* fpi, optionStruct& Option)
+#else
+void XMLtext::DoYourWork(FILE* fpi, optionStruct& Option)
+#endif
     {
     StartOfLine = true;
 

@@ -132,6 +132,14 @@ class XMLtext : public text
 */
             );
         ~XMLtext(){}
+        virtual void DoYourWork(
+#if STREAM
+            istream* fpi
+#else
+            FILE* fpi
+#endif
+            , optionStruct& Option
+        );
         virtual void printUnsorted(
 #if STREAM
             ostream * fpo

@@ -56,7 +56,16 @@ class flattext : public text
             */
             );
         ~flattext(){}
-        
+        virtual const char* convert(const char* s, char* buf, const char* lastBufByte);
+        virtual void DoYourWork(
+#if STREAM
+            istream* fpi
+#else
+            FILE* fpi
+#endif
+            , optionStruct& Option
+        ) {};
+
         virtual void printUnsorted(
 #if STREAM
             ostream * fpo

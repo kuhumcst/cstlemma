@@ -1,4 +1,10 @@
 -------------------------------
+Version 8.1.2 (18 May 2021)
+-------------------------------
+Fixed error in decoding X/HTML entities, caused by calling virtual fnction from
+inside a constructor.
+
+-------------------------------
 Version 8.1.1 (17 April 2021)
 -------------------------------
 Fixed in applyrules.cpp: recompute string length after 

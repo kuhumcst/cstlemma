@@ -1066,6 +1066,7 @@ void Lemmatiser::LemmatiseText(FILE * fpin,FILE * fpout,tallyStruct * tally)
     if(Option.XML)
         {
         Text  = new XMLtext(fpin,Option);
+        Text->DoYourWork(fpin, Option);
         }
     else
         {

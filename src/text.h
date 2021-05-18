@@ -39,6 +39,7 @@ using namespace std;
 class Word;
 class taggedWord;
 class basefrm;
+class optionStruct;
 enum class caseTp;
 
 struct tallyStruct
@@ -93,12 +94,12 @@ class text
         bool InputHasTags;
         bool StartOfLine;
     private:
-        virtual const char * convert(const char * s, char * buf, const char * lastBufByte)
-            {
+        virtual const char* convert(const char* s, char* buf, const char* lastBufByte) = NULL;
+            /*{
             REFER(buf)
             REFER(lastBufByte)
             return s;
-            }
+            }*/
     protected:
         bool atStartOfLine() const { return StartOfLine; }
         void insert(const char * w);
@@ -145,6 +146,14 @@ class text
             );
 #endif
         text(bool InputHasTags,bool nice);
+        virtual void DoYourWork(
+#if STREAM
+            istream* fpi
+#else
+            FILE* fpi
+#endif
+            , optionStruct& Option
+        ) = NULL;
         virtual ~text();
         void createUnTaggedAlternatives(
 #ifndef CONSTSTRCHR
