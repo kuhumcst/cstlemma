@@ -435,7 +435,7 @@ bool isAllUpperUTF8(const char * s)
     return isAllUpper(s,0);
     }
 
-bool (*IsAllUpper)(const char * s) = NULL;
+bool (*IsAllUpper)(const char * s) = 0;
 
 
 void AllToLowerISO(char * s)

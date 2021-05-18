@@ -94,7 +94,7 @@ class text
         bool InputHasTags;
         bool StartOfLine;
     private:
-        virtual const char* convert(const char* s, char* buf, const char* lastBufByte) = NULL;
+        virtual const char* convert(const char* s, char* buf, const char* lastBufByte) = 0;
             /*{
             REFER(buf)
             REFER(lastBufByte)
@@ -153,7 +153,7 @@ class text
             FILE* fpi
 #endif
             , optionStruct& Option
-        ) = NULL;
+        ) = 0;
         virtual ~text();
         void createUnTaggedAlternatives(
 #ifndef CONSTSTRCHR
