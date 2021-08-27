@@ -1,5 +1,6 @@
 METH=git
 METH=https
+BRANCH=$(git branch --show-current)
 
 if [ ! -d hashmap ]; then
     mkdir hashmap
@@ -39,11 +40,14 @@ if [ ! -d cstlemma ]; then
     cd cstlemma
     git init
     git remote add origin $METH://github.com/kuhumcst/cstlemma.git
+    git checkout $BRANCH
     cd ..
 fi
 cd cstlemma
-git pull origin master
+git pull origin $BRANCH
 cd src
-make all
+
+# make the default compile target (dynamic linking)
+make
 cd ..
 cd ..
