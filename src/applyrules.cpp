@@ -170,7 +170,10 @@ bool readRules(FILE * flexrulefile, const char * FlexFileName)
 
 const char * applyRules(const char * word, bool SegmentInitial, bool RulesUnique)
     {
-    assert(taglessrules);
+    if (taglessrules == 0)
+        taglessrules = new rules();
+
+//    assert(taglessrules);
     return taglessrules->applyRules(word, SegmentInitial, RulesUnique);
     }
 
