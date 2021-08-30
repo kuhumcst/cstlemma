@@ -384,7 +384,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 #endif
             LOG1LINE("        Output format for data pertaining to the base form, as predicted by\n"
                    "        flex pattern rules.\n"
-                   "        The functions $p and $r are only valid if there is no -W option. See there."
+                   "        The functions $p and $r are only valid if there is no -W option. See there.\n"
                    "        $p pattern part of the rule by which lemma is constructed.\n"
                    "        $r replacement part of the rule by which lemma is constructed.\n"
                    "        See -b for more options.\n"
@@ -400,7 +400,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "                       (If that is the case, the lemmatiser also generates lemma(s)\n"
                    "                       using the flex pattern rules, so you can choose.)\n"
                    "               (blank) full form in dictionary\n"
-                   "        Note that if there is no -W option, the $p and $r functions can be put in the -B option."
+                   "        Note that if there is no -W option, the $p and $r functions can be put in the -B option.\n"
                    "        $p pattern part of the rule by which lemma is constructed.\n"
                    "        $r replacement part of the rule by which lemma is constructed.\n"
                    "           (Note that the $p and $r functions can be put in the -B option\n"

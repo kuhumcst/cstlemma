@@ -1,6 +1,11 @@
 -------------------------------
 Version 8.1.3 (27 August 2021)
 -------------------------------
+Added newline before "  $p pattern part of the rule ..."
+
+-------------------------------
+Version 8.1.3 (27 August 2021)
+-------------------------------
 Made sure that
   touch my_empty_rule_file
   ./cstlemma -L -f my_empty_rule_file -i my_text_file.txt
