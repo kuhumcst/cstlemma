@@ -1,7 +1,4 @@
 # don't include binary output and build artifacts
 /cstlemma
-/doc/cstlemma/
-/doc/hashmap/
-/doc/letterfunc/
-/doc/parsesgml/
+/lib/
 /src/*.o

@@ -7,10 +7,11 @@
     * This directory contains documentation of the program.
 * src
     * This directory contains source code and a Makefile.
-    * You also need the source code in the following repositories, installed alongside and at the same level as cstlemma:
+    * You also need to clone source code from the following repositories to `lib/parsesgml`, `lib/letterfunc` and `lib/hashmap` respectively:
         * https://github.com/kuhumcst/parsesgml
         * https://github.com/kuhumcst/letterfunc
-        * https://github.com/kuhumcst/hashmap      
+        * https://github.com/kuhumcst/hashmap
+    * NOTE: Fetching libraries and compiling the code can be done automatically by running `makecstlemma.bash`.
 * Changelog
     * A document describing changes between versions.
 * COPYING
@@ -32,10 +33,10 @@ Both 32 and 64 bit versions can be made.
 
 **Installation**
 
-* Linux:
-    1. Download (e.g. git clone) cstlemma, parsesgml, letterfunc and hashmap. If you are going to use the Makefile that comes with cstlemma, locate each of these packages in separate subdirectories under the same directory, and call these subdirectories cstlemma, parsesgml, letterfunc and hashmap, respectively. You can use https://github.com/kuhumcst/cstlemma/blob/master/doc/makecstlemma.bash to do all of this automatically.
+* Linux/Mac:
+    1. Download (e.g. git clone) cstlemma, parsesgml, letterfunc and hashmap. If you are going to use the Makefile that comes with cstlemma, locate each of these packages in separate subdirectories under the same directory, and call these subdirectories cstlemma, parsesgml, letterfunc and hashmap, respectively. You can run `makecstlemma.bash` to do all of this automatically.
     2. Change directory to the 'cstlemma/src' directory.
-    3. Run 'make' or 'make all'. To get rid of object files, run 
+    3. Run 'make' (both Linux and Mac) or 'make all' (only Linux). To get rid of object files, run
     4. 'make clean'.
 
 **Running**
@@ -48,7 +49,7 @@ lemmatised already.
 Thus, for checking that the lemmatiser runs OK, you could do the following:
 
         touch my_empty_rule_file
-        cstlemma -L -f my_empty_rule_file -i my_text_file.txt
+        ./cstlemma -L -f my_empty_rule_file -i my_text_file.txt
 
 This would create a file my_text_file.txt.lemma that has two tab-separated
 columns: the left column contains a word from your text and the right column
