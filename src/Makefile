@@ -20,10 +20,13 @@ LINKERNAME=$(LIB)lib$(PNAME).so
 SONAME=$(LINKERNAME).$(VERSION)
 REALNAME=$(SONAME).$(MINOR_NUMBER)
 
+# Parallel includes for developers; otherwise use downloaded includes in lib.
+INCLUDEPREFIX = $(shell if [ -d ../hashmap/src ]; then echo ../; else echo ../lib/; fi)
+
 SRCDIR     = .
-HASHDIR    = ../lib/hashmap/src
-LETTERFUNCDIR    = ../lib/letterfunc/src
-SGMLDIR    = ../lib/parsesgml/src
+HASHDIR    = $(INCLUDEPREFIX)hashmap/src
+LETTERFUNCDIR    = $(INCLUDEPREFIX)letterfunc/src
+SGMLDIR    = $(INCLUDEPREFIX)parsesgml/src
 INCLUDEDIR = -I$(SRCDIR) -I$(HASHDIR) -I$(LETTERFUNCDIR) -I$(SGMLDIR)
 
 CC=g++ $(INCLUDEDIR) -O3 -Wall -Wno-reorder -pedantic -DNDEBUG -std=c++11

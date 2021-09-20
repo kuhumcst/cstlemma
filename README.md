@@ -12,6 +12,7 @@
         * https://github.com/kuhumcst/letterfunc
         * https://github.com/kuhumcst/hashmap
     * NOTE: Fetching libraries and compiling the code can be done automatically by running `makecstlemma.bash`.
+    * ALTERNATIVELY: Place the three included source directories in the same root directory that the `cstlemma` directory is in and then run `make` inside `cstlemma/src`.
 * Changelog
     * A document describing changes between versions.
 * COPYING
