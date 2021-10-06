@@ -39,7 +39,7 @@ using namespace std;
 class Word;
 class taggedWord;
 class basefrm;
-class optionStruct;
+struct optionStruct;
 enum class caseTp;
 
 struct tallyStruct

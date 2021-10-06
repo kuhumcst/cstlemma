@@ -1,4 +1,9 @@
 -------------------------------
+Version 8.1.4 (6 October 2021)
+-------------------------------
+In text.h, changed type of optionStruct to 'struct'.
+
+-------------------------------
 Version 8.1.3 (27 August 2021)
 -------------------------------
 Added newline before "  $p pattern part of the rule ..."
