@@ -88,6 +88,9 @@ non-const character strings.
 #if defined __GNUC__  && ((__GNUC__ == 4 && __GNUC_MINOR__ > 3) || __GNUC__ > 4)
 #define CONSTSTRCHR
 #endif
+#if defined __clang__
+#define CONSTSTRCHR
+#endif
 #define REFER(v)
 #endif
 
