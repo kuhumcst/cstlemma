@@ -21,7 +21,7 @@ SONAME=$(LINKERNAME).$(VERSION)
 REALNAME=$(SONAME).$(MINOR_NUMBER)
 
 # Parallel includes for developers; otherwise use downloaded includes in lib.
-INCLUDEPREFIX = $(shell if [ -d ../hashmap/src ]; then echo ../; else echo ../lib/; fi)
+INCLUDEPREFIX = $(shell if [ -d ../../hashmap/src ]; then echo ../../; else echo ../lib/; fi)
 
 SRCDIR     = .
 HASHDIR    = $(INCLUDEPREFIX)hashmap/src
