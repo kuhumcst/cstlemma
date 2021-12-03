@@ -356,15 +356,15 @@ class Word : public OutputClass
                     pbfL->addFullForm(this);
                 }
             }
-        void DissambiguateByLemmaFrequency()
+        void DisambiguateByLemmaFrequency()
             {
             if(pbfD)
                 {
-                pbfD->DissambiguateByLemmaFrequency();
+                pbfD->DisambiguateByLemmaFrequency();
                 }
             if(pbfL)
                 {
-                pbfL->DissambiguateByLemmaFrequency();
+                pbfL->DisambiguateByLemmaFrequency();
                 }
             }
         void decFreq()
@@ -472,15 +472,15 @@ class taggedWord : public Word
         virtual int addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
                                // lexical information for this word.
            bool & conflict,int & cntD,int & cntL);//
-        void DissambiguateByTagFriends()
+        void DisambiguateByTagFriends()
             {
             if(pbfD)
                 {
-                pbfD->DissambiguateByTagFriends(m_tag);
+                pbfD->DisambiguateByTagFriends(m_tag);
                 }
             if(pbfL)
                 {
-                pbfL->DissambiguateByTagFriends(m_tag);
+                pbfL->DisambiguateByTagFriends(m_tag);
                 }
             }
     };

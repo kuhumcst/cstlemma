@@ -548,7 +548,7 @@ void text::Lemmatise(FILE * fpo
         if(Root)
             {
             for(size_t i = 0;i < N;++i)
-                Root[i]->DissambiguateByLemmaFrequency();
+                Root[i]->DisambiguateByLemmaFrequency();
             for(size_t i = 0;i < N;++i)
                 Root[i]->decFreq();
             }
@@ -562,7 +562,7 @@ void text::Lemmatise(FILE * fpo
         if(Root)
             {
             for(size_t i = 0;i < N;++i)
-                ((taggedWord**)Root)[i]->DissambiguateByTagFriends();
+                ((taggedWord**)Root)[i]->DisambiguateByTagFriends();
             }
         if(nice)
             LOG1LINE("...disambiguated by tag friends");

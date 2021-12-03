@@ -487,6 +487,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "    -u  enforce unique dictionary look-up (default in versions < 7.0 of cstlemma)\n"
                    "    -u- allow ambiguous dictionary look-up (default)\n"
                    "    -Hn n = 0: use lemma frequencies for disambiguation (default in versions < 7.0 of cstlemma)\n"
+                   "               In case of same frequency: first lemma wins.\n"
                    "        n = 1: use lemma frequencies for disambiguation,\n"
                    "               show candidates for pruning after the winning candidate.\n"
                    "        n = 2: do not use lemma frequencies for disambiguation. (default)\n"

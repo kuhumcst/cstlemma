@@ -107,8 +107,8 @@ class baseformpointer
                 next->assignTo(pbf);
             }
         void addFullForm(Word * word);
-        void DissambiguateByLemmaFrequency();
-        void DissambiguateByTagFriends(const char * tag);
+        void DisambiguateByLemmaFrequency();
+        void DisambiguateByTagFriends(const char * tag);
         void testPrint();
         void decFreq(Word * w);
     };

@@ -280,8 +280,9 @@ void baseformpointer::addFullForm(Word * word)
         next->addFullForm(word);
     }
 
-void baseformpointer::DissambiguateByLemmaFrequency()
+void baseformpointer::DisambiguateByLemmaFrequency()
     {
+    bool maxSeen = false;
     int maxfreq = 0;
     baseformpointer * p = this;
     for(;p;p = p->next)
@@ -295,7 +296,14 @@ void baseformpointer::DissambiguateByLemmaFrequency()
     for(p = this;p;p = p->next)
         {
         int f = p->bf->lemmaFreq();
-        if(f < maxfreq)
+        if(f == maxfreq)
+            {
+            if (maxSeen)
+                p->hidden = true;
+            else
+                maxSeen = true;
+            }
+        else
             {
             p->hidden = true;
             }
@@ -313,7 +321,7 @@ void baseformpointer::decFreq(Word * w)
         }
     }
 
-void baseformpointer::DissambiguateByTagFriends(const char * tag)
+void baseformpointer::DisambiguateByTagFriends(const char * tag)
     {
     if(next)
         {

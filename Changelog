@@ -1,4 +1,11 @@
 -------------------------------
+Version 8.2.0 (3 December 2021)
+-------------------------------
+When disambiguating, if multiple lemmas have the same top frequency, only the
+first one survives. Previously, this remained undecided and the output was
+ambiguous.
+
+-------------------------------
 Version 8.1.4 (6 October 2021)
 -------------------------------
 In text.h, changed type of optionStruct to 'struct'.
