@@ -738,7 +738,7 @@ void text::insert(const char * w, const char * tag)
     void * v;
     taggedWord * wrd;
     for ( wrd = (taggedWord *)Hash->find(w,v)
-        ; wrd && strcmp(wrd->m_tag,tag)
+        ; wrd && wrd->m_tag && strcmp(wrd->m_tag,tag)
         ; wrd = (taggedWord *)Hash->findNext(w,v)
         )
         ;

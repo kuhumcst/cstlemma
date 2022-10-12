@@ -242,7 +242,16 @@ bool wordReader::countToken(int kar)
         }
     return false;
     }
+/*
+Suppose that if the input is tagged XML and contains an element like
 
+<span xml:id="t31767" from="#i58910" to="#i58912" pos="X" lemma="samfund">samfund ...</span>
+
+then the "..." is treated as untagged!
+
+Therefore one cannot assume that all generated words are of the class taggedWord. Some can be of the class word. 
+
+*/
 bool wordReader::readToken(int kar)
     {
     CHAR * w = readChar(kar);
