@@ -597,7 +597,7 @@ int (*strcmpN)(const char *s, const char *p,ptrdiff_t & is,ptrdiff_t & ip) = str
 
 void setEncoding(int encoding)
     {
-    if(encoding == 'u')
+    if(encoding == 'u' || encoding == 'U')
         encoding = ENUNICODE;
     else if(  encoding != ENUNICODE 
            && (  encoding < 0 

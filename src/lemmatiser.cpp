@@ -807,6 +807,20 @@ int Lemmatiser::openFiles()
     dict.initdict(fpdict);
     if(fpdict)
         fclose(fpdict);
+/*
+    FILE* fprintall = fopen("printall", "wb");
+    FILE* fprintall2 = fopen("printall2", "wb");
+    if(fprintall)
+        {
+        dict.printall(fprintall);
+        fclose(fprintall);
+        }
+    if(fprintall2)
+        {
+        dict.printall2(fprintall2);
+        fclose(fprintall2);
+        }
+*/        
     return 0;
     }
 

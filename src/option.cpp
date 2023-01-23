@@ -98,7 +98,7 @@ optionStruct::optionStruct()
     whattodo = whattodoTp::LEMMATISE;
     argi = NULL;
     argo = NULL;
-    arge = NULL;
+    arge = NULL; // 20230123
     cformat = NULL;//dupl(DefaultCFormat);
     nice = false;
 #if defined PROGMAKEDICT
@@ -298,6 +298,8 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "    -y  test output\n    -y- release output (default)\n"
                    "    -k  collapse homographs (remove \",n\" endings)(default)\n"
                    "    -k- do not collapse homographs (keep \",n\" endings)\n"
+                   "    -e<n> ISO8859 Character encoding. 'n' is one of 1,2,7 and 9 (ISO8859-1,2, etc).\n"
+                   "    -eU Unicode (UTF-8) input. (default)\n"
                    "===============================");
 #endif
 #if defined PROGMAKESUFFIXFLEX
@@ -510,7 +512,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "    -A  Treat / as separator between alternative words.\n"
                    "    -A- Do not treat / as separator between alternative words (default)\n"
                    "    -e<n> ISO8859 Character encoding. 'n' is one of 1,2,7 and 9 (ISO8859-1,2, etc).\n"
-                   "    -eU Unicode (UTF-8) input.\n"
+                   "    -eU Unicode (UTF-8) input. (default)\n"
                    "    -e  Don't use case conversion.\n"
                    "    -X  XML input. Leave XML elements unchanged.\n"
                    "    The next options do not allow space between option letters and argument!\n"
@@ -1101,7 +1103,7 @@ OptReturnTp optionStruct::readArgs(int argc, char * argv[])
         }
     if(this->arge == NULL)
         {
-        setEncoding(0);
+        setEncoding('U');
         }
     return result;
     }

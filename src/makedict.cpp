@@ -639,7 +639,6 @@ bool DictNode::add(char * flexform,char * lextype,char * baseform,ptrdiff_t offs
         }
     else if(next)
         {
-        
         if(UTF8char(next->m_flexform,globUTF8) > UTF8char(flexform,globUTF8))
             { // The new node is alphabetically before the next node
             if(UTF8char(this->m_flexform,globUTF8) < UTF8char(flexform,globUTF8))

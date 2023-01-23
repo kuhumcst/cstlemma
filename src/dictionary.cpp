@@ -79,7 +79,6 @@ static char * STRINGS;
 static char * STRINGS1; // STRINGS1 = STRINGS + 1
 lext * LEXT;
 static Nodes NODES;
-static char EMPTY[] = "";
 
 bool dictionary::initdict(FILE * fpin)
     {
@@ -116,6 +115,8 @@ void dictionary::printall(FILE * fp)
 
 void dictionary::printall2(FILE * fp)
     {
+    char EMPTY[10000];
+    EMPTY[0] = '\0';
     for(tchildrencount i = 0;i < NODES.ntoplevel;++i)
         {
         printnode2(EMPTY,i,fp);
