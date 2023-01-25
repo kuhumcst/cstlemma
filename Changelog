@@ -1,4 +1,10 @@
 -------------------------------
+Version 8.3.1 (25 January 2023)
+-------------------------------
+New predefined 'PROGPRINTDICT' in defines.h to enable serialization of binary
+dictionary to text format.
+
+-------------------------------
 Version 8.3.0 (23 January 2023)
 -------------------------------
 CSTlemma assumes UTF-8 encoded input (option -eU).

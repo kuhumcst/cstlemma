@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // types that ar used for serializing (writing to file) the dictionary
 
 #include "defines.h"
-#if (defined PROGLEMMATISE) || (defined PROGMAKEDICT)
+#if (defined PROGLEMMATISE) || (defined PROGMAKEDICT) || (defined PROGPRINTDICT)
 
 #include <stddef.h>
 

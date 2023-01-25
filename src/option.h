@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class FreqFile;
 #endif
 
-enum class whattodoTp {MAKEDICT,MAKEFLEXPATTERNS,LEMMATISE};
+enum class whattodoTp {MAKEDICT,MAKEFLEXPATTERNS,LEMMATISE,PRINTDICT};
 enum class OptReturnTp {GoOn = 0,Leave = 1,Error = 2};
 
 #if defined _WIN32
@@ -64,7 +64,7 @@ struct optionStruct
 #endif
     // -L
     // linguistic resources
-#if defined PROGLEMMATISE
+#if (defined PROGLEMMATISE) || (defined PROGPRINTDICT)
     const char * dictfile;  // -d
 #endif
 #if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
@@ -114,11 +114,9 @@ struct optionStruct
 //    unsigned int SortFreq;                // -q#wp text::Lemmatise
     int UseLemmaFreqForDisambiguation;      // -H text::Lemmatise
     bool DictUnique;                        // -u text::Lemmatise
-#endif
     caseTp baseformsAreLowercase;             // -l text::Lemmatise
 
 
-#if defined PROGLEMMATISE
     bool defaultbformat;
     bool defaultBformat;
 #endif
@@ -162,6 +160,6 @@ struct optionStruct
     void settreatSlashAsAlternativesSeparator(bool b);
     void setUseLemmaFreqForDisambiguation(bool b);
     void setDictUnique(bool b);
-#endif
     void setbaseformsAreLowercase(caseTp b);
+#endif
     };

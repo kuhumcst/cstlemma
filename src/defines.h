@@ -122,18 +122,22 @@ non-const character strings.
 
 
 
-#if (defined PROGMAKEDICT)
+#if   (defined PROGMAKEDICT)
 #elif (defined PROGMAKESUFFIXFLEX)
 #elif (defined PROGLEMMATISE)
+#elif (defined PROGPRINTDICT)
 #else
 #define PROGMAKEDICT
-#define PROGMAKESUFFIXFLEX
+//#define PROGMAKESUFFIXFLEX
 #define PROGLEMMATISE
+//#define PROGPRINTDICT
 #endif
 #if !defined PROGMAKEDICT
 #if !defined PROGMAKESUFFIXFLEX
 #if !defined PROGLEMMATISE
-#error At least one of PROGMAKEDICT  PROGMAKESUFFIXFLEX and PROGLEMMATISE must be defined
+#if !defined PROGPRINTDICT
+#error At least one of PROGMAKEDICT  PROGMAKESUFFIXFLEX PROGLEMMATISE and PROGPRINTDICT must be defined
+#endif
 #endif
 #endif
 #endif

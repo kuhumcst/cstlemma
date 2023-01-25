@@ -56,7 +56,7 @@ const char optionStruct::Default_b_format[] = "$w";
 const char * optionStruct::Default_B_format = optionStruct::Default_b_format;
 #endif
 
-static char opts[] = "?@:A:b:B:c:C:d:De:f:F:H:hi:I:k:l:Lm:n:N:o:p:q:R:s:t:u:U:v:W:x:X:y:z:" /* GNU: */ "wr";
+static char opts[] = "?@:A:b:B:c:C:d:De:f:F:H:hi:I:k:l:Lm:n:N:o:p:Pq:R:s:t:u:U:v:W:x:X:y:z:" /* GNU: */ "wr";
 static char *** Ppoptions = NULL;
 static char ** Poptions = NULL;
 static int optionSets = 0;
@@ -230,13 +230,16 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
 
             break;
 #endif
-#if defined PROGLEMMATISE
+#if (defined PROGLEMMATISE) || (defined PROGPRINTDICT)
         case 'd':
             dictfile = dupl(locoptarg);
             break;
 #endif
         case 'D':
             whattodo = whattodoTp::MAKEDICT;
+            break;
+        case 'P':
+            whattodo = whattodoTp::PRINTDICT;
             break;
         case 'e':
             arge = dupl(locoptarg);
@@ -260,6 +263,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             flx = dupl(locoptarg);
             break;
 #endif
+#if (defined PROGMAKESUFFIXFLEX)
         case 'F':
             if(*locoptarg != 'F')
                 {
@@ -277,6 +281,7 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                 }
             whattodo = whattodoTp::MAKEFLEXPATTERNS;
             break;
+#endif
         case 'h':
         case '?':
             LOG1LINE("usage:\n============================");
@@ -301,6 +306,19 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
                    "    -e<n> ISO8859 Character encoding. 'n' is one of 1,2,7 and 9 (ISO8859-1,2, etc).\n"
                    "    -eU Unicode (UTF-8) input. (default)\n"
                    "===============================");
+#endif
+#if defined PROGPRINTDICT
+            LOG1LINE("    Print binary dictionary to files 'dicttree.txt'  and 'dictlist.txt'");
+#if STREAM
+            cout << progname << " -P \\" << endl;
+#else
+            printf("%s -P \\\n", progname);
+#endif
+            LOG1LINE("    -i  <binarydictionary>\n"
+                     "    -d  <binarydictionary> (identical to -i)\n"
+                     "    -e<n> ISO8859 Character encoding. 'n' is one of 1,2,7 and 9 (ISO8859-1,2, etc).\n"
+                     "    -eU Unicode (UTF-8) input. (default)\n"
+                     "===============================");
 #endif
 #if defined PROGMAKESUFFIXFLEX
             LOG1LINE("    Create or add flex patterns");
@@ -548,7 +566,10 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             break;
 #endif
         case 'i':
-            argi = dupl(locoptarg);
+            if(whattodo == whattodoTp::PRINTDICT)
+                dictfile = dupl(locoptarg);
+            else
+                argi = dupl(locoptarg);
             break;
 #if defined PROGLEMMATISE
         case 'I':

@@ -33,8 +33,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <ctype.h>
 #include <assert.h>
 
+#if (defined PROGLEMMATISE) 
 caseTp flex::baseformsAreLowercase = caseTp::easis;
-
+#endif
 
 #if STREAM
 #include <iostream>

@@ -20,7 +20,7 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "defines.h"
-#if defined PROGLEMMATISE
+#if (defined PROGLEMMATISE) || (defined PROGPRINTDICT)
 #include "dictionary.h"
 #endif
 
@@ -53,15 +53,17 @@ class Lemmatiser
 #endif
     private:
         static int instance;
-#if (defined PROGLEMMATISE)
+#if (defined PROGLEMMATISE) || (defined PROGPRINTDICT)
         dictionary dict;
+#if (defined PROGLEMMATISE)
         static tagpairs * TextToDictTags;
-#endif
-        optionStruct & Option;
         int listLemmas;
-        int status;
         bool SortInput; // derived from other options
         bool changed;
+#endif
+#endif
+        optionStruct & Option;
+        int status;
     public:
         int getStatus()
             {
@@ -69,19 +71,21 @@ class Lemmatiser
             }
         Lemmatiser(optionStruct & Option);
         ~Lemmatiser();
+#if defined PROGLEMMATISE || defined PROGPRINTDICT
+        int openFiles();
+        int LemmatiseInit();
+        int LemmatiseFile();
 #if defined PROGLEMMATISE
+        void LemmatiseEnd();
         static const char * translate(const char * tag);
         int setFormats();
-        int openFiles();
         void showSwitches();
 #if STREAM
         void LemmatiseText(istream * fpin,ostream * fpout,tallyStruct * tally);
 #else
         void LemmatiseText(FILE * fpin,FILE * fpout,tallyStruct * tally);
 #endif
-        int LemmatiseFile();
-        int LemmatiseInit();
-        void LemmatiseEnd();
+#endif
 #endif
 #if defined PROGMAKEDICT
         int MakeDict();

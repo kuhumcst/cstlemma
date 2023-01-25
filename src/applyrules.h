@@ -22,8 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef APPLYRULES_H
 #define APPLYRULES_H
 
+#if (defined PROGLEMMATISE)
 #include "defines.h"
-#if defined PROGLEMMATISE
 #include <stdio.h>
 
 int newStyleRules();

@@ -24,7 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "lemmatiser.h"
 #include "lemmtags.h"
 #include "word.h"
-#if defined PROGLEMMATISE
+
+#if (defined PROGLEMMATISE) || (defined PROGPRINTDICT)
 
 #include "utf8func.h"
 #include "caseconv.h"
@@ -105,6 +106,7 @@ dictionary::~dictionary()
 #endif
     }
 
+#if defined PROGPRINTDICT
 void dictionary::printall(FILE * fp)
     {
     for(tchildrencount i = 0;i < NODES.ntoplevel;++i)
@@ -122,7 +124,9 @@ void dictionary::printall2(FILE * fp)
         printnode2(EMPTY,i,fp);
         }
     }
+#endif
 
+#if defined PROGLEMMATISE
 bool dictionary::findword(const char * word, const char * tag, tcount & Pos,int & Nmbr)
     {
     if(findwordSub(word,tag,Pos,Nmbr))
@@ -220,7 +224,7 @@ bool dictionary::findwordSub(const char * word, const char * tag, tcount & Pos,i
         }
     return false;
     }
-
+#endif
 
 /*
 Structure of dictionary file.
@@ -358,8 +362,10 @@ void dictionary::cleanup()
     delete [] NODES.pos;
     }
 
+#if defined PROGPRINTDICT
 void dictionary::printlex(tindex pos, FILE * fp)
     {
+//    printf("%s\n", LEXT[pos].BaseFormSuffix);
     fprintf(fp,"%s %s %d %d",LEXT[pos].BaseFormSuffix,LEXT[pos].Type,LEXT[pos].S.Offset,LEXT[pos].S.frequency);
     }
 
@@ -422,4 +428,5 @@ void dictionary::printnode2(char * head, tindex pos, FILE * fp)
         }
     head[len] = '\0';
     }
+#endif
 #endif

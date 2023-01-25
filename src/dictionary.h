@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DICTIONARY_H
 
 #include "defines.h"
-#if defined PROGLEMMATISE
+#if (defined PROGLEMMATISE) || (defined PROGPRINTDICT)
 #include "lext.h"
 #include <stdio.h>
 
@@ -42,18 +42,26 @@ class dictionary
         static bool readNodes(FILE * fp);
         static void cleanup();
         
+#if defined PROGPRINTDICT
         static void printlex(tindex pos, FILE * fp);
         static void printlex2(char * head,tindex pos, FILE * fp);
         static void printnode(size_t indent, tindex pos, FILE * fp);
         static void printnode2(char * head,tindex pos, FILE * fp);
+#endif
+#if (defined PROGLEMMATISE)
         static bool findwordSub(const char * word, const char * tag, tcount & Pos,int & Nmbr);
+#endif
     public:
+#if (defined PROGLEMMATISE)
         static bool findword(const char * word,const char * tag,tcount & Pos,int & Nmbr);
+#endif
         bool initdict(FILE * fpin);
         dictionary();
         ~dictionary();
+#if defined PROGPRINTDICT
         void printall(FILE * fp);
         void printall2(FILE * fp);
+#endif
     };
 
 

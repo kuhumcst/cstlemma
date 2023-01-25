@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define LEXT_H
 
 #include "defines.h"
-#if defined PROGLEMMATISE
+#if (defined PROGLEMMATISE) || (defined PROGPRINTDICT)
 
 #include "lem.h"
 /*
