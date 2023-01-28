@@ -39,49 +39,49 @@ int dictionary::COUNT = 0;
 static bool staticUTF8 = true; // Initial assumption. If the data are not UTF-8, reading continues byte-wise.
 
 typedef int tchildrencount; // type for variables that are optimal for counting
-                            // small numbers, but the value of which eventually
-                            // will be typecasted to tchildren.
+// small numbers, but the value of which eventually
+// will be typecasted to tchildren.
 
 
 struct Nodes
     {
     tcount nnodes; // number of nodes = number of elements in initialchars, 
-                   // strings and children
+    // strings and children
     tchildren ntoplevel; // number of nodes at top level (for other levels, 
-                         // this number is given by numberOfChildren)
-    int * initialchars;  // (optimization) string with all first characters. 
-                         //     (Not part of the dictionary file!)
-                         // First ntoplevel characters for each of the 
-                         // ntoplevel nodes. May contain zero bytes!
-                         // If first character of candidate string isn't in
-                         // stretch of initialchars, then the candidate string
-                         // cannot be matched.
-                         // If first character of candidate string is in 
-                         // stretch of initialchars, then the candidate string
-                         // must be compared (strcmp) with precisely one 
-                         // string.
-                         // Position of string to compare with can be computed
-                         // from position of character in initialchars 
-    char ** strings; // array of strings. First ntoplevel strings are for 
-                     // each of the ntoplevel nodes.
-                     // Full forms are encoded by stringing together the 
-                     // appropriate *strings needed to reach the final 
-                     // 'lext' structure.
-    tchildren * numberOfChildren; // If node is a leaf, numberOfChildren 
-                                  // denotes number of consecutive elements in
-                                  // LEXT, otherwise its meaning is analogous
-                                  // to ntoplevel
-    tindex * pos; // zero or positive: index into lext array (LEXT)
-                  // negative: inverse of index into initialchars, strings,
-                  // numberOfChildren and pos
+    // this number is given by numberOfChildren)
+    int* initialchars;  // (optimization) string with all first characters. 
+    //     (Not part of the dictionary file!)
+    // First ntoplevel characters for each of the 
+    // ntoplevel nodes. May contain zero bytes!
+    // If first character of candidate string isn't in
+    // stretch of initialchars, then the candidate string
+    // cannot be matched.
+    // If first character of candidate string is in 
+    // stretch of initialchars, then the candidate string
+    // must be compared (strcmp) with precisely one 
+    // string.
+    // Position of string to compare with can be computed
+    // from position of character in initialchars 
+    char** strings; // array of strings. First ntoplevel strings are for 
+    // each of the ntoplevel nodes.
+    // Full forms are encoded by stringing together the 
+    // appropriate *strings needed to reach the final 
+    // 'lext' structure.
+    tchildren* numberOfChildren; // If node is a leaf, numberOfChildren 
+    // denotes number of consecutive elements in
+    // LEXT, otherwise its meaning is analogous
+    // to ntoplevel
+    tindex* pos; // zero or positive: index into lext array (LEXT)
+    // negative: inverse of index into initialchars, strings,
+    // numberOfChildren and pos
     };
 
-static char * STRINGS;
-static char * STRINGS1; // STRINGS1 = STRINGS + 1
-lext * LEXT;
+static char* STRINGS;
+static char* STRINGS1; // STRINGS1 = STRINGS + 1
+lext* LEXT;
 static Nodes NODES;
 
-bool dictionary::initdict(FILE * fpin)
+bool dictionary::initdict(FILE* fpin)
     {
     if(fpin)
         {
@@ -107,42 +107,42 @@ dictionary::~dictionary()
     }
 
 #if defined PROGPRINTDICT
-void dictionary::printall(FILE * fp)
+void dictionary::printall(FILE* fp)
     {
-    for(tchildrencount i = 0;i < NODES.ntoplevel;++i)
+    for(tchildrencount i = 0; i < NODES.ntoplevel; ++i)
         {
-        printnode(0,i,fp);
+        printnode(0, i, fp);
         }
     }
 
-void dictionary::printall2(FILE * fp)
+void dictionary::printall2(FILE* fp)
     {
     char EMPTY[10000];
     EMPTY[0] = '\0';
-    for(tchildrencount i = 0;i < NODES.ntoplevel;++i)
+    for(tchildrencount i = 0; i < NODES.ntoplevel; ++i)
         {
-        printnode2(EMPTY,i,fp);
+        printnode2(EMPTY, i, fp);
         }
     }
 #endif
 
 #if defined PROGLEMMATISE
-bool dictionary::findword(const char * word, const char * tag, tcount & Pos,int & Nmbr)
+const char* dictionary::findword(const char* word, const char* tag, tcount& Pos, int& Nmbr)
     {
-    if(findwordSub(word,tag,Pos,Nmbr))
-        {
-        return true;
-        }
+    const char* Tp;
+    Tp = findwordSub(word, tag, Pos, Nmbr);
+    if(Tp != 0)
+        return Tp;
     else if(is_Upper(word))
-        return findwordSub(allToLower(word), tag, Pos,Nmbr);
+        return findwordSub(allToLower(word), tag, Pos, Nmbr);
     else
-        return false;
+        return 0;
     }
 
-bool dictionary::findwordSub(const char * word, const char * tag, tcount & Pos,int & Nmbr)
+const char * dictionary::findwordSub(const char* word, const char* tag, tcount& Pos, int& Nmbr)
     {
-    int kar = UTF8char(word,staticUTF8);
-    const char * w = word;
+    int kar = UTF8char(word, staticUTF8);
+    const char* w = word;
     int nmbr = NODES.ntoplevel;
     tcount pos = 0;
     while(nmbr > 0)
@@ -158,11 +158,11 @@ bool dictionary::findwordSub(const char * word, const char * tag, tcount & Pos,i
             bool wMatched = false;
             if(kar)
                 {
-                ptrdiff_t p,q;
-                char * s = NODES.strings[pos];
-                strcmpN(s,w,p,q);
+                ptrdiff_t p, q;
+                char* s = NODES.strings[pos];
+                strcmpN(s, w, p, q);
                 if(s[p])
-                    return false;
+                    return 0;
                 w += q;
                 wMatched = true; // 20210308
                 }
@@ -171,58 +171,50 @@ bool dictionary::findwordSub(const char * word, const char * tag, tcount & Pos,i
             if(pos < 0) // not a leaf, descend further
                 {
                 pos = -pos; // Make it a valid index.
-                kar = UTF8char(w,staticUTF8);
+                kar = UTF8char(w, staticUTF8);
                 }
-            else if(*w && (*++w||wMatched))
+            else if(*w && (*++w || wMatched))
                 { /* 20210308
                      The dictionary word is too short, and the dictionary does
                      not contain the full word. */
-                return false;
+                return 0;
                 }
             else // This is a leaf. Do the baseform and type stuff.
                 {
-                if (tag)
+                if(tag)
                     {
-                    lext * plext;
-                    const char * Tp = Lemmatiser::translate(tag); // tag as found in the text
-                                                                    // See whether the word's tag can be found in the
-                                                                    // dictionary's lexical information.
-                    plext = LEXT + pos;
+                    lext* plext;
                     int m;
-
-                    const char * baseTp = LemmaTag(Tp);
-
-                    unsigned int maxFreq = Word::maxFrequency(LEXT, nmbr, baseTp, m);
-
-                    for (int n = nmbr; n; --n, ++plext)
+                    plext = LEXT + pos;
+                    for(int n = nmbr; n; --n, ++plext)
                         {
-                        if (plext->S.frequency >= maxFreq)
+                        if(Lemmatiser::translatable(tag, plext->Type))
                             {
-                            if (!strcmp(Tp, (plext->Type))) // Word is in dictionary,
+                            const char* baseTp = LemmaTag(plext->Type);
+                            unsigned int maxFreq = Word::maxFrequency(LEXT, nmbr, baseTp, m);
+                            if(plext->S.frequency >= maxFreq)
                                 {
                                 Pos = pos;
                                 Nmbr = nmbr;
-                                return true;
+                                return plext->Type;
                                 }
                             }
                         }
-                    return false;
+                    return 0;
                     }
                 else
                     {
                     Pos = pos;
                     Nmbr = nmbr;
-                    return true;
+                    return "";
                     }
                 }
             }
         else // Initial character alphabetically greater than any of the
              // available candidates.
-            {
-            return false;
-            }
+            return 0;
         }
-    return false;
+    return 0;
     }
 #endif
 
@@ -237,15 +229,15 @@ STRINGS1 = {#STRINGS1}{STRINGS1}
 
 */
 
-bool dictionary::readStrings(FILE * fp)
+bool dictionary::readStrings(FILE* fp)
     {
     tlength stringBufLen;
-    if(fread(&stringBufLen,sizeof(stringBufLen),1,fp) == 1)
+    if(fread(&stringBufLen, sizeof(stringBufLen), 1, fp) == 1)
         {
-        STRINGS = new char[stringBufLen+1];
+        STRINGS = new char[stringBufLen + 1];
         STRINGS[0] = '\0';
         STRINGS1 = STRINGS + 1;
-        return fread(STRINGS1,stringBufLen,1,fp) == 1;
+        return fread(STRINGS1, stringBufLen, 1, fp) == 1;
         }
     return false;
     }
@@ -262,29 +254,29 @@ such that
 LEXT[i].Type           = STRINGS1[TypeIndex-1]
 LEXT[i].BaseFormSuffix = STRINGS1[BaseFormSuffixIndex-1]
 */
-bool dictionary::readLeaves(FILE * fp)
+bool dictionary::readLeaves(FILE* fp)
     {
     tcount leafBufLen;
     int readcount = 0;
-    if(fread(&leafBufLen,sizeof(leafBufLen),1,fp) == 1)
+    if(fread(&leafBufLen, sizeof(leafBufLen), 1, fp) == 1)
         {
         LEXT = new lext[leafBufLen];
-        for(tcount i = 0;i < leafBufLen;++i)
+        for(tcount i = 0; i < leafBufLen; ++i)
             {
             tindex tmp;
-            if(fread(&tmp,sizeof(tmp),1,fp) == 1)
+            if(fread(&tmp, sizeof(tmp), 1, fp) == 1)
                 {
                 LEXT[i].Type = tmp + STRINGS;
-                if(fread(&tmp,sizeof(tmp),1,fp) == 1)
+                if(fread(&tmp, sizeof(tmp), 1, fp) == 1)
                     {
                     LEXT[i].BaseFormSuffix = tmp + STRINGS;
-                    if(fread(&LEXT[i].S,sizeof(LEXT[i].S),1,fp) == 1)
+                    if(fread(&LEXT[i].S, sizeof(LEXT[i].S), 1, fp) == 1)
                         {
                         ++readcount;
                         }
                     else
                         {
-                        fprintf(stderr,"Function dictionary::readLeaves returns false.\n");
+                        fprintf(stderr, "Function dictionary::readLeaves returns false.\n");
                         return false;
                         }
                     }
@@ -302,49 +294,49 @@ NODE  = {#stringsIndex}{#numberOfChildren}{#pos}NODE*(numberOfChildren)
 where N is ntoplevel for the first NODE and numberOfChildren for child NODES.
 The tree is built in depth-first fashion.
 */
-tcount dictionary::readStretch(tchildren length,tcount pos,FILE * fp)
+tcount dictionary::readStretch(tchildren length, tcount pos, FILE* fp)
     {
     tchildrencount i;
-    for(i = 0;i < length;++i)
+    for(i = 0; i < length; ++i)
         {
         tindex tmp;
-        if(  fread(&tmp,sizeof(tmp),1,fp) != 1
-          || fread(&NODES.numberOfChildren[pos + i],sizeof(NODES.numberOfChildren[pos + i]),1,fp) != 1
-          || fread(&NODES.pos[pos + i],sizeof(NODES.pos[pos + i]),1,fp) != 1
-          )
+        if(fread(&tmp, sizeof(tmp), 1, fp) != 1
+           || fread(&NODES.numberOfChildren[pos + i], sizeof(NODES.numberOfChildren[pos + i]), 1, fp) != 1
+           || fread(&NODES.pos[pos + i], sizeof(NODES.pos[pos + i]), 1, fp) != 1
+           )
             return 0; // error!
         NODES.strings[pos + i] = STRINGS + tmp;
         }
     tcount curr = pos + length;
-    for(i = 0;i < length;++i)
+    for(i = 0; i < length; ++i)
         {
         if(NODES.pos[pos + i] < 0)
             {
             NODES.pos[pos + i] = -curr;
-            curr = readStretch(NODES.numberOfChildren[pos + i],curr,fp);
+            curr = readStretch(NODES.numberOfChildren[pos + i], curr, fp);
             }
         }
     return curr;
     }
 
-bool dictionary::readNodes(FILE * fp)
+bool dictionary::readNodes(FILE* fp)
     {
     tcount nodeBufLen;
-    if(fread(&nodeBufLen,sizeof(nodeBufLen),1,fp) == 1)
+    if(fread(&nodeBufLen, sizeof(nodeBufLen), 1, fp) == 1)
         {
         NODES.nnodes = nodeBufLen;
         NODES.initialchars = new int[nodeBufLen];
-        NODES.strings = new char * [nodeBufLen];
+        NODES.strings = new char* [nodeBufLen];
         NODES.numberOfChildren = new tchildren[nodeBufLen];
         NODES.pos = new tindex[nodeBufLen];
         tchildren length;
-        if(fread(&length,sizeof(length),1,fp) == 1)
+        if(fread(&length, sizeof(length), 1, fp) == 1)
             {
             NODES.ntoplevel = length;
-            readStretch(NODES.ntoplevel,0,fp);
-            for(tcount i = 0;i < nodeBufLen;++i)
+            readStretch(NODES.ntoplevel, 0, fp);
+            for(tcount i = 0; i < nodeBufLen; ++i)
                 {
-                NODES.initialchars[i] = UTF8char(NODES.strings[i],staticUTF8);
+                NODES.initialchars[i] = UTF8char(NODES.strings[i], staticUTF8);
                 }
             }
         return true;
@@ -354,77 +346,77 @@ bool dictionary::readNodes(FILE * fp)
 
 void dictionary::cleanup()
     {
-    delete [] STRINGS;
-    delete [] LEXT;
-    delete [] NODES.initialchars;
-    delete [] NODES.strings;
-    delete [] NODES.numberOfChildren;
-    delete [] NODES.pos;
+    delete[] STRINGS;
+    delete[] LEXT;
+    delete[] NODES.initialchars;
+    delete[] NODES.strings;
+    delete[] NODES.numberOfChildren;
+    delete[] NODES.pos;
     }
 
 #if defined PROGPRINTDICT
-void dictionary::printlex(tindex pos, FILE * fp)
+void dictionary::printlex(tindex pos, FILE* fp)
     {
-//    printf("%s\n", LEXT[pos].BaseFormSuffix);
-    fprintf(fp,"%s %s %d %d",LEXT[pos].BaseFormSuffix,LEXT[pos].Type,LEXT[pos].S.Offset,LEXT[pos].S.frequency);
+    //    printf("%s\n", LEXT[pos].BaseFormSuffix);
+    fprintf(fp, "%s %s %d %d", LEXT[pos].BaseFormSuffix, LEXT[pos].Type, LEXT[pos].S.Offset, LEXT[pos].S.frequency);
     }
 
-void dictionary::printlex2(char * head,tindex pos, FILE * fp)
+void dictionary::printlex2(char* head, tindex pos, FILE* fp)
     {
-    fprintf(fp,"%.*s%s/%s %d",(int)LEXT[pos].S.Offset,head,LEXT[pos].BaseFormSuffix,LEXT[pos].Type,LEXT[pos].S.frequency);
+    fprintf(fp, "%.*s%s/%s %d", (int)LEXT[pos].S.Offset, head, LEXT[pos].BaseFormSuffix, LEXT[pos].Type, LEXT[pos].S.frequency);
     }
 
-void dictionary::printnode(size_t indent, tindex pos, FILE * fp)
+void dictionary::printnode(size_t indent, tindex pos, FILE* fp)
     {
     tchildren n = NODES.numberOfChildren[pos];
     tchildrencount i;
-    for(size_t j = indent;j;--j)
-        fputc(' ',fp);
-    fprintf(fp,"%s",NODES.strings[pos]);
+    for(size_t j = indent; j; --j)
+        fputc(' ', fp);
+    fprintf(fp, "%s", NODES.strings[pos]);
     if(NODES.pos[pos] < 0)
         {
-        fprintf(fp,"\n");
-        for(i = 0;i < n;++i)
+        fprintf(fp, "\n");
+        for(i = 0; i < n; ++i)
             {
-            printnode(indent + 2,i - NODES.pos[pos],fp);
+            printnode(indent + 2, i - NODES.pos[pos], fp);
             }
         }
     else
         {
-        fprintf(fp,"(");
-        for(i = 0;i < n;++i)
+        fprintf(fp, "(");
+        for(i = 0; i < n; ++i)
             {
-            printlex(NODES.pos[pos] + i,fp);
+            printlex(NODES.pos[pos] + i, fp);
             if(i < NODES.numberOfChildren[pos] - 1)
-                fprintf(fp,",");
+                fprintf(fp, ",");
             }
-        fprintf(fp,")\n");
+        fprintf(fp, ")\n");
         }
     }
 
-void dictionary::printnode2(char * head, tindex pos, FILE * fp)
+void dictionary::printnode2(char* head, tindex pos, FILE* fp)
     {
     size_t len = strlen(head);
-    strcpy(head+len,NODES.strings[pos]);
+    strcpy(head + len, NODES.strings[pos]);
     tchildren n = NODES.numberOfChildren[pos];
     tchildrencount i;
     if(NODES.pos[pos] < 0)
         {
-        for(i = 0;i < n;++i)
+        for(i = 0; i < n; ++i)
             {
-            printnode2(head,i - NODES.pos[pos],fp);
+            printnode2(head, i - NODES.pos[pos], fp);
             }
         }
     else
         {
-        fprintf(fp,"%s\t(",head);
-        for(i = 0;i < n;++i)
+        fprintf(fp, "%s\t(", head);
+        for(i = 0; i < n; ++i)
             {
-            printlex2(head,NODES.pos[pos] + i,fp);
+            printlex2(head, NODES.pos[pos] + i, fp);
             if(i < NODES.numberOfChildren[pos] - 1)
-                fprintf(fp,",");
+                fprintf(fp, ",");
             }
-        fprintf(fp,")\n");
+        fprintf(fp, ")\n");
         }
     head[len] = '\0';
     }

@@ -77,7 +77,9 @@ class Lemmatiser
         int LemmatiseFile();
 #if defined PROGLEMMATISE
         void LemmatiseEnd();
-        static const char * translate(const char * tag);
+        static const char* translatable(const char * texttag,const char * dicttag);
+        static const char* translate(const char* tag);
+        static const char* nexttranslate(const char* tag);
         int setFormats();
         void showSwitches();
 #if STREAM

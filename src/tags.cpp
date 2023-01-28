@@ -116,20 +116,50 @@ tagpairs::~tagpairs()
 #endif
     }
 
+static int transi = 0;
+
 const char * tagpairs::translate(const char * Tp)
     {
-    static int i = 0;
-    if(tagcnt && !strcmp(Tp,textTags[i]))
-        return dictTags[i]; // optimisation. (Often the same tag must be translated many times in sequence).
-    for(i = 0;i < tagcnt;++i)
+    if(tagcnt && !strcmp(Tp,textTags[transi]))
+        return dictTags[transi]; // optimisation. (Often the same tag must be translated many times in sequence).
+    for(transi = 0;transi < tagcnt;++transi)
         {
-        if(!strcmp(Tp,textTags[i]))
+        if(!strcmp(Tp,textTags[transi]))
             {
-            return dictTags[i]; // translate tag to dictionary-type
+            return dictTags[transi]; // translate tag to dictionary-type
             }
         }
-    i = 0;
+    transi = 0;
     return Tp;
+    }
+
+const char* tagpairs::translatable(const char* texttag, const char* dicttag)
+    {
+    int transj;
+    for(transj = 0; transj < tagcnt; ++transj)
+        {
+        if(!strcmp(texttag, textTags[transj]))
+            {
+            if(!strcmp(dictTags[transj], dicttag))
+                return dicttag;
+            }
+        }
+    return 0;
+    }
+
+
+const char* tagpairs::nexttranslate(const char* Tp)
+    {
+    ++transi;
+    for(; transi < tagcnt; ++transi)
+        {
+        if(!strcmp(Tp, textTags[transi]))
+            {
+            return dictTags[transi]; // translate tag to dictionary-type
+            }
+        }
+    transi = 0;
+    return 0;
     }
 
 int tagpairs::Closeness(const char * tag,const char * t)

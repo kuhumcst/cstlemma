@@ -49,11 +49,11 @@ class dictionary
         static void printnode2(char * head,tindex pos, FILE * fp);
 #endif
 #if (defined PROGLEMMATISE)
-        static bool findwordSub(const char * word, const char * tag, tcount & Pos,int & Nmbr);
+        static const char * findwordSub(const char * word, const char * tag, tcount & Pos,int & Nmbr); // returns dictionary tag or 0
 #endif
     public:
 #if (defined PROGLEMMATISE)
-        static bool findword(const char * word,const char * tag,tcount & Pos,int & Nmbr);
+        static const char* findword(const char * word,const char * tag,tcount & Pos,int & Nmbr); // returns dictionary tag or 0
 #endif
         bool initdict(FILE * fpin);
         dictionary();

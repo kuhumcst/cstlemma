@@ -122,6 +122,16 @@ const char* Lemmatiser::translate(const char* tag)
     {
     return TextToDictTags ? TextToDictTags->translate(tag) : tag; // tag as found in the text
     }
+
+const char* Lemmatiser::translatable(const char* texttag, const char* dicttag)
+    {
+    return !strcmp(texttag,dicttag) ? dicttag : TextToDictTags ? TextToDictTags->translatable(texttag, dicttag) : 0; // tag as found in the text
+    }
+
+const char* Lemmatiser::nexttranslate(const char* tag)
+    {
+    return TextToDictTags ? TextToDictTags->nexttranslate(tag) : 0; // tag as found in the text
+    }
 #endif
 
 Lemmatiser::Lemmatiser(optionStruct& a_Option) :

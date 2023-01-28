@@ -344,7 +344,8 @@ class Word : public OutputClass
         virtual int addBaseFormsL();
         virtual int addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
                                // lexical information for this word.
-           bool & conflict,int & cntD,int & cntL);//
+           bool & conflict,int & cntD,int & cntL,const char * Tp);//
+
         void addFullForm()
             {
             if(!hasAddedItselfToBaseForm)
@@ -471,7 +472,7 @@ class taggedWord : public Word
         virtual int addBaseFormsL();
         virtual int addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
                                // lexical information for this word.
-           bool & conflict,int & cntD,int & cntL);//
+           bool & conflict,int & cntD,int & cntL,const char * Tp);//
         void DisambiguateByTagFriends()
             {
             if(pbfD)

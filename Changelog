@@ -1,4 +1,16 @@
 -------------------------------
+Version 8.4.0 (27 January 2023)
+-------------------------------
+It is now possible to map the same input text tag to multiple dictionary tags
+in the tag translation file (option -X). E.g.
+PRON_DEMO       PRON_DEMO
+PRON_DEMO_S     PRON_DEMO
+PRON_DEMO_P     PRON_DEMO
+PRON_DEMO_GEN   PRON_DEMO
+PRON_DEMO_GEN_S PRON_DEMO
+PRON_DEMO_GEN_P PRON_DEMO
+
+-------------------------------
 Version 8.3.1 (25 January 2023)
 -------------------------------
 New predefined 'PROGPRINTDICT' in defines.h to enable serialization of binary

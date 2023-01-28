@@ -42,6 +42,8 @@ class tagpairs
         tagpairs(FILE * fpx,bool nice);
         ~tagpairs();
         const char * translate(const char * Tp);
+        const char* translatable(const char* texttag, const char* dicttag);
+        const char* nexttranslate(const char* Tp);
         int Closeness(const char * tag,const char * t);
     };
 

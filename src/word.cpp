@@ -267,7 +267,7 @@ int Word::addBaseFormL(const char * s, const char * t)
 
 int Word::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
                                  // lexical information for this word.
-                                 bool & ,int & cntD,int & )
+                                 bool & ,int & cntD,int & ,const char * Tp)
     {
     int n;
 #define WRIT 1
@@ -580,10 +580,10 @@ int taggedWord::addBaseFormsL()
 
 int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
                                // lexical information for this word.
-                               bool & conflict,int & cntD,int & cntL)//
+                               bool & conflict,int & cntD,int & cntL,const char * Tp)//
     {
     lext * plext;
-    const char * Tp = Lemmatiser::translate(m_tag); // tag as found in the text
+    //const char * Tp = Lemmatiser::translate(m_tag); // tag as found in the text
     // See whether the word's tag can be found in the
     // dictionary's lexical information.
     int written = 0;
@@ -698,9 +698,10 @@ void Word::lookup(text * txt)
     bool conflict = false;
     tcount Pos;
     int Nmbr;
-    if(dictionary::findword(itsWord(),m_tag,Pos,Nmbr))
+    const char* Tp = dictionary::findword(itsWord(), m_tag, Pos, Nmbr);
+    if(Tp != 0)
         {
-        addBaseFormsDL(LEXT + Pos,Nmbr,conflict,txt->cntD,txt->cntL);
+        addBaseFormsDL(LEXT + Pos,Nmbr,conflict,txt->cntD,txt->cntL,Tp);
         if(conflict)
             {
             txt->aConflictTypes++;
@@ -714,9 +715,9 @@ void Word::lookup(text * txt)
         txt->cntL += addBaseFormsL();
         }
     if(basefrm::hasW)
-	{
+        {
         addFullForm();
-	}
+        }
     }
 
 
