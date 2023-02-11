@@ -109,9 +109,11 @@ dictionary::~dictionary()
 #if defined PROGPRINTDICT
 void dictionary::printall(FILE* fp)
     {
+    char EMPTY[10000];
+    EMPTY[0] = '\0';
     for(tchildrencount i = 0; i < NODES.ntoplevel; ++i)
         {
-        printnode(0, i, fp);
+        printnode(0, EMPTY, i, fp);
         }
     }
 
@@ -355,10 +357,10 @@ void dictionary::cleanup()
     }
 
 #if defined PROGPRINTDICT
-void dictionary::printlex(tindex pos, FILE* fp)
+void dictionary::printlex(char* head, tindex pos, FILE* fp)
     {
     //    printf("%s\n", LEXT[pos].BaseFormSuffix);
-    fprintf(fp, "%s %s %d %d", LEXT[pos].BaseFormSuffix, LEXT[pos].Type, LEXT[pos].S.Offset, LEXT[pos].S.frequency);
+    fprintf(fp, "%.*s%s %s %d %d", (int)LEXT[pos].S.Offset, head, LEXT[pos].BaseFormSuffix, LEXT[pos].Type, LEXT[pos].S.Offset, LEXT[pos].S.frequency);
     }
 
 void dictionary::printlex2(char* head, tindex pos, FILE* fp)
@@ -366,8 +368,10 @@ void dictionary::printlex2(char* head, tindex pos, FILE* fp)
     fprintf(fp, "%.*s%s/%s %d", (int)LEXT[pos].S.Offset, head, LEXT[pos].BaseFormSuffix, LEXT[pos].Type, LEXT[pos].S.frequency);
     }
 
-void dictionary::printnode(size_t indent, tindex pos, FILE* fp)
+void dictionary::printnode(size_t indent, char* head, tindex pos, FILE* fp)
     {
+    size_t len = strlen(head);
+    strcpy(head + len, NODES.strings[pos]);
     tchildren n = NODES.numberOfChildren[pos];
     tchildrencount i;
     for(size_t j = indent; j; --j)
@@ -378,7 +382,7 @@ void dictionary::printnode(size_t indent, tindex pos, FILE* fp)
         fprintf(fp, "\n");
         for(i = 0; i < n; ++i)
             {
-            printnode(indent + 2, i - NODES.pos[pos], fp);
+            printnode(indent + 2, head, i - NODES.pos[pos], fp);
             }
         }
     else
@@ -386,12 +390,13 @@ void dictionary::printnode(size_t indent, tindex pos, FILE* fp)
         fprintf(fp, "(");
         for(i = 0; i < n; ++i)
             {
-            printlex(NODES.pos[pos] + i, fp);
+            printlex(head, NODES.pos[pos] + i, fp);
             if(i < NODES.numberOfChildren[pos] - 1)
                 fprintf(fp, ",");
             }
         fprintf(fp, ")\n");
         }
+    head[len] = '\0';
     }
 
 void dictionary::printnode2(char* head, tindex pos, FILE* fp)

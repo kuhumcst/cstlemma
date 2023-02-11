@@ -43,9 +43,9 @@ class dictionary
         static void cleanup();
         
 #if defined PROGPRINTDICT
-        static void printlex(tindex pos, FILE * fp);
+        static void printlex(char* head, tindex pos, FILE * fp);
         static void printlex2(char * head,tindex pos, FILE * fp);
-        static void printnode(size_t indent, tindex pos, FILE * fp);
+        static void printnode(size_t indent, char* head, tindex pos, FILE * fp);
         static void printnode2(char * head,tindex pos, FILE * fp);
 #endif
 #if (defined PROGLEMMATISE)
