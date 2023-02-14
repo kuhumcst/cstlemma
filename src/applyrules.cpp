@@ -97,12 +97,20 @@ class rules
         char * buf;
         long buflen;
         long End;
+#if LEMMATIZEV0
         int NewStyle;
+#endif
     public:
-        rules() : TagName(0), buf(bufbuf), buflen(sizeof(bufbuf) - 1), End(0), NewStyle(3)
+        rules() : TagName(0), buf(bufbuf), buflen(sizeof(bufbuf) - 1), End(0)
+#if LEMMATIZEV0
+            , NewStyle(3)
+#endif
             {
             }
-        rules(const char * TagName) : buflen(sizeof(bufbuf) - 1), NewStyle(3)
+        rules(const char * TagName) : buflen(sizeof(bufbuf) - 1)
+#if LEMMATIZEV0
+            , NewStyle(3)
+#endif
             {
             this->TagName = new char[strlen(TagName) + 1];
             strcpy(this->TagName, TagName);
@@ -132,16 +140,19 @@ class rules
         const char * Buf(){ return buf; }
         long end(){ return End; }
         void print(){}
-        int newStyleRules(){ return NewStyle; }
         char * readRules(FILE * flexrulefile, long & end);
         bool readRules(FILE * flexrulefile, const char * flexFileName);
         const char * applyRules(const char * word, bool SegmentInitial,bool RulesUnique);
         const char * applyRules(const char * word, const char * tag, bool SegmentInitial, bool RulesUnique);
+#if LEMMATIZEV0
+        int newStyleRules() { return NewStyle; }
         bool setNewStyleRules(int val);
+#endif
 //        int newStyleRules();
     };
 
 //rules * taglessrules = 0;
+#if LEMMATIZEV0
 bool rules::setNewStyleRules(int val)
     {
     assert(val == 2 || val == 3);
@@ -163,6 +174,7 @@ bool setNewStyleRules(int val)
     assert(taglessrules == 0);
     return true;
     }
+#endif
 
 bool readRules(FILE * flexrulefile, const char * FlexFileName)
     {
@@ -207,12 +219,16 @@ bool rules::readRules(FILE * flexrulefile, const char * FlexFileName)
             return bufbuf;
         if (istart == 0)
             {
+#if LEMMATIZEV0
             if (!setNewStyleRules(2))
+#endif
                 return bufbuf;
             }
         else if (istart == *(int*)"\rV3\r")
             {
+#if LEMMATIZEV0
             if (!setNewStyleRules(3))
+#endif
                 return bufbuf;
             }
         else
@@ -221,13 +237,17 @@ bool rules::readRules(FILE * flexrulefile, const char * FlexFileName)
             }
         fseek(flexrulefile, 0, SEEK_END);
         end = ftell(flexrulefile);
+#if LEMMATIZEV0
         if (newStyleRules() == 3)
+#endif
             {
             fseek(flexrulefile, sizeof(int), SEEK_SET);
             end -= sizeof(int);
             }
+#if LEMMATIZEV0
         else
             rewind(flexrulefile);
+#endif
         buf = new char[end + 1];
         buflen = end;
         if (buf && end > 0)
@@ -257,6 +277,7 @@ bool readRules(const char * FlexFileName) // Does not read at all.
     return FlexFileName != 0;
     }
 
+#if LEMMATIZEV0
 int newStyleRules()
     {
     if (taglessrules)
@@ -264,6 +285,7 @@ int newStyleRules()
     return 3;
 //    return NewStyle;
     }
+#endif
 
 static const char * samestart(const char ** fields, const char * s, const char * we)
     {
@@ -414,9 +436,7 @@ static void printpat2(const char ** fields,int findex,char * start,char * middle
         *end = '\0';
     }
 #endif
-#endif
 
-#if LEMMATIZEV0
 // return values:
 // 0: failure
 // 1: success, caller must add lemma to the end of the result string
@@ -851,7 +871,7 @@ static LemmaRule * addLemma(LemmaRule * lemmas, lemmaCandidate * lemma)
 
     if (lemma->L)
         {
-        if(flex::baseformsAreLowercase == caseTp::emimicked)
+        if(baseformsAreLowercase == caseTp::emimicked)
             {
             const char * adapted = adaptCase(lemma->L, wordInOriginalCasing, len);
             char* newL = new char[strlen(adapted) + 1];
@@ -1202,7 +1222,7 @@ static const char* apply ( const char* word
     {
     wordInOriginalCasing = word;
     size_t len = strlen(word);
-    if(flex::baseformsAreLowercase == caseTp::elower)
+    if(baseformsAreLowercase == caseTp::elower)
         {
         //size_t length = 0;
         word = changeCase(word, true, len/*gth*/); //Non-destructive! 'word' points
@@ -1218,10 +1238,12 @@ static const char* apply ( const char* word
     char Middle[30] = { '\0' };
     printf("WOORD [%.*s]\n", len, word);
 #endif
+#if LEMMATIZEV0
     if(newStyleRules() == 3)
+#endif
         {
         LemmaRule* lemmas = 0;
-        if(flex::baseformsAreLowercase == caseTp::emimicked)
+        if(baseformsAreLowercase == caseTp::emimicked)
             {
             // Lemmatize word as-is
             lemmas = newStyleLemmatizeV3(word, word + len, buf, maxpos, 0, lemmas
@@ -1249,7 +1271,7 @@ static const char* apply ( const char* word
                                                            ), RulesUnique));
             }
         else if(SegmentInitial
-           && (flex::baseformsAreLowercase == caseTp::easis)
+           && (baseformsAreLowercase == caseTp::easis)
            && isUpperUTF8(word)
            )
             {
@@ -1286,8 +1308,8 @@ static const char* apply ( const char* word
                                                            ), RulesUnique));
             }
         }
-    else
 #if LEMMATIZEV0
+    else
         {
         oldStyleLemmatize(word, word + len
                           , buf

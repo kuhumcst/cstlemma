@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 using namespace std;
 #endif
 
+#if LEMMATIZEV0
 void base::print(int n)
     {
 #if STREAM
@@ -89,7 +90,6 @@ void node::print(int n)
         m_next->print(n);
     }
 //-----------------
-
 char * type::Baseform(char * invertedWord,base *& bf,size_t & ln)
     {
     base * BF = 0;    
@@ -139,6 +139,7 @@ void type::print()
         m_next->print();
     }
 
+
 void type::removeAmbiguous(type *& prev)
     {
     if(end)
@@ -159,11 +160,12 @@ void type::removeAmbiguous(type *& prev)
 //------------------
 void flex::removeAmbiguous()
     {
+    /*
     if(newStyleRules())
         {
         oneAnswer = true;
         }
-    else if(types)
+    else*/ if(types)
         types->removeAmbiguous(types);
     }
 
@@ -343,7 +345,7 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool Se
         return 0;
     }
 
-    bool flex::readFromFile(FILE * fpflex,const char * flexFileName)
+bool flex::readFromFile(FILE * fpflex,const char * flexFileName)
         {
         if(!fpflex)
             {
@@ -367,4 +369,5 @@ char * flex::Baseform(const char * word,const char *& bf,size_t & borrow,bool Se
             }
         return true;
         }
+#endif
 #endif

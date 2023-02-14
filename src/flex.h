@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define FLEX_H
 
 #include "defines.h"
+
 #if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
 
 #include <stdio.h>
@@ -32,6 +33,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 typedef enum {normal,/*notdeeper,*/onlydeeper} traverseTp;
 class node;
 #endif
+
+#if LEMMATIZEV0
 
 enum class caseTp;
 
@@ -206,7 +209,9 @@ class type
         void removeAmbiguous(type *& prev);
 #endif
     };
+#endif
 
+#if LEMMATIZEV0
 class flex
     {
 #ifdef COUNTOBJECTS
@@ -260,7 +265,7 @@ class flex
 #endif
 #if defined PROGLEMMATISE
     public:
-        static caseTp baseformsAreLowercase;
+//        static caseTp baseformsAreLowercase;
         void print();
         bool Baseform(const char * word, const char * tag, const char *& bf, size_t & borrow, bool SegmentInitial, bool RulesUnique);
         char * Baseform(const char * word, const char *& bf, size_t & borrow, bool SegmentInitial, bool RulesUnique);
@@ -270,12 +275,13 @@ class flex
     };
 
 extern flex Flex;
+
 void Strrev(char * s);
 #if defined PROGMAKESUFFIXFLEX
 bool changes();
 void unchanged();
 #endif
-
+#endif
 /*
 
     1            ADJ  [øderativ]ederativ t 

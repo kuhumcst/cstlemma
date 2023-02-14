@@ -130,7 +130,7 @@ non-const character strings.
 #define PROGMAKEDICT
 //#define PROGMAKESUFFIXFLEX
 #define PROGLEMMATISE
-//#define PROGPRINTDICT
+#define PROGPRINTDICT
 #endif
 #if !defined PROGMAKEDICT
 #if !defined PROGMAKESUFFIXFLEX
@@ -149,7 +149,9 @@ non-const character strings.
 #endif
 
 #define PRINTRULE 1 /* $p in output format prints rule by which lemma was formed */
-
+#ifdef PROGMAKESUFFIXFLEX
+#define LEMMATIZEV0 1 
+#else
 #define LEMMATIZEV0 0 // if 1, accepts first generation of affix rules
-
+#endif
 #endif

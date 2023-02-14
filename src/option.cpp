@@ -160,12 +160,17 @@ optionStruct::~optionStruct()
     delete[] v;
     delete[] x;
     delete[] z;
+#else
+#ifdef PROGPRINTDICT
+    delete[] dictfile;
+#endif
 #endif
 #ifdef COUNTOBJECTS
     --COUNT;
 #endif
     }
 
+#if defined PROGLEMMATISE
 static int hexchar(int c)
     {
     if ('0' <= c && c <= '9')
@@ -185,6 +190,7 @@ static int octchar(int c)
     else
         return -1;
     }
+#endif
 
 OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
     {
@@ -566,9 +572,11 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             break;
 #endif
         case 'i':
+#ifdef PROGPRINTDICT
             if(whattodo == whattodoTp::PRINTDICT)
                 dictfile = dupl(locoptarg);
             else
+#endif
                 argi = dupl(locoptarg);
             break;
 #if defined PROGLEMMATISE

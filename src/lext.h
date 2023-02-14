@@ -39,7 +39,7 @@ enum class caseTp;
 
 struct lext
     {
-    static enum caseTp baseformsAreLowercase;
+    //static enum caseTp baseformsAreLowercase;
 #ifdef COUNTOBJECTS
     public:
     static int COUNT;

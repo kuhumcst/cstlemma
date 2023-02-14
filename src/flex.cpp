@@ -20,6 +20,7 @@ along with CSTLEMMA; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "flex.h"
+#if LEMMATIZEV0
 #if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
 #include "caseconv.h"
 #if defined PROGMAKESUFFIXFLEX
@@ -32,10 +33,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
-
-#if (defined PROGLEMMATISE) 
-caseTp flex::baseformsAreLowercase = caseTp::easis;
-#endif
 
 #if STREAM
 #include <iostream>
@@ -73,6 +70,7 @@ void Strrev(char * s)
         }
     }
 
+
 flex Flex;
 
 int base::nn = 0;
@@ -81,12 +79,12 @@ int node::mutated = 0;
 int type::mutated = 0;
 long flex::CutoffRefcount = 0L;
 bool flex::showRefcount = false;
+#endif
 
 
+#if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
 static char EMPTY[] = "";
-
 /*extern*/ bool training = false;
-
 base * base::remove()
     {
     base * ret = m_next;
@@ -613,5 +611,5 @@ bool flex::readFromFile(FILE * fpflex)
         }
     return true;
     }
-
+#endif
 #endif

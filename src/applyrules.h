@@ -26,14 +26,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "defines.h"
 #include <stdio.h>
 
+#if LEMMATIZEV0
 int newStyleRules();
+#endif
 bool readRules(FILE * flexrulefile,const char * flexFileName);
 bool readRules(const char * flexFileName);
 const char * applyRules(const char * word,bool SegmentInitial, bool RulesUnique);
 const char * applyRules(const char * word,const char * tag,bool SegmentInitial, bool RulesUnique);
 void deleteRules();
 extern bool oneAnswer;
+#if LEMMATIZEV0
 bool setNewStyleRules(int val);
+#endif
 
 #endif
 #endif

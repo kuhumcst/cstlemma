@@ -391,8 +391,8 @@ void text::Lemmatise(FILE * fpo
                     )
 #endif
     {
-    flex::baseformsAreLowercase = baseformsAreLowercase;
-    lext::baseformsAreLowercase = baseformsAreLowercase;
+    baseformsAreLowercase = baseformsAreLowercase;
+    /*lext::baseformsAreLowercase = baseformsAreLowercase;*/
     Word::DictUnique = DictUnique;
     Word::RulesUnique = RulesUnique;
     baseformpointer::UseLemmaFreqForDisambiguation = UseLemmaFreqForDisambiguation;

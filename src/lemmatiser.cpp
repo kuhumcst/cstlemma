@@ -42,10 +42,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include  <io.h>
 #endif
 #endif
-#if (defined PROGLEMMATISE) || (defined PROGMAKEDICT)
+#if (defined PROGLEMMATISE) || (defined PROGMAKEDICT)  || (defined PROGPRINTDICT)
 #include <stdarg.h>
 #include <time.h>
 #include <limits.h>
+#include <stdlib.h> // exit()
+#include <string.h> // strncmp()
 #endif
 
 #ifdef COUNTOBJECTS
@@ -558,6 +560,18 @@ int Lemmatiser::setFormats()
     return 0;
     }
 #endif
+
+#ifdef PROGLEMMATISE
+static bool newstylerulefile(FILE* fpflex)
+    {
+    int start;
+    if(fread(&start, sizeof(int), 1, fpflex) != 1)
+        return false;
+    rewind(fpflex);
+    return start == 0 || !strncmp((char*)&start, "\rV3\r", 4);
+    }
+#endif
+
 int Lemmatiser::openFiles()
     {
     FILE* fpdict = 0;
@@ -744,15 +758,34 @@ int Lemmatiser::openFiles()
             }
         if(fpflex)
             {
-            Flex.readFromFile(fpflex, Option.InputHasTags ? Option.flx : 0);
-            // fpflex contains rules for untagged text. These can be used if tag-specific rules do not exist.
-            if(Option.RulesUnique)
-                Flex.removeAmbiguous();
-            if(Option.nice)
-                {
-                LOG1LINE("");
-                Flex.print();
+            if(newstylerulefile(fpflex))
+                { // new style flexrules 20080218
+                //printf("New style rules. First four bytes, as int: %x. As char*:\n%.4s\n", start, (char*)&start);
+                if(!readRules(fpflex, Option.InputHasTags ? Option.flx : 0))
+                    return false;
+                if(Option.RulesUnique)
+                    oneAnswer = true;
                 }
+#if LEMMATIZEV0
+            else
+                {
+                Flex.readFromFile(fpflex, Option.InputHasTags ? Option.flx : 0);
+                // fpflex contains rules for untagged text. These can be used if tag-specific rules do not exist.
+                if(Option.RulesUnique)
+                    Flex.removeAmbiguous();
+                if(Option.nice)
+                    {
+                    LOG1LINE("");
+                    Flex.print();
+                    }
+                }
+#else
+            else
+                {
+                fprintf(stderr, "%s\n", "This version of CSTlemma does not support old style flexrules.");
+                exit(-1);
+                }
+#endif
             fclose(fpflex);
             }
         else if(!readRules(Option.flx))

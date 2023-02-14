@@ -425,6 +425,10 @@ const unsigned char * upperEquivalents[10] = {
     upperEquivalent_ISO8859_9
     };
 
+#if (defined PROGLEMMATISE) 
+caseTp baseformsAreLowercase = caseTp::easis;
+#endif
+
 const bool * space = space_DEFAULTENCODING;
 const bool * alpha = alphas[DEFAULTENCODING];
 const unsigned char * LowerEquivalent = lowerEquivalents[DEFAULTENCODING];

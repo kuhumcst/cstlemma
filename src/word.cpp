@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include "word.h"
 #if defined PROGLEMMATISE
+#include "applyrules.h"
 #include "basefrm.h"
 #include "functio.h"
 #include "functiontree.h"
@@ -40,21 +41,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 int Word::COUNT = 0;
 #endif
 
-Word * Word::Root = 0;
+Word* Word::Root = 0;
 
 
 
 #if STREAM
-ostream * Word::fp = 0;
+ostream* Word::fp = 0;
 #else
-FILE * Word::fp = 0;
+FILE* Word::fp = 0;
 #endif
-functionTree * Word::funcs = 0;
-functionTree * Word::bfuncs = 0;
-functionTree * Word::Bfuncs = 0;
+functionTree* Word::funcs = 0;
+functionTree* Word::bfuncs = 0;
+functionTree* Word::Bfuncs = 0;
 bool Word::hasb = false;
 bool Word::hasB = false;
-const char * Word::sep;
+const char* Word::sep;
 bool Word::DictUnique = false;
 bool Word::RulesUnique = false;
 int Word::NewLinesAfterWord = 0;
@@ -67,44 +68,57 @@ The next function makes an >>uneducated<< guess at the type of the word.
 Only used for untagged texts.
 We could use several techniques to improve: return the type that is
 most probable, given the word's ending (then we would need to have a most
-probable type for the case that NO rule aplies, 
+probable type for the case that NO rule aplies,
 i.e. the unkown word is in base form already.)
 */
-const char * baseform(char * word,const char ** tag /*return value!*/, bool SegmentInitial, bool RulesUnique)
+const char* baseform(char* word, const char** tag /*return value!*/, bool SegmentInitial, bool RulesUnique)
     { // construct baseform by applying general rules (e.g. removing endings)
-    static const char * wrd;
-    size_t borrow;
     assert(tag);
-    *tag = Flex.Baseform(word,wrd,borrow,SegmentInitial, RulesUnique);
+
+#if LEMMATIZEV0
+    static const char* wrd;
+    size_t borrow;
+    if(newStyleRules())
+#endif
+        {
+        return applyRules(word, SegmentInitial, RulesUnique);
+        }
+#if LEMMATIZEV0
+    *tag = Flex.Baseform(word, wrd, borrow, SegmentInitial, RulesUnique);
     if(*tag)
-	{
+        {
         return wrd;
-	}
+        }
     else
-	{
-        return allToLower(word); 
-	}
+        {
+        return allToLower(word);
+        }
+#endif
     }
 
 
-const char * baseform(char * word,const char * tag,bool SegmentInitial, bool RulesUnique)
+const char* baseform(char* word, const char* tag, bool SegmentInitial, bool RulesUnique)
     { // construct baseform by applying general rules (e.g. removing endings)
-    const char * bf;
-    size_t borrow;
-    if(Flex.Baseform(word,tag,bf,borrow,SegmentInitial, RulesUnique))
-        return bf;
-    else if(flex::baseformsAreLowercase == caseTp::elower)
-        return allToLower(word); 
+#if LEMMATIZEV0
+    if(newStyleRules())
+#endif
+        {
+        return applyRules(word, tag, SegmentInitial, RulesUnique);
+        }
+#if LEMMATIZEV0
+    else if(baseformsAreLowercase == caseTp::elower)
+        return allToLower(word);
     else
-        return word; 
+        return word;
+#endif
     }
 
 
 
 #if STREAM
-void Word::setFile(ostream * a_fp)
+void Word::setFile(ostream* a_fp)
 #else
-void Word::setFile(FILE * a_fp)
+void Word::setFile(FILE* a_fp)
 #endif
     {
     Word::fp = a_fp;
@@ -113,58 +127,58 @@ void Word::setFile(FILE * a_fp)
 
 void Word::deleteStaticMembers()
     {
-    delete funcs;funcs = 0;
-    delete bfuncs;bfuncs = 0;
-    delete Bfuncs;Bfuncs = 0;
+    delete funcs; funcs = 0;
+    delete bfuncs; bfuncs = 0;
+    delete Bfuncs; Bfuncs = 0;
     }
 
 #if PRINTRULE
 void Word::p() const
     {
-    if (pbfL)
+    if(pbfL)
         pbfL->printfrule(fp, Bfuncs, sep);
     }
 void Word::r() const
     {
-    if (pbfL)
+    if(pbfL)
         pbfL->printfrule(fp, Bfuncs, sep);
     }
 #endif
 #if PRINTRULE
 void Word::P() const
-{
-        if (pbfL)
-                pbfL->P();
-}
+    {
+    if(pbfL)
+        pbfL->P();
+    }
 void Word::R() const
-{
-        if (pbfL)
-                pbfL->R();
-}
+    {
+    if(pbfL)
+        pbfL->R();
+    }
 #endif
 
 
-formattingFunction * Word::getUnTaggedWordFunction(int character,bool & SortInput,int & testType)
+formattingFunction* Word::getUnTaggedWordFunction(int character, bool& SortInput, int& testType)
     {
     switch(character)
         {
         case 'i':
-            return new functionNoArg(&Word::i,0);
+            return new functionNoArg(&Word::i, 0);
         case 'f':
             SortInput = true;
-            return new functionNoArg(&Word::f,0);
+            return new functionNoArg(&Word::f, 0);
         case 'w':
-            return new functionNoArg(&Word::w,0);
+            return new functionNoArg(&Word::w, 0);
         case 'b':
             hasb = true;
             testType |= NUMBERTEST;
-            return new functionNoArg(&Word::b,&Word::countBaseForms);
+            return new functionNoArg(&Word::b, &Word::countBaseForms);
         case 'B':
             hasB = true;
             testType |= NUMBERTEST;
-            return new functionNoArg(&Word::B,&Word::countBaseFormsL);
+            return new functionNoArg(&Word::B, &Word::countBaseFormsL);
         case 's':
-            return new functionNoArg(&Word::s,0);
+            return new functionNoArg(&Word::s, 0);
 #if PRINTRULE
         case 'p':
             return new functionNoArg(&Word::P, 0);
@@ -176,29 +190,29 @@ formattingFunction * Word::getUnTaggedWordFunction(int character,bool & SortInpu
         }
     }
 
-formattingFunction * Word::getUnTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType)
+formattingFunction* Word::getUnTaggedWordFunctionNoBb(int character, bool& SortInput, int& testType)
     {
     REFER(testType)
-    switch(character)
-        {
-        case 'i':
-            return new functionNoArg(&Word::i,0);
-        case 'f':
-            SortInput = true;
-            return new functionNoArg(&Word::f,0);
-        case 'w':
-            return new functionNoArg(&Word::w,0);
-        case 's':
-            return new functionNoArg(&Word::s,0);
+        switch(character)
+            {
+            case 'i':
+                return new functionNoArg(&Word::i, 0);
+            case 'f':
+                SortInput = true;
+                return new functionNoArg(&Word::f, 0);
+            case 'w':
+                return new functionNoArg(&Word::w, 0);
+            case 's':
+                return new functionNoArg(&Word::s, 0);
 #if PRINTRULE
-        case 'p':
-            return new functionNoArg(&Word::P, 0);
-        case 'r':
-            return new functionNoArg(&Word::R, 0);
+            case 'p':
+                return new functionNoArg(&Word::P, 0);
+            case 'r':
+                return new functionNoArg(&Word::R, 0);
 #endif
-        default:
-            return 0;
-        }
+            default:
+                return 0;
+            }
     }
 
 void Word::print()const
@@ -212,32 +226,32 @@ void Word::print()const
 void Word::printLemmaClass()const
     {
     if(pbfD)
-        pbfD->printFn(fp,&basefrm::T,sep);
+        pbfD->printFn(fp, &basefrm::T, sep);
     else if(pbfL)
-        pbfL->printFn(fp,&basefrm::T,sep);
+        pbfL->printFn(fp, &basefrm::T, sep);
     }
 
 int Word::addBaseFormsL()
     {
-    const char * tag = 0;
-    const char * wrd = baseform(m_word,&tag,SegmentInitial, RulesUnique);
+    const char* tag = 0;
+    const char* wrd = baseform(m_word, &tag, SegmentInitial, RulesUnique);
     if(!tag)
         tag = NOT_KNOWN;// TODO do something better (NUM, XX, TEGN, etc)
     if(!*wrd)
         wrd = allToLower(m_word);
-    return addBaseFormL(wrd,LemmaTag(tag));
+    return addBaseFormL(wrd, LemmaTag(tag));
     }
 
-int Word::addBaseFormL(const char * s, const char * t)
+int Word::addBaseFormL(const char* s, const char* t)
     {
     int cntL = 0;
-    const char * l_sep;
-    while ((l_sep = strchr(s, ' ')) != 0)
+    const char* l_sep;
+    while((l_sep = strchr(s, ' ')) != 0)
         {
-        if (pbfL)
+        if(pbfL)
             cntL += pbfL->addBaseForm(s, t, l_sep - s
 #if PFRQ || FREQ24
-                                      ,0
+                                      , 0
 #endif
             );
         else
@@ -251,43 +265,43 @@ int Word::addBaseFormL(const char * s, const char * t)
             }
         s = l_sep + 1;
         }
-/* There is always a space after the lemma, so all lemmas have been handled
-   in the loop above.
+    /* There is always a space after the lemma, so all lemmas have been handled
+       in the loop above.
 
-    if (pbfL)
-        cntL += pbfL->addBaseForm(s, t, p, strlen(s));
-    else
-        {
-        pbfL = new baseformpointer(s, t, p, strlen(s));
-        ++cntL;
-        }
-        */
+        if (pbfL)
+            cntL += pbfL->addBaseForm(s, t, p, strlen(s));
+        else
+            {
+            pbfL = new baseformpointer(s, t, p, strlen(s));
+            ++cntL;
+            }
+            */
     return cntL;
     }
 
-int Word::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
-                                 // lexical information for this word.
-                                 bool & ,int & cntD,int & ,const char * Tp)
+int Word::addBaseFormsDL(lext* Plext, int nmbr,// The dictionary's available
+                         // lexical information for this word.
+                         bool&, int& cntD, int&, const char* Tp)
     {
     int n;
 #define WRIT 1
 #if WRIT
     int written = 0;
 #endif
-    unsigned int maxFreq = maxFrequency(Plext,nmbr,0,n);
+    unsigned int maxFreq = maxFrequency(Plext, nmbr, 0, n);
     if(n > 1)
         {
-        const char * tp = commonType(Plext,nmbr,maxFreq);
+        const char* tp = commonType(Plext, nmbr, maxFreq);
         unsigned int off;
-        char * stem = commonStem(Plext,nmbr,tp,maxFreq,off);
+        char* stem = commonStem(Plext, nmbr, tp, maxFreq, off);
         if(tp)
             {
             if(stem)
                 {
 #if PFRQ || FREQ24
-                cntD += addBaseFormD(stem,LemmaTag(tp),maxFreq);
+                cntD += addBaseFormD(stem, LemmaTag(tp), maxFreq);
 #else
-                cntD += addBaseFormD(stem,LemmaTag(tp));
+                cntD += addBaseFormD(stem, LemmaTag(tp));
 #endif
                 FoundInDict = true;
                 return cnt;
@@ -295,13 +309,13 @@ int Word::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
             }
         else
             {
-            if(stem && !strcmp(stem,Plext->constructBaseform(m_word))) 
+            if(stem && !strcmp(stem, Plext->constructBaseform(m_word)))
                 // if all baseforms are the same, then use that common baseform.
                 {
 #if PFRQ || FREQ24
-                cntD += addBaseFormD(stem,NOT_KNOWN,0);
+                cntD += addBaseFormD(stem, NOT_KNOWN, 0);
 #else
-                cntD += addBaseFormD(stem,NOT_KNOWN);
+                cntD += addBaseFormD(stem, NOT_KNOWN);
 #endif
                 FoundInDict = true;
                 return cnt;
@@ -311,7 +325,7 @@ int Word::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
 #if WRIT
                 written = 0; // force flex rule application
 #else
-                cntD += addBaseFormD(allToLower(word),NOT_KNOWN,0);
+                cntD += addBaseFormD(allToLower(word), NOT_KNOWN, 0);
                 FoundInDict = true;
                 return cnt;
 #endif
@@ -319,7 +333,7 @@ int Word::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
             }
         }
 
-    lext * plext;
+    lext* plext;
     // Lemmatiser adds tag from dictionary
     plext = Plext;
     for(;;)
@@ -327,9 +341,9 @@ int Word::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
         if(plext->S.frequency >= maxFreq)
             {
 #if PFRQ || FREQ24
-            cntD += addBaseFormD(plext->constructBaseform(m_word),LemmaTag(plext->Type),plext->S.frequency);
+            cntD += addBaseFormD(plext->constructBaseform(m_word), LemmaTag(plext->Type), plext->S.frequency);
 #else
-            cntD += addBaseFormD(plext->constructBaseform(m_word),LemmaTag(plext->Type));
+            cntD += addBaseFormD(plext->constructBaseform(m_word), LemmaTag(plext->Type));
 #endif
             FoundInDict = true;
 #if WRIT
@@ -338,7 +352,7 @@ int Word::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
             }
         // write the remainder of the baseform and the tag, as
         // found in the dictionary
-        
+
         if(--nmbr)
             {
             ++plext;
@@ -356,7 +370,7 @@ int Word::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
     }
 
 
-bool Word::setFormat(const char * cformat,const char * bformat,const char * Bformat,bool InputHasTags)
+bool Word::setFormat(const char* cformat, const char* bformat, const char* Bformat, bool InputHasTags)
     {
     bool SortInput = false;
     getFunction gfnc = InputHasTags ? taggedWord::getTaggedWordFunction : Word::getUnTaggedWordFunction;
@@ -364,7 +378,7 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
         delete funcs;
     funcs = new functionTree();
     int testType = 0;
-    OutputClass::Format(cformat,gfnc,*funcs,cformat,SortInput,testType);
+    OutputClass::Format(cformat, gfnc, *funcs, cformat, SortInput, testType);
     if(hasb)
         {
         if(bformat)
@@ -376,7 +390,7 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
 #if STREAM
             cerr << "Error: Missing -b pattern on commandline. (Output format " << cformat << " specifies dictionary field $b)" << endl;
 #else
-            fprintf(stderr,"Error: Missing -b pattern on commandline. (Output format %s specifies dictionary field $b)\n",cformat);
+            fprintf(stderr, "Error: Missing -b pattern on commandline. (Output format %s specifies dictionary field $b)\n", cformat);
 #endif
             exit(0);
             }
@@ -386,7 +400,7 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
 #if STREAM
         cerr << "Warning: -b pattern \"" << bformat << "\"specified on commandline but not used. (Output format " << cformat << " doesn't specify dictionary field $b)" << endl;
 #else
-        fprintf(stderr, "Warning: -b pattern \"%s\"specified on commandline but not used. (Output format %s doesn't specify dictionary field $b)\n",bformat,cformat);
+        fprintf(stderr, "Warning: -b pattern \"%s\"specified on commandline but not used. (Output format %s doesn't specify dictionary field $b)\n", bformat, cformat);
 #endif
         }
 
@@ -401,7 +415,7 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
 #if STREAM
             cerr << "Error: Missing -B pattern on commandline. (Output format " << cformat << " specifies flexrule field $B)" << endl;
 #else
-            fprintf(stderr, "Error: Missing -B pattern on commandline. (Output format %s specifies flexrule field $B)\n",cformat);
+            fprintf(stderr, "Error: Missing -B pattern on commandline. (Output format %s specifies flexrule field $B)\n", cformat);
 #endif
             exit(0);
             }
@@ -411,14 +425,14 @@ bool Word::setFormat(const char * cformat,const char * bformat,const char * Bfor
 #if STREAM
         cerr << "Warning: -B pattern specified on commandline but not used. (Output format " << cformat << " doesn't specify flexrule field $B)" << endl;
 #else
-        fprintf(stderr, "Warning: -B pattern specified on commandline but not used. (Output format %s doesn't specify flexrule field $B)\n",cformat);
+        fprintf(stderr, "Warning: -B pattern specified on commandline but not used. (Output format %s doesn't specify flexrule field $B)\n", cformat);
 #endif
         }
     return SortInput;
     }
 
-unsigned int Word::maxFrequency(lext * Plext,int nmbr,const char * a_type,int & n)// The dictionary's available
-                               // lexical information for this word.
+unsigned int Word::maxFrequency(lext* Plext, int nmbr, const char* a_type, int& n)// The dictionary's available
+// lexical information for this word.
     {
     n = 1;
     if(!Word::DictUnique)
@@ -426,9 +440,9 @@ unsigned int Word::maxFrequency(lext * Plext,int nmbr,const char * a_type,int & 
     if(nmbr < 2)
         return 0;
     unsigned int maxfreq = 0;
-    for(int j = 0;j < nmbr;++j)
+    for(int j = 0; j < nmbr; ++j)
         {
-        if(!a_type || !strcmp(a_type,LemmaTag(Plext[j].Type)))
+        if(!a_type || !strcmp(a_type, LemmaTag(Plext[j].Type)))
             {
             if(Plext[j].S.frequency > maxfreq)
                 {
@@ -445,7 +459,7 @@ unsigned int Word::maxFrequency(lext * Plext,int nmbr,const char * a_type,int & 
 /*
 Find the common stem by disregarding cardinal numbers, i.e. abcd,1 and abcd,2 have common stem abcd.
 */
-char * Word::commonStem(lext * Plext,int nmbr,const char * a_type,unsigned int freq,unsigned int & off)
+char* Word::commonStem(lext* Plext, int nmbr, const char* a_type, unsigned int freq, unsigned int& off)
     {
     if(!Word::DictUnique)
         return 0;
@@ -456,21 +470,21 @@ char * Word::commonStem(lext * Plext,int nmbr,const char * a_type,unsigned int f
     suffix[0] = '\0';
     buf[0] = '\0';
     off = 0;
-    char * ret = 0;
+    char* ret = 0;
     int ii;
-    for(ii = 0;ii < nmbr;++ii)
+    for(ii = 0; ii < nmbr; ++ii)
         {
-        if(  freq == Plext[ii].S.frequency 
-          && (  !a_type
-             || !strcmp(a_type,LemmaTag(Plext[ii].Type))
-             )
-          )
+        if(freq == Plext[ii].S.frequency
+           && (!a_type
+               || !strcmp(a_type, LemmaTag(Plext[ii].Type))
+               )
+           )
             {
             if(ret && off != Plext[ii].S.Offset)
                 {
                 return 0;
                 }
-            char * bf = Plext[ii].BaseFormSuffix;
+            char* bf = Plext[ii].BaseFormSuffix;
             /*char * komma = strchr(bf,',');
             if(komma)
                 {
@@ -490,32 +504,32 @@ char * Word::commonStem(lext * Plext,int nmbr,const char * a_type,unsigned int f
                     }
                 }
             else*/
+            {
+            if(suffix[0])
                 {
-                if(suffix[0])
+                if(strcmp(suffix, bf))
                     {
-                    if(strcmp(suffix,bf))
-                        {
-                        return 0;
-                        }
-                    }
-                else
-                    {
-                    strcpy(suffix,bf);
-                    ret = suffix;
-                    off = Plext[ii].S.Offset;
+                    return 0;
                     }
                 }
+            else
+                {
+                strcpy(suffix, bf);
+                ret = suffix;
+                off = Plext[ii].S.Offset;
+                }
+            }
             }
         }
     size_t length = off;
     if(length)
-        strcpy(buf,changeCase(m_word,true,length));
-    strcpy(buf+length,suffix);
+        strcpy(buf, changeCase(m_word, true, length));
+    strcpy(buf + length, suffix);
     return buf;
     }
 
 
-char * Word::commonType(lext * Plext,int nmbr,unsigned int freq)
+char* Word::commonType(lext* Plext, int nmbr, unsigned int freq)
     {
     if(!Word::DictUnique)
         return 0;
@@ -523,22 +537,22 @@ char * Word::commonType(lext * Plext,int nmbr,unsigned int freq)
         return 0;
     static char buf[256];
     buf[0] = '\0';
-    char * ret = 0;
-    for(int ii = 0;ii < nmbr;++ii)
+    char* ret = 0;
+    for(int ii = 0; ii < nmbr; ++ii)
         {
         if(freq == Plext[ii].S.frequency)
             {
-            const char * t = LemmaTag(Plext[ii].Type);
+            const char* t = LemmaTag(Plext[ii].Type);
             if(buf[0])
                 {
-                if(strcmp(buf,t))
+                if(strcmp(buf, t))
                     {
                     return 0;
                     }
                 }
             else
                 {
-                strcpy(buf,t);
+                strcpy(buf, t);
                 ret = buf;
                 }
             }
@@ -546,70 +560,70 @@ char * Word::commonType(lext * Plext,int nmbr,unsigned int freq)
     return ret;
     }
 
-formattingFunction * taggedWord::getTaggedWordFunction(int character,bool & SortInput,int & testType)
+formattingFunction* taggedWord::getTaggedWordFunction(int character, bool& SortInput, int& testType)
     {
     switch(character)
         {
         case 't':
             return new functionNoArgT(&taggedWord::t);
         }
-    return Word::getUnTaggedWordFunction(character,SortInput,testType);
+    return Word::getUnTaggedWordFunction(character, SortInput, testType);
     }
 
-formattingFunction * taggedWord::getTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType)
+formattingFunction* taggedWord::getTaggedWordFunctionNoBb(int character, bool& SortInput, int& testType)
     {
     switch(character)
         {
         case 't':
             return new functionNoArgT(&taggedWord::t);
         }
-    return Word::getUnTaggedWordFunctionNoBb(character,SortInput,testType);
+    return Word::getUnTaggedWordFunctionNoBb(character, SortInput, testType);
     }
 
 int taggedWord::addBaseFormsL()
     {
-    const char *ttag = Lemmatiser::translate(m_tag); 
-    const char * wrd = baseform(m_word,ttag,SegmentInitial, RulesUnique);
+    const char* ttag = Lemmatiser::translate(m_tag);
+    const char* wrd = baseform(m_word, ttag, SegmentInitial, RulesUnique);
 #if PRINTRULE
     return addBaseFormL(wrd, LemmaTag(ttag));
 #else
-    return addBaseFormL(wrd,LemmaTag(ttag));
+    return addBaseFormL(wrd, LemmaTag(ttag));
 #endif
     }
 
 
-int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
+int taggedWord::addBaseFormsDL(lext* Plext, int nmbr,// The dictionary's available
                                // lexical information for this word.
-                               bool & conflict,int & cntD,int & cntL,const char * Tp)//
+                               bool& conflict, int& cntD, int& cntL, const char* Tp)//
     {
-    lext * plext;
+    lext* plext;
     //const char * Tp = Lemmatiser::translate(m_tag); // tag as found in the text
     // See whether the word's tag can be found in the
     // dictionary's lexical information.
     int written = 0;
-    
+
     plext = Plext;
     int m;
-    const char * baseTp = LemmaTag(Tp);
+    const char* baseTp = LemmaTag(Tp);
 
-    unsigned int maxFreq = maxFrequency(Plext,nmbr,baseTp,m);
+    unsigned int maxFreq = maxFrequency(Plext, nmbr, baseTp, m);
     if(m > 1)
         {
         unsigned int off;
-        char * stem = commonStem(Plext,nmbr,baseTp,maxFreq,off);
+        char* stem = commonStem(Plext, nmbr, baseTp, maxFreq, off);
         if(stem)
             {
 #if PFRQ || FREQ24
-            cntD += addBaseFormD(stem,baseTp,maxFreq);
+            cntD += addBaseFormD(stem, baseTp, maxFreq);
 #else
-            cntD += addBaseFormD(stem,baseTp);
+            cntD += addBaseFormD(stem, baseTp);
 #endif
             FoundInDict = true;
             return cnt;
             }
         }
 
-    for(int n = nmbr;n;--n,++plext)
+    for(int n = nmbr; n; --n, ++plext)
         {
         if(plext->S.frequency >= maxFreq)
             {
@@ -622,16 +636,16 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
             // In reality, only if "skal" has POS tag V_IMP the lemma
             // "skalle" is correct.
 
-            if(!strcmp(baseTp,LemmaTag(plext->Type))) // Word is in dictionary,
+            if(!strcmp(baseTp, LemmaTag(plext->Type))) // Word is in dictionary,
 #else
-            if(!strcmp(Tp,(plext->Type))) // Word is in dictionary,
+            if(!strcmp(Tp, (plext->Type))) // Word is in dictionary,
 #endif
                 // and type info matches.
                 {
 #if PFRQ || FREQ24
-                cntD += addBaseFormD(plext->constructBaseform(m_word),baseTp,/*1,*/plext->S.frequency);
+                cntD += addBaseFormD(plext->constructBaseform(m_word), baseTp,/*1,*/plext->S.frequency);
 #else
-                cntD += addBaseFormD(plext->constructBaseform(m_word),baseTp);
+                cntD += addBaseFormD(plext->constructBaseform(m_word), baseTp);
 #endif
                 ++written;
                 FoundInDict = true;
@@ -639,11 +653,11 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
             }
         //There is a problem with the statistics if more than one lemma is added!
         }
-    
+
     if(written > 1)
         addBaseFormsL(); // Let the rules decide if the word is a 
-        // homograph, with more than one readings having the correct lexical 
-        // type. First try other disambiguation tricks (frequency).
+    // homograph, with more than one readings having the correct lexical 
+    // type. First try other disambiguation tricks (frequency).
     else if(!written)
         {
         conflict = true;
@@ -653,20 +667,20 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
 #if 0        
         if(nmbr)
             {
-            maxFreq = maxFrequency(Plext,nmbr,0,m);
+            maxFreq = maxFrequency(Plext, nmbr, 0, m);
             if(m > 1)
                 {
-                char * tp = commonType(Plext,nmbr,maxFreq);
+                char* tp = commonType(Plext, nmbr, maxFreq);
                 if(tp)
                     {
                     unsigned int off;
-                    char * stem = commonStem(Plext,nmbr,tp,maxFreq,off);
+                    char* stem = commonStem(Plext, nmbr, tp, maxFreq, off);
                     if(stem)
                         {
 #if PFRQ || FREQ24
-                        addBaseFormD(stem,tp,maxFreq);
+                        addBaseFormD(stem, tp, maxFreq);
 #else
-                        addBaseFormD(stem,tp);
+                        addBaseFormD(stem, tp);
 #endif
                         return cnt;
                         }
@@ -677,15 +691,15 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
                 {
                 if(plext->S.frequency >= maxFreq)
 #if PFRQ || FREQ24
-                    addBaseFormD(plext->constructBaseform(m_word),LemmaTag(plext->Type),plext->S.frequency);
+                    addBaseFormD(plext->constructBaseform(m_word), LemmaTag(plext->Type), plext->S.frequency);
 #else
-                    addBaseFormD(plext->constructBaseform(m_word),LemmaTag(plext->Type));
+                    addBaseFormD(plext->constructBaseform(m_word), LemmaTag(plext->Type));
 #endif
-                    // We choose not to count the dictionary lemmas if the constructed lemma already is counted on.
-                    if(--nmbr)
-                        ++plext;
-                    else
-                        break;
+                // We choose not to count the dictionary lemmas if the constructed lemma already is counted on.
+                if(--nmbr)
+                    ++plext;
+                else
+                    break;
                 }
             }
 #endif
@@ -693,7 +707,7 @@ int taggedWord::addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's availab
     return cnt;
     }
 
-void Word::lookup(text * txt)
+void Word::lookup(text* txt)
     {
     bool conflict = false;
     tcount Pos;
@@ -701,7 +715,7 @@ void Word::lookup(text * txt)
     const char* Tp = dictionary::findword(itsWord(), m_tag, Pos, Nmbr);
     if(Tp != 0)
         {
-        addBaseFormsDL(LEXT + Pos,Nmbr,conflict,txt->cntD,txt->cntL,Tp);
+        addBaseFormsDL(LEXT + Pos, Nmbr, conflict, txt->cntD, txt->cntL, Tp);
         if(conflict)
             {
             txt->aConflictTypes++;

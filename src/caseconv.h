@@ -22,8 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef CASECONV_H
 #define CASECONV_H
 
+#include "defines.h"
 #include <stddef.h>
-
 
 #define DEFAULTENCODING 0
 #define ISO8859_1 1 //Western European
@@ -66,5 +66,6 @@ extern bool (*is_Alpha)(int s);
 extern const char * (*allToLower)(const char * s);
 extern bool (*IsAllUpper)(const char * s);
 enum class caseTp { easis, elower, emimicked }; // 
+extern caseTp baseformsAreLowercase;
 
 #endif

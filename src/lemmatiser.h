@@ -39,6 +39,7 @@ class tagpairs;
 struct optionStruct;
 struct tallyStruct;
 
+
 class Lemmatiser
     {
     private:
