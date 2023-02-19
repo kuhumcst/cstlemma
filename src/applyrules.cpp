@@ -224,12 +224,12 @@ bool rules::readRules(FILE * flexrulefile, const char * FlexFileName)
 #endif
                 return bufbuf;
             }
-        else if (istart == *(int*)"\rV3\r")
+        else if(istart == *(int*)"\rV3\r")
             {
 #if LEMMATIZEV0
-            if (!setNewStyleRules(3))
-#endif
+            if(!setNewStyleRules(3))
                 return bufbuf;
+#endif
             }
         else
             {
@@ -1319,7 +1319,7 @@ static const char* apply ( const char* word
 #endif
         );
         }
-#else
+//#else
         {
         fprintf(stderr, "The rules %s have a deprecated structure.\nGenerate flexrules with a recent version of affixtrain or recompile cstlemma with LEMMATIZEV0 set to 1\n", flexFileName);
         exit(-1);
