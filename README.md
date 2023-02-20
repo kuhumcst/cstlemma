@@ -99,9 +99,13 @@ https://www.aclweb.org/anthology/P09-1017.pdf
 **Appraisal of lemmatization (author: ChatGPT)**
 
   There once was a word, quite a beast
+  
   Its endings were many, at least
+  
   But with lemmatization
+  
   It found liberation
+  
   And made perfect sense in the least
 
 **Contact info**
