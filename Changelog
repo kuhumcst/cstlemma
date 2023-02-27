@@ -1,3 +1,8 @@
+--------------------------------
+Version 8.4.4 (27 February 2023)
+--------------------------------
+Fixed: Uninitialized member 'End' in 'rules' when defaulting flexrules to "do nothing".
+
 -------------------------------
 Version 8.4.0 (27 January 2023)
 -------------------------------

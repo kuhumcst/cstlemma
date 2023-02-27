@@ -116,6 +116,7 @@ class rules
             strcpy(this->TagName, TagName);
             char * filename = new char[strlen(TagName) + strlen(flexFileName) + 2];
             sprintf(filename, "%s.%s", flexFileName, TagName);
+            End = sizeof(bufbuf) - 1;
             FILE * f = fopen(filename, "rb");
             if (f)
                 {
@@ -1070,8 +1071,10 @@ static LemmaRule * newStyleLemmatizeV3
 #endif
     )
     {
-    if (maxpos <= buf)
+    if(maxpos <= buf)
+        {
         return 0;
+        }
     const char * cword = word;
     const char * cwordend = wordend;
     int pos = 0;
@@ -1293,11 +1296,13 @@ static const char* apply ( const char* word
             word = changeCase(word, true, len/*gth*/);
             //len = strlen(word);
             donotAddLemmaUnlessRuleHasPrefix = false;
-            result = concat(pruneEquals(newStyleLemmatizeV3(word, word + len, buf, maxpos, 0, lemmas
+            LemmaRule * rule = newStyleLemmatizeV3(word, word + len, buf, maxpos, 0, lemmas
 #if PRINTRULE
-                                                           , word
+                                                            , word
 #endif
-                                                           ), RulesUnique));
+            );
+            LemmaRule * prunedrule = pruneEquals(rule, RulesUnique);
+            result = concat(prunedrule);
             }
         else
             {
