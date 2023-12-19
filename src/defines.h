@@ -130,7 +130,7 @@ non-const character strings.
 #define PROGMAKEDICT
 //#define PROGMAKESUFFIXFLEX
 #define PROGLEMMATISE
-#define PROGPRINTDICT
+//#define PROGPRINTDICT
 #endif
 #if !defined PROGMAKEDICT
 #if !defined PROGMAKESUFFIXFLEX
