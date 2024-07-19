@@ -34,7 +34,7 @@ bool readRules(const char * flexFileName);
 const char * applyRules(const char * word,bool SegmentInitial, bool RulesUnique);
 const char * applyRules(const char * word,const char * tag,bool SegmentInitial, bool RulesUnique);
 void deleteRules();
-extern bool oneAnswer;
+//extern bool oneAnswer;
 #if LEMMATIZEV0
 bool setNewStyleRules(int val);
 #endif

@@ -81,6 +81,7 @@ LEMMATISERSRC=\
 	readlemm.cpp\
 	tags.cpp\
 	text.cpp\
+                trigramdisamb.cpp\
  	$(LETTERFUNCDIR)/utf8func.cpp \
 	word.cpp\
 	wordReader.cpp\
@@ -116,6 +117,7 @@ LEMMATISEROBJS=\
 	readlemm.o\
 	tags.o\
 	text.o\
+                trigramdisamb.o\
 	utf8func.o\
 	word.o\
 	wordReader.o\

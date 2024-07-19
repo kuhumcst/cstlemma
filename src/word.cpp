@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "lemmatiser.h"
 #include "text.h"
 #include "dictionary.h"
+//#include "trigramdisamb.h"
 #include "utf8func.h"
 #include <assert.h>
 #include <stdlib.h>
@@ -235,6 +236,7 @@ int Word::addBaseFormsL()
     {
     const char* tag = 0;
     const char* wrd = baseform(m_word, &tag, SegmentInitial, RulesUnique);
+    //wrd = trigrams.sortByWeight(wrd);
     if(!tag)
         tag = NOT_KNOWN;// TODO do something better (NUM, XX, TEGN, etc)
     if(!*wrd)

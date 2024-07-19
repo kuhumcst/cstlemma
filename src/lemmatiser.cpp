@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "applyrules.h"
 #include "tags.h"
 #include "caseconv.h"
+#include "trigramdisamb.h"
 #endif
 #include "option.h"
 #if defined PROGMAKEDICT 
@@ -127,7 +128,7 @@ const char* Lemmatiser::translate(const char* tag)
 
 const char* Lemmatiser::translatable(const char* texttag, const char* dicttag)
     {
-    return !strcmp(texttag,dicttag) ? dicttag : TextToDictTags ? TextToDictTags->translatable(texttag, dicttag) : 0; // tag as found in the text
+    return !strcmp(texttag, dicttag) ? dicttag : TextToDictTags ? TextToDictTags->translatable(texttag, dicttag) : 0; // tag as found in the text
     }
 
 const char* Lemmatiser::nexttranslate(const char* tag)
@@ -151,32 +152,32 @@ Lemmatiser::Lemmatiser(optionStruct& a_Option) :
 #endif
         switch(Option.whattodo)
             {
-            case whattodoTp::MAKEDICT:
-                {
+                case whattodoTp::MAKEDICT:
+                    {
 #if defined PROGMAKEDICT
-                status = MakeDict();
+                    status = MakeDict();
 #endif
-                break;
-                }
-            case whattodoTp::MAKEFLEXPATTERNS:
-                {
+                    break;
+                    }
+                case whattodoTp::MAKEFLEXPATTERNS:
+                    {
 #if defined PROGMAKESUFFIXFLEX
-                status = MakeFlexPatterns();
+                    status = MakeFlexPatterns();
 #endif
-                break;
-                }
-            case whattodoTp::PRINTDICT:
+                    break;
+                    }
+                case whattodoTp::PRINTDICT:
 #if (defined PROGPRINTDICT)
-                status = LemmatiseInit();
+                    status = LemmatiseInit();
 #endif
-                break;
-            default:
-                {
+                    break;
+                default:
+                    {
 #if (defined PROGLEMMATISE)
-                status = LemmatiseInit();
+                    status = LemmatiseInit();
 #endif
-                break;
-                }
+                    break;
+                    }
             }
         }
     else
@@ -191,22 +192,22 @@ Lemmatiser::~Lemmatiser()
     instance--;
     switch(Option.whattodo)
         {
-        case whattodoTp::MAKEDICT:
-            {
-            break;
-            }
-        case whattodoTp::MAKEFLEXPATTERNS:
-            {
-            break;
-            }
-        case whattodoTp::PRINTDICT:
-            break;
-        default:
-            {
+            case whattodoTp::MAKEDICT:
+                {
+                break;
+                }
+            case whattodoTp::MAKEFLEXPATTERNS:
+                {
+                break;
+                }
+            case whattodoTp::PRINTDICT:
+                break;
+            default:
+                {
 #if defined PROGLEMMATISE
-            LemmatiseEnd();
+                LemmatiseEnd();
 #endif
-            }
+                }
         }
 #ifdef COUNTOBJECTS
     --COUNT;
@@ -576,6 +577,7 @@ int Lemmatiser::openFiles()
     {
     FILE* fpdict = 0;
 #if defined PROGLEMMATISE
+    FILE* fptrigram = 0;
     FILE* fpflex;
     FILE* fpv = 0;
     FILE* fpx = 0;
@@ -763,8 +765,10 @@ int Lemmatiser::openFiles()
                 //printf("New style rules. First four bytes, as int: %x. As char*:\n%.4s\n", start, (char*)&start);
                 if(!readRules(fpflex, Option.InputHasTags ? Option.flx : 0))
                     return false;
+                /*
                 if(Option.RulesUnique)
                     oneAnswer = true;
+                    */
                 }
 #if LEMMATIZEV0
             else
@@ -824,37 +828,60 @@ int Lemmatiser::openFiles()
         }
 #endif
 
-        
-        if(Option.dictfile)
+    if(Option.dictfile)
+        {
+        fpdict = fopen(Option.dictfile, "rb");
+        if(!fpdict)
             {
-            fpdict = fopen(Option.dictfile, "rb");
-            if(!fpdict)
-                {
-                cannotOpenFile("-d\t", Option.dictfile, "\t(Dictionary): Cannot open file.");
-                return -1;
-                }
-#if defined PROGLEMMATISE
-            else
-#if STREAM
-                clog << "-d\t" << std::setw(20) << Option.dictfile << "\tDictionary" << endl;
-#else
-                info("-d\t%-20s\tDictionary", Option.dictfile);
-#endif
-#endif
+            cannotOpenFile("-d\t", Option.dictfile, "\t(Dictionary): Cannot open file.");
+            return -1;
             }
 #if defined PROGLEMMATISE
         else
-            {
 #if STREAM
-            clog << "-d\tDictionary: File not specified." << endl;
+            clog << "-d\t" << std::setw(20) << Option.dictfile << "\tDictionary" << endl;
 #else
-            info("-d\tDictionary: File not specified.");
+            info("-d\t%-20s\tDictionary", Option.dictfile);
+#endif
+#endif
+        }
+#if defined PROGLEMMATISE
+    else
+        {
+#if STREAM
+        clog << "-d\tDictionary: File not specified." << endl;
+#else
+        info("-d\tDictionary: File not specified.");
 #endif
         }
 #endif
 
-        
-        
+#if defined PROGLEMMATISE
+    if(Option.trigramfile)
+        {
+        fptrigram = fopen(Option.trigramfile, "rb");
+        if(!fptrigram)
+            {
+            cannotOpenFile("-d\t", Option.trigramfile, "\t(Trigram frequencies): Cannot open file.");
+            return -1;
+            }
+        else
+#if STREAM
+            clog << "-d\t" << std::setw(20) << Option.trigramfile << "\tTrigram frequencies" << endl;
+#else
+            info("-d\t%-20s\tTrigram frequencies", Option.trigramfile);
+#endif
+        }
+    else
+        {
+#if STREAM
+        clog << "-d\tTrigram frequencies: File not specified." << endl;
+#else
+        info("-d\tTrigram frequencies: File not specified.");
+#endif
+        }
+#endif
+
     if(Option.nice && fpdict)
 #if STREAM
         cout << "\nreading dictionary \"" << Option.dictfile << "\"" << endl;
@@ -864,6 +891,19 @@ int Lemmatiser::openFiles()
     dict.initdict(fpdict);
     if(fpdict)
         fclose(fpdict);
+
+#if (defined PROGLEMMATISE)
+    if(Option.nice && fptrigram)
+#if STREAM
+        cout << "\nreading trigram frequencies \"" << Option.trigramfile << "\"" << endl;
+#else
+        printf("\nreading trigram frequencies \"%s\"\n", Option.trigramfile);
+#endif
+    trigrams.init(fptrigram);
+    if(fptrigram)
+        fclose(fptrigram);
+#endif
+
 #if defined PROGPRINTDICT
     FILE* fprintall = fopen("dicttree.txt", "wb");
     FILE* fprintall2 = fopen("dictlist.txt", "wb");
@@ -1028,29 +1068,29 @@ void Lemmatiser::showSwitches()
 #endif
     switch(Option.UseLemmaFreqForDisambiguation)
         {
-        case 0:
+            case 0:
 #if STREAM
-            clog << "-H0\tuse lemma frequencies for disambigation" << endl;
+                clog << "-H0\tuse lemma frequencies for disambigation" << endl;
 #else
-            info("-H0\tuse lemma frequencies for disambigation");
+                info("-H0\tuse lemma frequencies for disambigation");
 #endif
-            basefrm::hasW = true;
-            break;
-        case 1:
+                basefrm::hasW = true;
+                break;
+            case 1:
 #if STREAM
-            clog << "-H1\tuse lemma frequencies for disambigation, show pruned lemmas between <<>>" << endl;
+                clog << "-H1\tuse lemma frequencies for disambigation, show pruned lemmas between <<>>" << endl;
 #else
-            info("-H1\tuse lemma frequencies for disambigation, show pruned lemmas between <<>>");
+                info("-H1\tuse lemma frequencies for disambigation, show pruned lemmas between <<>>");
 #endif
-            basefrm::hasW = true;
-            break;
-        case 2:
+                basefrm::hasW = true;
+                break;
+            case 2:
 #if STREAM
-            clog << "-H2\tdon't use lemma frequencies for disambigation (default)" << endl;
+                clog << "-H2\tdon't use lemma frequencies for disambigation (default)" << endl;
 #else
-            info("-H2\tdon't use lemma frequencies for disambigation (default)");
+                info("-H2\tdon't use lemma frequencies for disambigation (default)");
 #endif
-            break;
+                break;
         }
     if(Option.baseformsAreLowercase == caseTp::elower)
 #if STREAM
@@ -1246,32 +1286,32 @@ int Lemmatiser::LemmatiseFile()
         }
     switch(Option.keepPunctuation)
         {
-        case 0:
+            case 0:
 #if STREAM
-            clog << "-p-\tignore punctuation (only together with -t- and no -W format)\n" << endl;
+                clog << "-p-\tignore punctuation (only together with -t- and no -W format)\n" << endl;
 #else
-            info("-p-\tignore punctuation (only together with -t- and no -W format)\n");
+                info("-p-\tignore punctuation (only together with -t- and no -W format)\n");
 #endif
-            break;
-        case 1:
+                break;
+            case 1:
 #if STREAM
-            clog << "-p\tkeep punctuation (default)\n" << endl;
+                clog << "-p\tkeep punctuation (default)\n" << endl;
 #else
-            info("-p\tkeep punctuation (default)\n");
+                info("-p\tkeep punctuation (default)\n");
 #endif
-            break;
-        case 2:
+                break;
+            case 2:
 #if STREAM
-            clog << "-p+\ttreat punctuation as tokens (only together with -t- and no -W format)\n" << endl;
+                clog << "-p+\ttreat punctuation as tokens (only together with -t- and no -W format)\n" << endl;
 #else
-            info("-p+\ttreat punctuation as tokens (only together with -t- and no -W format)\n");
+                info("-p+\ttreat punctuation as tokens (only together with -t- and no -W format)\n");
 #endif
-            break;
-        default:
+                break;
+            default:
 #if STREAM
-            clog << "-p:\tUnknown argument.\n" << endl;
+                clog << "-p:\tUnknown argument.\n" << endl;
 #else
-            info("-p:\tUnknown argument.\n");
+                info("-p:\tUnknown argument.\n");
 #endif
         }
 

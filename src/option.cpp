@@ -56,7 +56,7 @@ const char optionStruct::Default_b_format[] = "$w";
 const char * optionStruct::Default_B_format = optionStruct::Default_b_format;
 #endif
 
-static char opts[] = "?@:A:b:B:c:C:d:De:f:F:H:hi:I:k:l:Lm:n:N:o:p:Pq:R:s:t:u:U:v:W:x:X:y:z:" /* GNU: */ "wr";
+static char opts[] = "?@:A:b:B:c:C:d:De:f:F:H:hi:I:k:l:Lm:n:N:o:p:Pq:R:s:t:T:u:U:v:W:x:X:y:z:" /* GNU: */ "wr";
 static char *** Ppoptions = NULL;
 static char ** Poptions = NULL;
 static int optionSets = 0;
@@ -75,6 +75,7 @@ optionStruct::optionStruct()
     defaultBformat = true;
     defaultCformat = true;
     dictfile = NULL;
+    trigramfile = NULL;
     v = NULL;
     x = NULL;
     XML = false;
@@ -156,6 +157,7 @@ optionStruct::~optionStruct()
     delete[] argi;
     delete[] argo;
     delete[] dictfile;
+    delete[] trigramfile;
     delete[] flx;
     delete[] v;
     delete[] x;
@@ -241,6 +243,9 @@ OptReturnTp optionStruct::doSwitch(int c,char * locoptarg,char * progname)
             dictfile = dupl(locoptarg);
             break;
 #endif
+        case 'T':
+            trigramfile = dupl(locoptarg);
+            break;
         case 'D':
             whattodo = whattodoTp::MAKEDICT;
             break;

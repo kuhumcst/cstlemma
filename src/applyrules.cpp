@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "flex.h"
 #include "utf8func.h"
 #include "caseconv.h"
+#include "trigramdisamb.h"
 //#include "option.h"
 #include <stdio.h>
 #include <string.h>
@@ -43,7 +44,7 @@ using namespace std;
 
 typedef unsigned char typetype;
 
-bool oneAnswer = false;
+//bool oneAnswer = false;
 
 struct startEnd
     {
@@ -1223,6 +1224,9 @@ static const char* apply ( const char* word
                          , const char* maxpos
                          )
     {
+    bool doPrune = RulesUnique;
+    if(doPrune && trigrams.hasTrigrams())
+        doPrune = false;
     wordInOriginalCasing = word;
     size_t len = strlen(word);
     if(baseformsAreLowercase == caseTp::elower)
@@ -1271,7 +1275,7 @@ static const char* apply ( const char* word
 #if PRINTRULE
                                                            , word
 #endif
-                                                           ), RulesUnique));
+                                                           ), doPrune));
             }
         else if(SegmentInitial
            && (baseformsAreLowercase == caseTp::easis)
@@ -1301,7 +1305,7 @@ static const char* apply ( const char* word
                                                             , word
 #endif
             );
-            LemmaRule * prunedrule = pruneEquals(rule, RulesUnique);
+            LemmaRule * prunedrule = pruneEquals(rule, doPrune);
             result = concat(prunedrule);
             }
         else
@@ -1310,7 +1314,7 @@ static const char* apply ( const char* word
 #if PRINTRULE
                                                            , word
 #endif
-                                                           ), RulesUnique));
+                                                           ), doPrune));
             }
         }
 #if LEMMATIZEV0
@@ -1339,6 +1343,7 @@ static const char* apply ( const char* word
     result = new char[newresult];
     strcpy(result, temp);
 #endif
+    trigrams.sortByWeight(result, RulesUnique);
     return result;
     }
 
