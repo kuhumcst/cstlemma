@@ -862,22 +862,22 @@ int Lemmatiser::openFiles()
         fptrigram = fopen(Option.trigramfile, "rb");
         if(!fptrigram)
             {
-            cannotOpenFile("-d\t", Option.trigramfile, "\t(Trigram frequencies): Cannot open file.");
+            cannotOpenFile("-T\t", Option.trigramfile, "\t(Trigram frequencies): Cannot open file.");
             return -1;
             }
         else
 #if STREAM
             clog << "-d\t" << std::setw(20) << Option.trigramfile << "\tTrigram frequencies" << endl;
 #else
-            info("-d\t%-20s\tTrigram frequencies", Option.trigramfile);
+            info("-T\t%-20s\tTrigram frequencies", Option.trigramfile);
 #endif
         }
     else
         {
 #if STREAM
-        clog << "-d\tTrigram frequencies: File not specified." << endl;
+        clog << "-T\tTrigram frequencies: File not specified." << endl;
 #else
-        info("-d\tTrigram frequencies: File not specified.");
+        info("-T\tTrigram frequencies: File not specified.");
 #endif
         }
 #endif
