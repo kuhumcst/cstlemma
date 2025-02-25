@@ -1,4 +1,9 @@
 --------------------------------
+Version 8.5.2 (25 February 2025)
+--------------------------------
+Fixed: option -l had no effect.
+
+--------------------------------
 Version 8.4.4 (27 February 2023)
 --------------------------------
 Fixed: Uninitialized member 'End' in 'rules' when defaulting flexrules to "do nothing".
