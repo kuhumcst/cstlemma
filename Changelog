@@ -1,4 +1,9 @@
 --------------------------------
+Version 8.5.3 (1 April 2025)
+--------------------------------
+Fixed: CSTlemma did not accept an empty rule file.
+
+--------------------------------
 Version 8.5.2 (25 February 2025)
 --------------------------------
 Fixed: option -l had no effect.
