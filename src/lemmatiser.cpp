@@ -566,6 +566,12 @@ int Lemmatiser::setFormats()
 static bool newstylerulefile(FILE* fpflex)
     {
     int start;
+    if(fgetc(fpflex) == EOF)
+        {
+        /*Empty file (zero bytes)*/
+        return true;
+        }
+    rewind(fpflex);
     if(fread(&start, sizeof(int), 1, fpflex) != 1)
         return false;
     rewind(fpflex);
