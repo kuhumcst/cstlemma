@@ -40,6 +40,7 @@ functionTree * basefrm::Bfuncs = 0;// used if -W option set
 functionTree * basefrm::wfuncs = 0;// used if -W option set
 const char * basefrm::sep;
 bool basefrm::hasW = false;
+Wstatus basefrm::needW = nofW;
 tagpairs * TagFriends = 0;
 
 #if STREAM
@@ -61,6 +62,8 @@ formattingFunction * basefrm::getBasefrmFunction(int character,bool & DummySortI
     switch(character)
         {
         case 'f':
+            hasW = true;
+            needW = (needW == Wseen) ? fWseen : fseen;
             return new functionNoArgB(&basefrm::F);
 #if FREQ24
         case 'n':
@@ -72,6 +75,7 @@ formattingFunction * basefrm::getBasefrmFunction(int character,bool & DummySortI
             return new functionNoArgB(&basefrm::W);
         case 'W':
             hasW = true;
+            needW = (needW == fseen) ? fWseen : Wseen;
             testType |= NUMBERTEST;
             return new functionNoArgW(&basefrm::L,&basefrm::countFullForms);
 //            return new functionNoArgB(&basefrm::L);
@@ -187,6 +191,11 @@ bool basefrm::setFormat(const char * Wformat,const char * bformat,const char * B
         Bfuncs = new functionTree();
         int testType = 0;
         OutputClass::Format(Bformat,basefrm::getBasefrmFunction,*Bfuncs,Bformat,DummySortInput,testType);
+        }
+    if(basefrm::needW == fseen)
+        {
+        if(!Wformat)
+            Wformat = "";
         }
     /*
     if(hasW)

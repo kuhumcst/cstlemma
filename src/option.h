@@ -66,6 +66,7 @@ struct optionStruct
     // linguistic resources
 #if (defined PROGLEMMATISE) || (defined PROGPRINTDICT)
     const char * dictfile;  // -d
+    const char * trigramfile; // -T
 #endif
 #if (defined PROGLEMMATISE) || (defined PROGMAKESUFFIXFLEX)
     const char * flx;       // -f
