@@ -44,7 +44,9 @@ using namespace std;
 
 typedef unsigned char typetype;
 
-//bool oneAnswer = false;
+#if LEMMATIZEV0
+bool oneAnswer = false;
+#endif
 
 struct startEnd
     {
