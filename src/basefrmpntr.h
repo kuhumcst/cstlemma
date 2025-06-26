@@ -36,18 +36,18 @@ using namespace std;
 
 extern void (*print)(
 #if STREAM
-              ostream * fpo
+    ostream* fpo
 #else
-              FILE * fpo
+    FILE* fpo
 #endif
-              ,const char * s);
+    , const char* s);
 
 
 class basefrm;
 class functionTree;
 class Word;
 
-typedef void (basefrm::*bfn)(void)const;
+typedef void (basefrm::* bfn)(void)const;
 
 class baseformpointer
     {
@@ -56,14 +56,14 @@ class baseformpointer
         static int COUNT;
 #endif
     private:
-        basefrm * bf;
-        baseformpointer * next;
+        basefrm* bf;
+        baseformpointer* next;
 #if PFRQ
         unsigned int pfrq;
 #endif
         bool owning;
         bool hidden;
-        bool hasDuplicateLemma(baseformpointer * startOfList, baseformpointer * current);
+        bool hasDuplicateLemma(baseformpointer* startOfList, baseformpointer* current);
     public:
         static int UseLemmaFreqForDisambiguation;
         int count()
@@ -71,46 +71,47 @@ class baseformpointer
             return (hidden ? 0 : 1) + (next ? next->count() : 0);
             }
 #if STREAM
-        void printfbf(ostream *fp,functionTree * fns,const char * sep);
-        void printFn(ostream *fp,bfn Fn,const char * sep);
+        void printfbf(ostream* fp, functionTree* fns, const char* sep);
+        void printFn(ostream* fp, bfn Fn, const char* sep);
 #if PRINTRULE
-        void printfrule(ostream *fp, functionTree * fns, const char * sep);
+        void printfrule(ostream* fp, functionTree* fns, const char* sep);
 #endif
 #else
-        void printfbf(FILE *fp,functionTree * fns,const char * sep);
-        void printFn(FILE *fp,bfn Fn,const char * sep);
+        void printfbf(FILE* fp, functionTree* fns, const char* sep);
+        void printFn(FILE* fp, bfn Fn, const char* sep);
 #if PRINTRULE
-        void printfrule(FILE *fp, functionTree * fns, const char * sep);
+        void printfrule(FILE* fp, functionTree* fns, const char* sep);
 #endif
 #endif
 #if PRINTRULE
+        static basefrm* which;
         void P();
         void R();
 #endif
 #if PFRQ || FREQ24
-        baseformpointer(const char * s,const char * t,size_t len,unsigned int frequency);
+        baseformpointer(const char* s, const char* t, size_t len, unsigned int frequency);
 #else
-        baseformpointer(const char * s,const char * t,size_t len);
+        baseformpointer(const char* s, const char* t, size_t len);
 #endif
         ~baseformpointer();
-        void reassign(basefrm * bf);
+        void reassign(basefrm* bf);
 #if PFRQ || FREQ24
-        int addBaseForm(const char * s,const char * t,size_t len,unsigned int frequency);
+        int addBaseForm(const char* s, const char* t, size_t len, unsigned int frequency);
 #else
-        int addBaseForm(const char * s,const char * t,size_t len);
+        int addBaseForm(const char* s, const char* t, size_t len);
 #endif
-        void assignTo(basefrm **& pbf)
+        void assignTo(basefrm**& pbf)
             {
             *pbf = bf;
             ++pbf;
             if(next)
                 next->assignTo(pbf);
             }
-        void addFullForm(Word * word);
+        void addFullForm(Word* word);
         void DisambiguateByLemmaFrequency();
-        void DisambiguateByTagFriends(const char * tag);
+        void DisambiguateByTagFriends(const char* tag);
         void testPrint();
-        void decFreq(Word * w);
+        void decFreq(Word* w);
     };
 
 

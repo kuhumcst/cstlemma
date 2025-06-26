@@ -1,4 +1,10 @@
 --------------------------------
+Version 8.5.4 (26 June 2025)
+--------------------------------
+Fixed -W option: Pattern and replacement were not printed correctly if word had more than one lemmacandidate. 
+  -W $w($p->$r)
+
+--------------------------------
 Version 8.5.3 (1 April 2025)
 --------------------------------
 Fixed: CSTlemma did not accept an empty rule file.

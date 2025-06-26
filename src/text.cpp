@@ -606,8 +606,11 @@ void text::Lemmatise(FILE * fpo
                     }
                 else
                     {
+                    baseformpointer::which = basefrmarrL[l];
                     if(basefrmarrL[l]->lemmaFreq())
+                        {
                         basefrmarrL[l]->printB();
+                        }
                     l++;
                     }
                 }
@@ -619,8 +622,11 @@ void text::Lemmatise(FILE * fpo
                 }
             while(l < cntL && basefrmarrL[l])
                 {
+                baseformpointer::which = basefrmarrL[l];
                 if(basefrmarrL[l]->lemmaFreq())
+                    {
                     basefrmarrL[l]->printB();
+                    }
                 l++;
                 }
             }
@@ -631,8 +637,11 @@ void text::Lemmatise(FILE * fpo
             }
         else if(listLemmas & 2)
             {
-            for(int K = 0;K < cntL && basefrmarrL[K];++K)
+            for(int K = 0; K < cntL && basefrmarrL[K]; ++K)
+                {
+                baseformpointer::which = basefrmarrL[K];
                 basefrmarrL[K]->printB();
+                }
             }
         if(nice)
             LOG1LINE("...listed lemmas");

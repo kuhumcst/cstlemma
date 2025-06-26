@@ -165,12 +165,12 @@ class basefrm : public OutputClass
             this->m_t = new char[strlen(t) + 1];
             strcpy(this->m_t, t);
 #if PRINTRULE
-            this->m_p = strchr(this->m_s, '\v');
+            this->m_p = strchr(this->m_s, '\v'); // Find end of baseform
             if(this->m_p)
                 {
-                *this->m_p++ = 0;
-                char* r = strchr(this->m_p, '\v');
-                *r = 0;
+                *this->m_p++ = 0; // zero-terminate baseform & pattern begins after 0 byte
+                char* r = strchr(this->m_p, '\v'); // Find end of pattern
+                *r = 0; // Replacement starts after 0 byte and ends where the space was.
                 }
 #endif
 #ifdef COUNTOBJECTS
