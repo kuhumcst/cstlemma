@@ -55,7 +55,7 @@ char * readValue::read(char * kar,field *& nextfield)
             len = pos + ln + 1;
             char * nw = new char[len];
             strcpy(nw,word);
-            delete word;
+            delete[] word;
             word = nw;
             }
         strcpy(word + pos,nxt);
@@ -176,12 +176,12 @@ void readLitteral::add(char kar)
     {
     ++len;
     char * nw = new char[len];
-    delete matched;
+    delete[] matched;
     matched = new char[len];
     strcpy(nw,litteral);
     nw[len-2] = kar;
     nw[len-1] = '\0';
-    delete litteral;
+    delete[] litteral;
     litteral = nw;
     }
 
@@ -210,7 +210,7 @@ char * readLitteral::read(char * kar,field *& nextfield)
                     {
                     if(givebacklen <= j)
                         {
-                        delete giveback;
+                        delete[] giveback;
                         giveback = new char[j+1];
                         }
                     int k;

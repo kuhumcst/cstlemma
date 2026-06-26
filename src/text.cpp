@@ -842,6 +842,7 @@ void text::createTagged(const char * w, const char * tag)
 
 text::text(bool a_InputHasTags,bool nice)
            :Root(0)
+           ,Lines(0)
            ,lineno(0)
            ,total(0)
            ,reducedtotal(0)
@@ -863,7 +864,8 @@ text::text(bool a_InputHasTags,bool nice)
 text::~text()
     {
     delete fields;
-    delete Root;
+    delete[] Root;
+    delete[] Lines;
 #ifdef COUNTOBJECTS
     --COUNT;
 #endif

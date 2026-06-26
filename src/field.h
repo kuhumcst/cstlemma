@@ -90,7 +90,7 @@ class readValue : public field
             }
         ~readValue()
             {
-            delete word;
+            delete[] word;
             }
         void reset()
             {
@@ -195,8 +195,9 @@ class readLitteral : public field
         readLitteral(char first);
         ~readLitteral()
             {
-            delete litteral;
-            delete giveback;
+            delete[] litteral;
+            delete[] matched;
+            delete[] giveback;
             }
         void add(char kar);
         virtual char * read(char * kar,field *& nextfield);

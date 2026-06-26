@@ -145,8 +145,12 @@ $(PNAMEDYNAMICLIB): $(REALNAME) $(CSTLEMMAOBJ)
 
 all: $(PNAMESTATIC) $(PNAMEDYNAMIC) $(REALNAME) $(PNAMEDYNAMICLIB)
 
+# Let make locate sources living in the sibling lib directories so each object
+# can be compiled individually (see the .cpp.o rule below).
+vpath %.cpp $(SRCDIR) $(HASHDIR) $(LETTERFUNCDIR) $(SGMLDIR)
+
 .cpp.o:
-	$(CC) $(PIC) $(DEBUG) $(GCCINC) -c $(CSTLEMMASRC) $(LEMMATISERSRC)
+	$(CC) $(PIC) $(DEBUG) $(GCCINC) -c $< -o $@
 
 clean:
 	$(RM) *.o

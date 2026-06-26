@@ -341,7 +341,7 @@ void flattext::printUnsorted(
     REFER(fpo) // unused
         for (k = 0; k < total; ++k)
             {
-            while (k >= Lines[line] && line <= lineno)
+            while (line <= lineno && k >= Lines[line])
                 {
                 Word::NewLinesAfterWord++;
                 ++line;

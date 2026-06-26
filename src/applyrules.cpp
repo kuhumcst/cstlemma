@@ -942,22 +942,26 @@ static char * concat(LemmaRule * L)
             }
         ++lngth;
         char * ret = new char[lngth];
-        ret[0] = 0;
+        char * w = ret; // running write pointer: avoids O(n^2) strcat rescans
         for (i = 0; L[i].Lem; ++i)
             {
-            strcat(ret, L[i].Lem);
+            size_t l = strlen(L[i].Lem);
+            memcpy(w, L[i].Lem, l);
+            w += l;
             delete[] L[i].Lem;
             L[i].Lem = 0;
 #if PRINTRULE
-            strcat(ret, "\v");
-            strcat(ret, L[i].rule);
+            *w++ = '\v';
+            size_t lr = strlen(L[i].rule);
+            memcpy(w, L[i].rule, lr);
+            w += lr;
             delete[] L[i].rule;
             L[i].rule = 0;
 #endif
-            strcat(ret, " ");
+            *w++ = ' ';
             }
         delete[] L;
-        ret[lngth-1] = 0;
+        ret[lngth-1] = 0; // w == ret + (lngth-1); terminate (trailing space kept, as before)
         return ret;
         }
     else
