@@ -39,13 +39,13 @@ using namespace std;
 
 class taggedWord;
 class Word;
-typedef void (Word::*trav0)();
-typedef void (taggedWord::*trav0T)();
-typedef void (Word::*trav0C)()const;
-typedef void (Word::*trav)(void *);
+typedef void (Word::* trav0)();
+typedef void (taggedWord::* trav0T)();
+typedef void (Word::* trav0C)()const;
+typedef void (Word::* trav)(void*);
 
-typedef int (Word::*cmp_f)(const Word *) const;
-typedef int (taggedWord::*cmp_ft)(const taggedWord *) const;
+typedef int (Word::* cmp_f)(const Word*) const;
+typedef int (taggedWord::* cmp_ft)(const taggedWord*) const;
 class text;
 
 
@@ -59,30 +59,30 @@ class Word : public OutputClass
         static int COUNT;
 #endif
     public:
-        static Word * Root;
+        static Word* Root;
         static int LineNumber; // The number of the line where the previous word was found. For line-wise output. 0 is initial value
         static bool DictUnique;
         static bool RulesUnique;
         static int NewLinesAfterWord;
         static unsigned long int reducedtotal;
-        char * m_word;
-        char * m_tag;
+        char* m_word;
+        char* m_tag;
     protected:
-        baseformpointer * pbfD;  // dictionary's base forms
-        baseformpointer * pbfL; // constructed base forms
+        baseformpointer* pbfD;  // dictionary's base forms
+        baseformpointer* pbfL; // constructed base forms
         // If there is a constructed base form (lemma), then do not do 
         // statistics on the dictionary's lemmas.
         int cnt;
 #if STREAM
-        static ostream * fp;
+        static ostream* fp;
 #else
-        static FILE * fp;
+        static FILE* fp;
 #endif
         bool hasAddedItselfToBaseForm : 1;
         bool FoundInDict : 1;
         bool owns : 1;
-        bool SegmentInitial:1; /* 20160205. If true and word starts with uppercase, 
-                               then lowercasing is likely default. 
+        bool SegmentInitial : 1; /* 20160205. If true and word starts with uppercase,
+                               then lowercasing is likely default.
                                Keep uppercase if also found in non-segment initial position
                                */
         void i() const
@@ -101,25 +101,25 @@ class Word : public OutputClass
             if(pbfL)
                 {
                 if(pbfD)
-                    fputc('+',fp);
+                    fputc('+', fp);
                 else
-                    fputc('-',fp);
+                    fputc('-', fp);
                 }
             else
-                fputc(' ',fp);
+                fputc(' ', fp);
 #endif
             }
         void f() const
             {
 #if STREAM
-            *fp << cnt;
+            * fp << cnt;
 #else
-            fprintf(fp,"%d",cnt);
+            fprintf(fp, "%d", cnt);
 #endif
             }
         void w() const
             {
-            ::print(fp,m_word);
+            ::print(fp, m_word);
 #if STREAM
             //*fp << m_word;
 #else
@@ -129,12 +129,12 @@ class Word : public OutputClass
         void b() const
             {
             if(pbfD)
-                pbfD->printfbf(fp,bfuncs,sep);
+                pbfD->printfbf(fp, bfuncs, sep);
             }
         void B() const
             {
             if(pbfL)
-                pbfL->printfbf(fp,Bfuncs,sep);
+                pbfL->printfbf(fp, Bfuncs, sep);
             }
 #if PRINTRULE
         void p() const;/*20191216 rule by which lemma is formed. Display '=' in
@@ -160,59 +160,59 @@ class Word : public OutputClass
                 {
                 if(LineNumber > 0)
                     {
-                    for(int n = NewLinesAfterWord;n > 0;--n)
-                        fputc('\n',fp);
+                    for(int n = NewLinesAfterWord; n > 0; --n)
+                        fputc('\n', fp);
                     }
                 LineNumber++;
                 }
             else
-                fputc(' ',fp);
+                fputc(' ', fp);
 #endif
             }
         static bool hasb;
         static bool hasB;
-        char * commonStem(lext * Plext,int nmbr,const char * type,unsigned int freq,unsigned int & offset);
+        char* commonStem(lext* Plext, int nmbr, const char* type, unsigned int freq, unsigned int& offset);
          // Find the common type of the most frequent readings
-        char * commonType(lext * Plext,int nmbr,unsigned int freq);
+        char* commonType(lext* Plext, int nmbr, unsigned int freq);
     public:
-        static unsigned int maxFrequency(lext * Plext, int nmbr, const char * a_type, int & n);// The dictionary's available
+        static unsigned int maxFrequency(lext* Plext, int nmbr, const char* a_type, int& n);// The dictionary's available
                                                                                                // lexical information for this word.
-        void inc(){++cnt;}
-        static functionTree * funcs;
-        static bool setFormat(const char * cformat,const char * bformat,const char * Bformat,bool InputHasTags);
+        void inc() { ++cnt; }
+        static functionTree* funcs;
+        static bool setFormat(const char* cformat, const char* bformat, const char* Bformat, bool InputHasTags);
         virtual bool skip()const
             {
-            return false; 
+            return false;
             }
-        static functionTree * bfuncs;
-        static functionTree * Bfuncs;
+        static functionTree* bfuncs;
+        static functionTree* Bfuncs;
         static void deleteStaticMembers();
-        static formattingFunction * getUnTaggedWordFunction(int character,bool & SortInput,int & testType);
-        static formattingFunction * getUnTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType);
+        static formattingFunction* getUnTaggedWordFunction(int character, bool& SortInput, int& testType);
+        static formattingFunction* getUnTaggedWordFunctionNoBb(int character, bool& SortInput, int& testType);
 #if STREAM
-        static void setFile(ostream * a_fp);
+        static void setFile(ostream* a_fp);
 #else
-        static void setFile(FILE * a_fp);
+        static void setFile(FILE* a_fp);
 #endif
-        static const char * sep;
-        int itsCnt()const{return cnt;}
-        const char * itsWord()const{return m_word;}
-        int cmpword(const Word * other)const{return strcmp(m_word,other->m_word);}
+        static const char* sep;
+        int itsCnt()const { return cnt; }
+        const char* itsWord()const { return m_word; }
+        int cmpword(const Word* other)const { return strcmp(m_word, other->m_word); }
         static cmp_f cmp;
-        int comp_fw(const Word * w) const
+        int comp_fw(const Word* w) const
             {
             int c = w->cnt - cnt;
-            if(!c) c = strcmp(m_word,w->m_word);
+            if(!c) c = strcmp(m_word, w->m_word);
             return c;
             }
 
-        int comp_wf(const Word * w) const
+        int comp_wf(const Word* w) const
             {
-            int c = strcmp(m_word,w->m_word);
+            int c = strcmp(m_word, w->m_word);
             if(!c) c = w->cnt - cnt;
             return c;
             }
-        void assignTo(basefrm **& D,basefrm **& L)
+        void assignTo(basefrm**& D, basefrm**& L)
             {
             if(pbfL && !FoundInDict)
                 pbfL->assignTo(L);
@@ -241,7 +241,7 @@ class Word : public OutputClass
                 {
                 print();
                 }
-            }            
+            }
         virtual void printConflict()const
             {
             if(pbfL && pbfD)
@@ -249,29 +249,29 @@ class Word : public OutputClass
                 print();
                 }
             }
-        Word(const char * word)
-            : 
-                hasAddedItselfToBaseForm(false),FoundInDict(false),owns(true),SegmentInitial(true)
-                ,pbfD(NULL),pbfL(NULL),cnt(1), m_tag(NULL)
+        Word(const char* word)
+            :
+            hasAddedItselfToBaseForm(false), FoundInDict(false), owns(true), SegmentInitial(true)
+            , pbfD(NULL), pbfL(NULL), cnt(1), m_tag(NULL)
             {
             this->m_word = new char[strlen(word) + 1];
-            strcpy(this->m_word,word);
+            strcpy(this->m_word, word);
             ++reducedtotal;
 #ifdef COUNTOBJECTS
             ++COUNT;
 #endif
             }
-        Word(const Word & w)
-            : 
-                hasAddedItselfToBaseForm(w.hasAddedItselfToBaseForm),
-                FoundInDict(w.FoundInDict),
-                owns(false),
-                SegmentInitial(w.SegmentInitial),
-                m_word(w.m_word),
-                m_tag(NULL),
-                pbfD(w.pbfD),
-                pbfL(w.pbfL),
-                cnt(w.cnt)
+        Word(const Word& w)
+            :
+            hasAddedItselfToBaseForm(w.hasAddedItselfToBaseForm),
+            FoundInDict(w.FoundInDict),
+            owns(false),
+            SegmentInitial(w.SegmentInitial),
+            m_word(w.m_word),
+            m_tag(NULL),
+            pbfD(w.pbfD),
+            pbfL(w.pbfL),
+            cnt(w.cnt)
             {
 #ifdef COUNTOBJECTS
             ++COUNT;
@@ -288,7 +288,7 @@ class Word : public OutputClass
             {
             if(owns)
                 {
-                delete m_word;
+                delete[] m_word;
                 deleteSecondaryStuff();
                 }
 #ifdef COUNTOBJECTS
@@ -297,20 +297,20 @@ class Word : public OutputClass
             }
 #if PRINTRULE
 #if PFRQ || FREQ24
-        int addBaseFormD(const char * s, const char * t, unsigned int frequency)
+        int addBaseFormD(const char* s, const char* t, unsigned int frequency)
             {
             //this->cnt++;
-            if (pbfD)
+            if(pbfD)
                 return pbfD->addBaseForm(s, t, "dict", strlen(s), frequency);
             else
                 pbfD = new baseformpointer(s, t, "dict", strlen(s), frequency);
             return 1;
             }
 #else
-        int addBaseFormD(const char * s, const char * t)
+        int addBaseFormD(const char* s, const char* t)
             {
             //this->cnt++;
-            if (pbfD)
+            if(pbfD)
                 return pbfD->addBaseForm(s, t, strlen(s));
             else
                 pbfD = new baseformpointer(s, t, strlen(s));
@@ -319,32 +319,32 @@ class Word : public OutputClass
 #endif
 #else
 #if PFRQ || FREQ24
-        int addBaseFormD(const char * s,const char * t,unsigned int frequency)
+        int addBaseFormD(const char* s, const char* t, unsigned int frequency)
             {
             //this->cnt++;
             if(pbfD)
-                return pbfD->addBaseForm(s,t,strlen(s),frequency);
+                return pbfD->addBaseForm(s, t, strlen(s), frequency);
             else
-                pbfD = new baseformpointer(s,t,strlen(s),frequency);
+                pbfD = new baseformpointer(s, t, strlen(s), frequency);
             return 1;
             }
 #else
-        int addBaseFormD(const char * s,const char * t)
+        int addBaseFormD(const char* s, const char* t)
             {
             //this->cnt++;
             if(pbfD)
-                return pbfD->addBaseForm(s,t,strlen(s));
+                return pbfD->addBaseForm(s, t, strlen(s));
             else
-                pbfD = new baseformpointer(s,t,strlen(s));
+                pbfD = new baseformpointer(s, t, strlen(s));
             return 1;
             }
 #endif
 #endif
-        int addBaseFormL(const char * s,const char * t);
+        int addBaseFormL(const char* s, const char* t);
         virtual int addBaseFormsL();
-        virtual int addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
+        virtual int addBaseFormsDL(lext* Plext, int nmbr,// The dictionary's available
                                // lexical information for this word.
-           bool & conflict,int & cntD,int & cntL,const char * Tp);//
+                                   bool& conflict, int& cntD, int& cntL, const char* Tp);//
 
         void addFullForm()
             {
@@ -379,10 +379,10 @@ class Word : public OutputClass
                 pbfL->decFreq(this);
                 }
             }
-        void lookup(text * txt);
-        void setSegmentInitial(){SegmentInitial = true;}
-        void unsetSegmentInitial(){SegmentInitial = false;}
-        bool segmentInitial() const{return SegmentInitial;}
+        void lookup(text* txt);
+        void setSegmentInitial() { SegmentInitial = true; }
+        void unsetSegmentInitial() { SegmentInitial = false; }
+        bool segmentInitial() const { return SegmentInitial; }
     };
 
 class taggedWord : public Word
@@ -390,7 +390,7 @@ class taggedWord : public Word
     private:
         void t() const
             {
-            ::print(fp,m_tag);
+            ::print(fp, m_tag);
 #if STREAM
             //*fp << m_tag;
 #else
@@ -399,68 +399,68 @@ class taggedWord : public Word
             }
     protected:
     public:
-        static formattingFunction * getTaggedWordFunction(int character,bool & SortInput,int & testType);
-        static formattingFunction * getTaggedWordFunctionNoBb(int character,bool & SortInput,int & testType);
+        static formattingFunction* getTaggedWordFunction(int character, bool& SortInput, int& testType);
+        static formattingFunction* getTaggedWordFunctionNoBb(int character, bool& SortInput, int& testType);
         static cmp_ft comp;
-        int cmptaggedword(const taggedWord * other)const
+        int cmptaggedword(const taggedWord* other)const
             {
-            int c = strcmp(m_tag,other->m_tag);
+            int c = strcmp(m_tag, other->m_tag);
             if(!c)
-                c = strcmp(m_word,other->m_word);
+                c = strcmp(m_word, other->m_word);
             return c;
             }
-        int cmp_ftw(const taggedWord * w) const
+        int cmp_ftw(const taggedWord* w) const
             {
             int c = ((taggedWord*)w)->cnt - cnt;
-            if(!c) c = strcmp(m_tag,((taggedWord*)w)->m_tag);
-            if(!c) c = strcmp(m_word,w->m_word);
+            if(!c) c = strcmp(m_tag, ((taggedWord*)w)->m_tag);
+            if(!c) c = strcmp(m_word, w->m_word);
             return c;
             }
         int cmp_fwt(const taggedWord* w) const
             {
             int c = ((taggedWord*)w)->cnt - cnt;
-            if(!c) c = strcmp(m_word,w->m_word);
-            if(!c) c = strcmp(m_tag,((taggedWord*)w)->m_tag);
+            if(!c) c = strcmp(m_word, w->m_word);
+            if(!c) c = strcmp(m_tag, ((taggedWord*)w)->m_tag);
             return c;
             }
         int cmp_wft(const taggedWord* w) const
             {
-            int c = strcmp(m_word,w->m_word);
+            int c = strcmp(m_word, w->m_word);
             if(!c) c = ((taggedWord*)w)->cnt - cnt;
-            if(!c) c = strcmp(m_tag,((taggedWord*)w)->m_tag);
+            if(!c) c = strcmp(m_tag, ((taggedWord*)w)->m_tag);
             return c;
             }
         int cmp_wtf(const taggedWord* w) const
             {
-            int c = strcmp(m_word,w->m_word);
-            if(!c) c = strcmp(m_tag,((taggedWord*)w)->m_tag);
+            int c = strcmp(m_word, w->m_word);
+            if(!c) c = strcmp(m_tag, ((taggedWord*)w)->m_tag);
             if(!c) c = ((taggedWord*)w)->cnt - cnt;
             return c;
             }
         int cmp_tfw(const taggedWord* w) const
             {
-            int c = strcmp(m_tag,((taggedWord*)w)->m_tag);
+            int c = strcmp(m_tag, ((taggedWord*)w)->m_tag);
             if(!c) c = ((taggedWord*)w)->cnt - cnt;
-            if(!c) c = strcmp(m_word,w->m_word);
+            if(!c) c = strcmp(m_word, w->m_word);
             return c;
             }
         int cmp_twf(const taggedWord* w) const
             {
-            int c = strcmp(m_tag,((taggedWord*)w)->m_tag);
-            if(!c) c = strcmp(m_word,w->m_word);
+            int c = strcmp(m_tag, ((taggedWord*)w)->m_tag);
+            if(!c) c = strcmp(m_word, w->m_word);
             if(!c) c = ((taggedWord*)w)->cnt - cnt;
             return c;
             }
         virtual bool skip()const
             {
-            return false; 
+            return false;
             }
-        taggedWord(const char * word,const char * tag):Word(word)
+        taggedWord(const char* word, const char* tag) :Word(word)
             {
             this->m_tag = new char[strlen(tag) + 1];
-            strcpy(this->m_tag,tag);
+            strcpy(this->m_tag, tag);
             }
-        taggedWord(taggedWord & w):Word(w) // (Word & w) ==> (taggedWord & w)
+        taggedWord(taggedWord& w) :Word(w) // (Word & w) ==> (taggedWord & w)
             {
             m_tag = w.m_tag;
             }
@@ -470,9 +470,9 @@ class taggedWord : public Word
                 delete m_tag;
             }
         virtual int addBaseFormsL();
-        virtual int addBaseFormsDL(lext * Plext,int nmbr,// The dictionary's available
+        virtual int addBaseFormsDL(lext* Plext, int nmbr,// The dictionary's available
                                // lexical information for this word.
-           bool & conflict,int & cntD,int & cntL,const char * Tp);//
+                                   bool& conflict, int& cntD, int& cntL, const char* Tp);//
         void DisambiguateByTagFriends()
             {
             if(pbfD)
