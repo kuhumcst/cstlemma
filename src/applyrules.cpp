@@ -833,7 +833,7 @@ static char * rewrite(const char *& word, const char *& wordend, const char * p
 #if PRINTRULE
             if (beginOfWord)
                 {
-                rule = printpat(fields, findex, beginOfWord, word-beginOfWord, wordend);
+                rule = printpat(fields, findex, beginOfWord, (int)(word-beginOfWord), wordend);
                 }
 #endif
             }
@@ -845,7 +845,7 @@ static char * rewrite(const char *& word, const char *& wordend, const char * p
 #if PRINTRULE
             if (beginOfWord)
                 {
-                rule = printpat(fields, findex, beginOfWord, vars[0].s - beginOfWord, wordend);
+                rule = printpat(fields, findex, beginOfWord, (int)(vars[0].s - beginOfWord), wordend);
                 }
 #endif
             }

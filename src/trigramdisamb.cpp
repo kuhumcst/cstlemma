@@ -214,7 +214,7 @@ const char* trigramdisamb::sortByWeight(char* strings, bool RulesUnique)
     char* tmp = new char[len + 1];
     int cnt = 0;
     strcpy(tmp, strings);
-    for(int i = strlen(tmp); --i >= 0;)
+    for(int i = (int)strlen(tmp); --i >= 0;)
         {
         if(tmp[i] == ' ')
             {
